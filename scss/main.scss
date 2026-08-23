@@ -1,5 +1,9 @@
 @use './_reset.scss';
 
+/* Шрифт Inter самохостится: @font-face объявлен inline в <head> index.html,
+   потому что bun-бандлер инлайнит url() из подключаемого CSS в base64 (раздувая критический CSS),
+   а inline <style> не трогает. Файл fonts/inter-latin-var.woff2 копируется в dist на этапе build. */
+
 /* Variables */
 $bg: #f7f7f7;
 $black: #1d1d1f;

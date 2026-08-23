@@ -1,0 +1,9 @@
+# Failoverly
+
+> Failoverly (Connect Buddy) is a macOS app that automatically switches between your primary and backup internet connections, keeping streaming sessions — online meetings, content, games — running without reconnects, rebuffering or content loss. Launching soon at $6.99/month, distributed via the Mac App Store.
+
+Failoverly constantly monitors the quality of the primary and backup internet connections. The moment the primary connection degrades, it switches to the backup — and back — with no manual input. Switching is seamless and hidden: no service relogins, no reconnects, no rebuffering; the streaming service never notices the connection changed. Usage of the backup (typically pricier) connection is minimized to save money. Supported backups: mobile hotspots, secondary Wi-Fi networks, wired connections.
+
+It is built for people who stream on an unstable or slow primary connection — at home or while traveling — and have a stable but pricey backup (e.g. a mobile hotspot): remote workers on video calls, viewers of streaming content, gamers.
+
+Key facts: platform — macOS; price — $6.99 per month; status — launching soon on the Mac App Store; product names — Failoverly (brand), Connect Buddy (macOS application).

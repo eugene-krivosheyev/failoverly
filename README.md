@@ -7,7 +7,9 @@ Structure
 - `scss/` — SCSS sources (`_reset.scss`, `main.scss`)
 - `css/` — compiled CSS (`main.css`) included for immediate preview
 - `scripts/` — JS modules (`main.js`); GSAP comes from npm (`bun install`), not a CDN
-- `images/`, `fonts/` — asset folders (place your images and fonts here)
+- `images/` — images (WebP/SVG, optimized)
+- `fonts/` — self-hosted Inter (variable woff2, latin subset), registered via FontFace API in `scripts/fonts.js`
+- `_headers` — Cloudflare Pages cache headers, copied to `dist/` on build
 
 Develop (bun)
 
@@ -24,7 +26,7 @@ bun run styles    # compile SCSS once (scss/main.scss -> css/main.css)
 bun run build     # production build -> dist/ (bundled, minified, hashed assets)
 ```
 
-Deploy the contents of `dist/` — it is self-contained (JS bundled with GSAP and minified, CSS minified, assets hashed).
+Deploy the contents of `dist/` to Cloudflare Pages — it is self-contained (JS bundled with GSAP and minified, CSS minified, assets hashed). `dist/_headers` gives hashed assets a 1-year immutable cache while `index.html` is always revalidated.
 
 Notes
 - `css/main.css` is compiled from `scss/` — edit styles in `scss/main.scss` only, never `css/main.css` directly.

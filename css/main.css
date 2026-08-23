@@ -47,6 +47,12 @@ svg {
   max-width: 100%;
 }
 
+img {
+  /* при width/height-атрибутах и CSS-ресайзе по ширине высота должна следовать
+     пропорции, а не значению атрибута — иначе картинка сплющивается */
+  height: auto;
+}
+
 input,
 button,
 textarea,
@@ -65,6 +71,9 @@ a {
   text-decoration: none;
 }
 
+/* Шрифт Inter самохостится: @font-face объявлен inline в <head> index.html,
+   потому что bun-бандлер инлайнит url() из подключаемого CSS в base64 (раздувая критический CSS),
+   а inline <style> не трогает. Файл fonts/inter-latin-var.woff2 копируется в dist на этапе build. */
 /* Variables */
 /* Base */
 body {

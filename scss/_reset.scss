@@ -40,6 +40,11 @@ svg {
   display: block;
   max-width: 100%;
 }
+img {
+  /* при width/height-атрибутах и CSS-ресайзе по ширине высота должна следовать
+     пропорции, а не значению атрибута — иначе картинка сплющивается */
+  height: auto;
+}
 input,
 button,
 textarea,
