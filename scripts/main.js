@@ -109,3 +109,4 @@ document.querySelectorAll('.faq_question').forEach(button => {
     button.setAttribute('aria-expanded', String(isOpen))
   })
 })
+
