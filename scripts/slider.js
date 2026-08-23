@@ -58,18 +58,57 @@ export function createSlideController(transitions, { onSettle } = {}) {
   return { next, prev, goTo, destroy }
 }
 
-export function bindWheelAndTouchNavigation(controller, { cooldown, wheelThreshold = 2, touchThreshold = 80 } = {}) {
-  let wheelLocked = false
+export function bindWheelAndTouchNavigation(
+  controller,
+  { gestureGap = 120, dipThreshold = 10, riseThreshold = 20, peakFloor = 30, wheelThreshold = 2, touchThreshold = 80 } = {}
+) {
+  // Один жест = ровно один слайд. Реальный профиль событий тачпада (см. запись):
+  // повторный свайп во время инерции НЕ создаёт паузы - касание мгновенно гасит
+  // инерцию (дельта падает до <=10 за одно событие), и новый жест разгоняется с нуля
+  // в том же непрерывном потоке. Поэтому границы жестов определяем не по паузам,
+  // а по сигнатуре "провал до dipThreshold -> разгон выше riseThreshold".
+  // peakFloor защищает от ложного взвода на пологом старте самого первого разгона,
+  // а дрожание внутри жеста в записи не опускается ниже 17 - порог 10 его не ловит.
+  // Паузы длиннее gestureGap в потоке тачпада не встречаются (макс. 50мс), так что
+  // gap-сброс нужен только для раздельных жестов и щелчков колеса мыши.
+  let stepTaken = false
+  let armed = false
+  let peak = 0
+  let lastTime = 0
+
+  function step(deltaY) {
+    stepTaken = true
+    armed = false
+    peak = 0
+    if (deltaY > 0) controller.next()
+    else controller.prev()
+  }
 
   function handleWheel(event) {
     event.preventDefault()
-    if (wheelLocked || Math.abs(event.deltaY) < wheelThreshold) return
-    wheelLocked = true
-    if (event.deltaY > 0) controller.next()
-    else controller.prev()
-    setTimeout(() => {
-      wheelLocked = false
-    }, cooldown)
+
+    const now = event.timeStamp || Date.now()
+    const delta = Math.abs(event.deltaY)
+
+    if (now - lastTime > gestureGap) {
+      stepTaken = false
+      armed = false
+      peak = 0
+    }
+    lastTime = now
+
+    if (!stepTaken) {
+      if (delta >= wheelThreshold) step(event.deltaY)
+      return
+    }
+
+    if (delta > peak) peak = delta
+
+    if (delta <= dipThreshold && peak >= peakFloor) {
+      armed = true
+      return
+    }
+    if (armed && delta >= riseThreshold) step(event.deltaY)
   }
 
   let touchStartY = null

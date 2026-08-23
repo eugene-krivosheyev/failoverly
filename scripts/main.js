@@ -1,6 +1,4 @@
 import {
-  FIRST_SCREEN_LEAVE_DURATION,
-  CARD_TRANSITION_DURATION,
   playFirstScreenIntro,
   buildFirstScreenLeaveTimeline,
   buildCardTransitionTimeline
@@ -31,8 +29,7 @@ ScrollTrigger.matchMedia({
     }
 
     const slider = createSlideController(transitions)
-    const cooldown = Math.max(FIRST_SCREEN_LEAVE_DURATION, CARD_TRANSITION_DURATION) * 1000 + 100
-    const unbindNavigation = bindWheelAndTouchNavigation(slider, { cooldown })
+    const unbindNavigation = bindWheelAndTouchNavigation(slider)
 
     const handleSupheaderClick = index => () => slider.goTo(index + 1)
     const supheaderClickHandlers = supheaderItems.map((supItem, index) => {
@@ -58,12 +55,11 @@ ScrollTrigger.matchMedia({
 
   '(max-width: 1120px)': () => {
     const transitions = [buildFirstScreenLeaveTimeline()]
-    const cooldown = FIRST_SCREEN_LEAVE_DURATION * 1000 + 100
 
     let unbindNavigation = null
 
     function bindNavigation() {
-      if (!unbindNavigation) unbindNavigation = bindWheelAndTouchNavigation(slider, { cooldown })
+      if (!unbindNavigation) unbindNavigation = bindWheelAndTouchNavigation(slider)
     }
 
     function handleScroll() {
