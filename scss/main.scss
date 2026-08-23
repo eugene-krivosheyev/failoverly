@@ -176,10 +176,9 @@ body {
       width: 75px;
       flex: 0 0 75px;
 
-      svg {
-        path {
-          transition: 0.2s;
-        }
+      img {
+        display: block;
+        transition: 0.2s;
       }
     }
 
@@ -198,10 +197,9 @@ body {
 
     &:hover {
       .supheader_item_image {
-        svg {
-          path {
-            fill: #6e6e73;
-          }
+        // иконка залита #1d1d1f внутри файла; brightness(3.8) даёт ~#6e6e73
+        img {
+          filter: brightness(3.8);
         }
       }
     }
@@ -211,10 +209,8 @@ body {
         color: #000;
       }
       .supheader_item_image {
-        svg {
-          path {
-            fill: #000;
-          }
+        img {
+          filter: brightness(0);
         }
       }
     }

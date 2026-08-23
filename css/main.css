@@ -160,8 +160,7 @@ body {
 .header .right_part button img {
   width: 100%;
   height: 100%;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .header .right_part button:hover {
   opacity: 0.8;
@@ -231,7 +230,8 @@ body {
   width: 75px;
   flex: 0 0 75px;
 }
-.supheader .supheader_item_image svg path {
+.supheader .supheader_item_image img {
+  display: block;
   transition: 0.2s;
 }
 .supheader .supheader_item p {
@@ -247,14 +247,14 @@ body {
     flex: 0 1 auto;
   }
 }
-.supheader .supheader_item:hover .supheader_item_image svg path {
-  fill: #6e6e73;
+.supheader .supheader_item:hover .supheader_item_image img {
+  filter: brightness(3.8);
 }
 .supheader .supheader_item:active p {
   color: #000;
 }
-.supheader .supheader_item:active .supheader_item_image svg path {
-  fill: #000;
+.supheader .supheader_item:active .supheader_item_image img {
+  filter: brightness(0);
 }
 @media screen and (max-width: 1120px) {
   .supheader .supheader_item {
@@ -307,8 +307,7 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   pointer-events: none;
   z-index: 50;
   will-change: transform, opacity;
@@ -472,10 +471,8 @@ body {
 .animation_item .text_part ul img {
   height: 50px;
   width: 50px;
-  -o-object-fit: contain;
-     object-fit: contain;
-  -o-object-position: 0 50%;
-     object-position: 0 50%;
+  object-fit: contain;
+  object-position: 0 50%;
 }
 @media screen and (max-width: 1120px) {
   .animation_item .text_part ul {
@@ -563,8 +560,7 @@ body {
   max-width: 100%;
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 @media screen and (max-width: 1120px) {
   .animation_item:first-child .image_part img {
@@ -628,8 +624,7 @@ body {
   max-width: 100%;
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 @media screen and (max-width: 1120px) {
   .animation_item._with_image .image_part img {
@@ -693,8 +688,7 @@ body {
   height: 100px;
   width: auto;
   flex-shrink: 0;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 
 @keyframes running-logos {
