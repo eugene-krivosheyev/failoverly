@@ -1,5 +1,4 @@
 import {
-  playFirstScreenIntro,
   buildFirstScreenLeaveTimeline,
   buildCardTransitionTimeline
 } from './animation.js'
@@ -8,8 +7,6 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
-
-let firstScreenIntroPlayed = false
 
 ScrollTrigger.matchMedia({
   '(min-width: 1121px)': () => {
@@ -24,11 +21,6 @@ ScrollTrigger.matchMedia({
       if (!fromItem || !toItem) return
       transitions.push(buildCardTransitionTimeline(supItem, fromItem, toItem))
     })
-
-    if (!firstScreenIntroPlayed) {
-      firstScreenIntroPlayed = true
-      playFirstScreenIntro()
-    }
 
     const slider = createSlideController(transitions)
     const unbindNavigation = bindWheelAndTouchNavigation(slider)
@@ -76,11 +68,6 @@ ScrollTrigger.matchMedia({
         }
       }
     })
-
-    if (!firstScreenIntroPlayed) {
-      firstScreenIntroPlayed = true
-      playFirstScreenIntro()
-    }
 
     bindNavigation()
     window.addEventListener('scroll', handleScroll)

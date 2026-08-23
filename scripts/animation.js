@@ -7,7 +7,6 @@ export const supheaderWidth = 290
 export const flyScale = 0.15
 
 export const INTRO_DURATION = 0.3
-export const LOGO_INTRO_DURATION = 2
 export const FIRST_SCREEN_LEAVE_DURATION = 0.4
 export const CARD_TRANSITION_DURATION = 0.3
 export const TRANSITION_EASE = 'power2.inOut'
@@ -26,13 +25,6 @@ export function updateFlyingClone(clone, target, progress, endScale) {
     scale: gsap.utils.interpolate(1, scale, progress),
     opacity: 1 - progress
   })
-}
-
-export function playFirstScreenIntro() {
-  const tl = gsap.timeline({ defaults: { ease: TRANSITION_EASE } })
-  tl.fromTo('.first_screen_image', { opacity: 0 }, { opacity: 1, duration: LOGO_INTRO_DURATION })
-  tl.fromTo('.first_screen_text', { opacity: 0 }, { opacity: 1, duration: LOGO_INTRO_DURATION }, '<')
-  return tl
 }
 
 function addFirstScreenLeave(timeline, position, { fadeDuration, totalDuration, flyLogo = true }) {
