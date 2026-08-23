@@ -18,3 +18,5 @@ dist/
 
 .claude/
 .antigravity/
+
+.playwright-mcp
