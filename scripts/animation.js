@@ -99,7 +99,7 @@ function fadeOutCardText(tl, fromItem) {
 }
 
 function slideInNextCard(tl, toItem) {
-  tl.fromTo(toItem, { left: '100%' }, { left: '0%', duration: CARD_TRANSITION_DURATION, ease: 'none' }, 0)
+  tl.fromTo(toItem, { left: '104%' }, { left: '0%', duration: CARD_TRANSITION_DURATION, ease: 'none' }, 0)
 }
 
 export function buildCardTransitionTimeline(supItem, fromItem, toItem) {
