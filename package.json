@@ -7,9 +7,12 @@
     "serve": "bun --port=8000 index.html",
     "styles": "sass scss/main.scss css/main.css --no-source-map --style=expanded",
     "styles:watch": "sass --watch scss/main.scss css/main.css --no-source-map --style=expanded",
-    "build": "bun run styles"
+    "build": "bun run styles && bun build index.html --outdir=dist --minify"
   },
   "devDependencies": {
     "sass": "^1.80.0"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0"
   }
 }

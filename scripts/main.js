@@ -4,6 +4,8 @@ import {
   buildCardTransitionTimeline
 } from './animation.js'
 import { createSlideController, bindWheelAndTouchNavigation } from './slider.js'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 

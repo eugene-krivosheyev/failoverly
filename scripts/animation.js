@@ -1,3 +1,5 @@
+import { gsap } from 'gsap'
+
 export const firstScreenLeave = 500
 export const firstScreenFadeOut = 150
 

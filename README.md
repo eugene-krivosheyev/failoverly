@@ -6,7 +6,7 @@ Structure
 - `index.html` — HTML entry, links `css/main.css` and `scripts/main.js`
 - `scss/` — SCSS sources (`_reset.scss`, `main.scss`)
 - `css/` — compiled CSS (`main.css`) included for immediate preview
-- `scripts/` — JS modules (`main.js`)
+- `scripts/` — JS modules (`main.js`); GSAP comes from npm (`bun install`), not a CDN
 - `images/`, `fonts/` — asset folders (place your images and fonts here)
 
 Develop (bun)
@@ -21,8 +21,10 @@ Other scripts:
 ```bash
 bun run serve     # dev server only, no SCSS watch
 bun run styles    # compile SCSS once (scss/main.scss -> css/main.css)
-bun run build     # alias of styles
+bun run build     # production build -> dist/ (bundled, minified, hashed assets)
 ```
+
+Deploy the contents of `dist/` — it is self-contained (JS bundled with GSAP and minified, CSS minified, assets hashed).
 
 Notes
 - `css/main.css` is compiled from `scss/` — edit styles in `scss/main.scss` only, never `css/main.css` directly.
