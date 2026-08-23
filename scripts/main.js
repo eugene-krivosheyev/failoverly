@@ -1,4 +1,5 @@
 import {
+  FIRST_SCREEN_LEAVE_DURATION,
   buildFirstScreenLeaveTimeline,
   buildCardTransitionTimeline
 } from './animation.js'
@@ -36,12 +37,17 @@ ScrollTrigger.matchMedia({
     const handleLogoClick = () => slider.goTo(0)
     headerLogo.addEventListener('click', handleLogoClick)
 
+    const headerBtn = document.querySelector('.header_btn')
+    const handleHeaderBtnClick = () => slider.goTo(transitions.length)
+    headerBtn.addEventListener('click', handleHeaderBtnClick)
+
     document.body.classList.add('is_slider_mode')
 
     return () => {
       unbindNavigation()
       supheaderItems.forEach((supItem, index) => supItem.removeEventListener('click', supheaderClickHandlers[index]))
       headerLogo.removeEventListener('click', handleLogoClick)
+      headerBtn.removeEventListener('click', handleHeaderBtnClick)
       document.body.classList.remove('is_slider_mode')
       slider.destroy()
     }
@@ -76,12 +82,21 @@ ScrollTrigger.matchMedia({
     const handleLogoClick = () => slider.goTo(0)
     headerLogo.addEventListener('click', handleLogoClick)
 
+    const headerBtn = document.querySelector('.header_btn')
+    const handleHeaderBtnClick = () => {
+      slider.goTo(transitions.length)
+      const lastItem = gsap.utils.toArray('.animation_item').at(-1)
+      setTimeout(() => lastItem.scrollIntoView({ behavior: 'smooth' }), FIRST_SCREEN_LEAVE_DURATION * 1000 + 50)
+    }
+    headerBtn.addEventListener('click', handleHeaderBtnClick)
+
     document.body.classList.add('is_slider_mode')
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
       if (unbindNavigation) unbindNavigation()
       headerLogo.removeEventListener('click', handleLogoClick)
+      headerBtn.removeEventListener('click', handleHeaderBtnClick)
       document.body.classList.remove('is_slider_mode')
       slider.destroy()
     }
@@ -97,3 +112,9 @@ document.querySelectorAll('.faq_question').forEach(button => {
   })
 })
 
+
+// Dev-only: при hot-reload перезагружаем страницу целиком. Горячая подмена модуля
+// оставляет inline-стили убитых GSAP-таймлайнов, а новый экземпляр слайдера
+// стартует с нуля - состояние рассинхронизируется (скрытый первый экран при
+// current=0), и навигация ведёт себя непредсказуемо до ручного обновления.
+if (import.meta.hot) import.meta.hot.dispose(() => location.reload())
