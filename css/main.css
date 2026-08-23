@@ -264,11 +264,8 @@ body {
     padding: 15px 50px 35px;
     border-bottom: 1px solid rgba(29, 29, 31, 0.3019607843);
   }
-  .supheader .supheader_item:nth-child(5) {
-    border-bottom: none;
-  }
   .supheader .supheader_item:last-child {
-    display: none;
+    border-bottom: none;
   }
 }
 @media screen and (max-width: 1650px) {

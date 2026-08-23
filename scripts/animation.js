@@ -112,3 +112,13 @@ export function buildCardTransitionTimeline(supItem, fromItem, toItem) {
 
   return tl.pause(0)
 }
+
+// Переход без иконки в supheader: текущий экран гаснет, следующий заезжает.
+export function buildCardSwapTimeline(fromItem, toItem) {
+  const tl = gsap.timeline({ paused: true, defaults: { ease: TRANSITION_EASE } })
+
+  tl.to(fromItem.querySelector('.content_container'), { opacity: 0, duration: CARD_TRANSITION_DURATION, ease: 'none' }, 0)
+  slideInNextCard(tl, toItem)
+
+  return tl.pause(0)
+}

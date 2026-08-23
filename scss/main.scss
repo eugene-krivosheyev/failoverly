@@ -222,12 +222,8 @@ body {
       padding: 15px 50px 35px;
       border-bottom: 1px solid #1d1d1f4d;
 
-      &:nth-child(5) {
-        border-bottom: none;
-      }
-
       &:last-child {
-        display: none;
+        border-bottom: none;
       }
     }
   }

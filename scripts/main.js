@@ -1,7 +1,8 @@
 import {
   FIRST_SCREEN_LEAVE_DURATION,
   buildFirstScreenLeaveTimeline,
-  buildCardTransitionTimeline
+  buildCardTransitionTimeline,
+  buildCardSwapTimeline
 } from './animation.js'
 import { createSlideController, bindWheelAndTouchNavigation } from './slider.js'
 import { gsap } from 'gsap'
@@ -22,6 +23,11 @@ ScrollTrigger.matchMedia({
       if (!fromItem || !toItem) return
       transitions.push(buildCardTransitionTimeline(supItem, fromItem, toItem))
     })
+
+    // Экраны без иконки в supheader (FAQ -> Launching soon) просто сменяют друг друга
+    for (let index = supheaderItems.length; index < animationItems.length - 1; index += 1) {
+      transitions.push(buildCardSwapTimeline(animationItems[index], animationItems[index + 1]))
+    }
 
     const slider = createSlideController(transitions)
     const unbindNavigation = bindWheelAndTouchNavigation(slider)
