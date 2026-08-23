@@ -9,18 +9,22 @@ Structure
 - `scripts/` — JS modules (`main.js`)
 - `images/`, `fonts/` — asset folders (place your images and fonts here)
 
-Open locally
-1. Open `index.html` in a browser or use Live Server extension.
-
-Compile SCSS (optional)
-Install Dart Sass if you want to compile manually:
+Develop (bun)
 
 ```bash
-npm install -g sass
-# or use your local install
-sass scss/main.scss css/main.css --no-source-map --style=expanded
+bun install       # once
+bun run dev       # dev server at http://localhost:8000 + SCSS watch
+```
+
+Other scripts:
+
+```bash
+bun run serve     # dev server only, no SCSS watch
+bun run styles    # compile SCSS once (scss/main.scss -> css/main.css)
+bun run build     # alias of styles
 ```
 
 Notes
-- `css/main.css` is provided so you can open `index.html` immediately without a build step.
-- To add a toolchain later, consider adding a `package.json` with `sass --watch` and a small dev server.
+- `css/main.css` is compiled from `scss/` — edit styles in `scss/main.scss` only, never `css/main.css` directly.
+- Compiled `css/main.css` is committed, so `index.html` can be opened without a build step; recompile after any SCSS change.
+- The dev server is Bun's built-in frontend server (`bun index.html`) with hot reloading; change the port via the `--port` flag in `package.json`.

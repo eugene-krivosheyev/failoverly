@@ -1,0 +1,15 @@
+{
+  "name": "failoverly-landing",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run styles:watch & bun --port=8000 index.html",
+    "serve": "bun --port=8000 index.html",
+    "styles": "sass scss/main.scss css/main.css --no-source-map --style=expanded",
+    "styles:watch": "sass --watch scss/main.scss css/main.css --no-source-map --style=expanded",
+    "build": "bun run styles"
+  },
+  "devDependencies": {
+    "sass": "^1.80.0"
+  }
+}
