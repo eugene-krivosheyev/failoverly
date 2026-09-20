@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#ffffff" />
-    <title>Failoverly — Landing wireframe</title>
+    <title>Automatic Internet Failover for Mac | Failoverly</title>
+    <meta name="description" content="Failoverly is an automatic internet failover app for macOS. Use your iPhone as backup internet to keep sessions connected during outages and sudden slowdowns." />
     <style>
       :root {
         color-scheme: light;
@@ -43,9 +44,10 @@
       .nav { display: flex; align-items: center; gap: 26px; font-size: 14px; }
       .nav a { padding-block: 12px; text-decoration: none; }
       .hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 64px; align-items: center; padding: 40px 0 48px; }
+      .hero-eyebrow { margin-bottom: 12px; color: var(--muted); font-size: 14px; font-weight: 600; }
       .hero h1 { font-size: clamp(43px, 4.9vw, 64px); font-weight: 680; line-height: 1.04; letter-spacing: -0.055em; }
       .hero h1 span { display: block; }
-      .hero-description { margin-top: 22px; max-width: 510px; font-size: 17px; line-height: 1.55; color: #4b4e54; }
+      .hero-description { margin-top: 22px; max-width: 510px; font-size: 20px; line-height: 1.55; color: #4b4e54; }
       .compatibility { display: block; font-size: inherit; }
       .offer { margin-top: 26px; font-size: 15px; }
       .offer strong { font-weight: 650; }
@@ -59,6 +61,7 @@
       .button { display: inline-flex; justify-content: center; align-items: center; min-height: 48px; padding: 10px 20px; border: 1px solid var(--action); border-radius: 5px; color: #fff; background: var(--action); font-size: 15px; font-weight: 600; text-decoration: none; white-space: nowrap; }
       .button:hover { background: #000; color: #fff; }
       .button:disabled { opacity: 0.6; cursor: not-allowed; }
+      .nav .nav-cta { min-height: 40px; padding: 8px 14px; font-size: 14px; }
       .signup-note { margin-top: 9px; color: var(--muted); font-size: 14px; }
       .form-message { margin-top: 12px; font-size: 14px; }
       .form-message:empty { display: none; }
@@ -71,12 +74,11 @@
       .source { display: flex; align-items: center; align-self: stretch; gap: 10px; min-height: 58px; padding: 8px 12px; border: 1px solid #969ca5; border-radius: 6px; background: #fff; }
       .source svg { flex-shrink: 0; }
       .source-name { display: block; font-size: 14px; font-weight: 620; }
-      .source-state { display: block; font-size: 12px; color: var(--muted); }
+      .source-state { display: block; min-height: 3.1em; font-size: 12px; line-height: 1.55; color: var(--muted); }
       .source-labels { display: grid; min-width: 0; }
       .source-labels .source-name { grid-area: 1 / 1; }
       .source-labels .source-state { grid-area: 2 / 1; }
-      /* Reserve the longest status at the current width so switching never resizes the row. */
-      .source-state-reserve { visibility: hidden; }
+      /* Reserve two status lines without duplicating text in the document. */
       .source-wifi { grid-column: 1; grid-row: 1; }
       .source-phone { grid-column: 3; grid-row: 1; border-style: dashed; }
       .path { grid-column: 1 / 4; grid-row: 2; width: 100%; height: 26px; overflow: visible; }
@@ -99,15 +101,12 @@
       .preview[data-backup="true"] .source-phone { border-style: solid; border-color: var(--ink); }
       .preview[data-backup="true"] .wifi-path { stroke: #b3b7bd; stroke-dasharray: 4 4; }
       .preview[data-backup="true"] .phone-path { stroke: var(--ink); stroke-dasharray: none; }
-      .preview-controls { display: flex; justify-content: center; margin-top: 18px; padding: 14px; }
-      .preview-button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; max-width: 100%; background: var(--action); color: #fff; border: 1px solid var(--action); border-radius: 6px; min-height: 44px; padding: 9px 17px; font-size: 14px; font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / 12%); }
-      .preview-button svg { flex-shrink: 0; }
-      .preview-button-label { display: grid; min-width: 0; text-wrap: balance; }
-      .preview-button-label > span { grid-area: 1 / 1; align-self: center; }
-      .preview-button-reserve { visibility: hidden; }
-      .preview-button:hover { border-color: #000; background: #000; }
-      .preview-button:active { box-shadow: none; }
+      .preview-controls { display: flex; justify-content: center; margin-top: 18px; }
+      .preview-refresh { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid #a7abb1; border-radius: 50%; background: transparent; color: var(--muted); }
+      .preview-refresh:hover { border-color: var(--ink); background: #fff; color: var(--ink); }
+      .preview-refresh:active { background: #e5e7eb; }
       .preview figcaption { margin-top: 13px; text-align: center; color: var(--muted); font-size: 13px; }
+      #preview-caption { min-height: 3.1em; }
       .section { border-top: 1px solid var(--line); padding-block: 42px; scroll-margin-top: 20px; }
       .use-cases { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; margin-top: 28px; }
       .use-case { padding-inline: 20px; border-left: 1px solid var(--line); }
@@ -116,7 +115,7 @@
       .use-case h3 { font-size: 13px; font-weight: 560; color: var(--muted); min-height: 36px; }
       .case-offer { font-size: 20px; font-weight: 630; letter-spacing: -0.025em; line-height: 1.3; margin-top: 8px; }
       .case-description { font-size: 14px; line-height: 1.5; color: #555960; margin-top: 12px; }
-      .steps { list-style: none; counter-reset: step; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px; padding: 0; margin: 26px 0 0; }
+      .steps { list-style: none; counter-reset: step; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; padding: 0; margin: 26px 0 0; }
       .steps li { counter-increment: step; position: relative; padding-left: 38px; }
       .steps li::before { content: counter(step); position: absolute; top: 0; left: 0; width: 26px; height: 26px; border: 1px solid #a7abb1; border-radius: 50%; display: grid; place-items: center; font-size: 13px; }
       .steps p { font-size: 14px; color: #555960; margin-top: 10px; }
@@ -144,7 +143,7 @@
         .wrap { width: calc(100% - 48px); }
         .hero { gap: 32px; grid-template-columns: 1.05fr 1fr; }
         .hero h1 { font-size: 49px; }
-        .hero-description { font-size: 16px; }
+        .hero-description { font-size: 18px; }
         .input-row { flex-wrap: wrap; }
         .input-row input { flex: 1 1 180px; }
         .input-row .button { flex: 1 0 auto; }
@@ -154,15 +153,18 @@
         .source svg { width: 20px; }
         .use-case { padding-inline: 13px; }
         .case-offer { font-size: 18px; }
-        .steps { gap: 20px; }
+        .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
         .faq-layout, .final { gap: 32px; }
         .context { column-gap: 32px; }
       }
       @media (max-width: 760px) {
         .wrap { width: calc(100% - 40px); }
-        .site-header { min-height: 66px; }
+        .site-header { min-height: 66px; align-items: flex-start; gap: 16px; padding-block: 12px; }
+        .brand { padding-top: 6px; }
         .brand-logo { width: 159px; }
-        .nav { gap: 20px; font-size: 13px; }
+        .nav { display: grid; grid-template-columns: auto auto; gap: 0 12px; justify-items: end; font-size: 12px; }
+        .nav a { padding-block: 6px; }
+        .nav .nav-cta { grid-column: 1 / -1; grid-row: 1; }
         .hero { grid-template-columns: 1fr; gap: 28px; padding: 28px 0 34px; }
         .hero h1 { font-size: clamp(39px, 8vw, 56px); }
         .hero-description { max-width: 550px; margin-top: 18px; }
@@ -198,7 +200,9 @@
       }
       @media (max-width: 370px) {
         .wrap { width: calc(100% - 32px); }
-        .nav { gap: 14px; }
+        .site-header { flex-wrap: wrap; gap: 4px; }
+        .nav { display: flex; justify-content: space-between; gap: 8px; width: 100%; }
+        .nav .nav-cta { font-size: 12px; padding-inline: 10px; }
         .hero h1 { font-size: 38px; }
         .input-row { flex-direction: column; }
         .input-row input { flex: none; }
@@ -233,6 +237,8 @@
       .skip-survey:hover { color: #000; }
       .survey-done p { margin-top: 12px; font-size: 15px; }
       .survey-done button { margin-top: 24px; }
+      .privacy-placeholder p { margin-top: 14px; }
+      .privacy-placeholder .button { margin-top: 24px; }
       @media (max-width: 480px) {
         dialog { padding: 22px 20px; }
         .survey-title { font-size: 25px; }
@@ -268,48 +274,49 @@
       <nav class="nav" aria-label="Main navigation">
         <a href="#how-it-works">How it works</a>
         <a href="#faq">FAQ</a>
+        <a class="button nav-cta" href="#hero-email">Join the waitlist</a>
       </nav>
     </header>
 
     <main id="main" class="wrap">
       <section class="hero" aria-labelledby="hero-title">
         <div>
-          <h1 id="hero-title"><span>Internet connection drops.</span><span>Your session stays.</span></h1>
-          <p class="hero-description">Internet drops or slows to a crawl, even while Wi-Fi says “connected”? Failoverly switches your Mac from a flaky primary connection to your phone’s connection and back, keeping your calls, streams, and online sessions connected.</p>
-          <p class="offer">Join before launch for <strong>your first month free.</strong><br /><span class="price">US$6.99/month</span> after that.<span class="compatibility">Requires macOS + iPhone connected via USB.</span></p>
+          <p class="hero-eyebrow">Internet failover for Mac</p>
+          <h1 id="hero-title"><span>Your internet slows or drops.</span> <span>Your session stays.</span></h1>
+          <p class="hero-description">Failoverly keeps calls, streams, and online sessions connected through outages and sudden slowdowns—even when Wi-Fi says &quot;connected&quot;. It automatically switches to your iPhone hotspot over USB and back.</p>
+          <p class="offer">Join before launch for <strong>your first month free.</strong> <br /> <span class="price">US$6.99/month</span> after that. <span class="compatibility">Requires a Mac and an iPhone connected over USB.</span></p>
           <form class="signup" novalidate aria-label="Join the Failoverly waitlist" data-preview-form>
             <label for="hero-email">Email address</label>
             <div class="input-row">
               <input id="hero-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required disabled placeholder="you@example.com" aria-describedby="hero-privacy hero-message" />
               <button class="button" type="submit" disabled>Join the waitlist</button>
             </div>
-            <p class="signup-note" id="hero-privacy">We’ll email you only when the app launches. No spam. We recommend Apple’s <a href="https://support.apple.com/guide/icloud/what-you-can-do-with-icloud-and-hide-my-email-mme38e1602db/icloud" target="_blank" rel="noopener noreferrer">Hide My Email (iCloud+)</a> to keep your real address private.</p>
+            <p class="signup-note" id="hero-privacy">We’ll email you only when the app launches. No spam. We recommend Apple’s Hide My Email (iCloud+) to keep your real address private. <a href="#privacy-policy" data-privacy-link aria-haspopup="dialog">Privacy Policy</a>.</p>
             <div class="form-message" id="hero-message" role="status" aria-live="polite"></div>
           </form>
         </div>
 
-        <figure class="preview" data-backup="false" aria-label="Concept illustration of a session continuing when Wi-Fi fails">
+        <figure class="preview" data-backup="false" aria-label="Concept illustration of a session staying connected while traffic switches to an iPhone hotspot over USB">
           <div class="preview-top"><strong>One session. Two ways online.</strong></div>
           <div class="connection-diagram">
             <div class="source source-wifi">
               <svg width="25" height="24" viewBox="0 0 25 24" fill="none" aria-hidden="true"><path d="M2 8a17 17 0 0 1 21 0M5.5 12a11 11 0 0 1 14 0M9 16a5.5 5.5 0 0 1 7 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12.5" cy="20" r="1.4" fill="currentColor"/></svg>
-              <div class="source-labels"><span class="source-name">Wi-Fi</span><span class="source-state" id="wifi-state">Active</span><span class="source-state source-state-reserve" aria-hidden="true">Connection lost or too slow</span></div>
+              <div class="source-labels"><span class="source-name">Wi-Fi</span> <span class="source-state" id="wifi-state">Active</span></div>
             </div>
             <div class="source source-phone">
               <svg width="25" height="24" viewBox="0 0 25 24" fill="none" aria-hidden="true"><rect x="6.5" y="1" width="12" height="22" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M11 19.5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-              <div class="source-labels"><span class="source-name">Wired iPhone</span><span class="source-state" id="phone-state">Backup ready</span><span class="source-state source-state-reserve" aria-hidden="true">Backup ready</span></div>
+              <div class="source-labels"><span class="source-name">iPhone hotspot (USB)</span> <span class="source-state" id="phone-state">Ready</span></div>
             </div>
             <svg class="path" viewBox="0 0 360 26" preserveAspectRatio="none" aria-hidden="true"><path class="wifi-path" d="M85 0 V8 Q85 15 98 15 H168 Q180 15 180 26"/><path class="phone-path" d="M275 0 V8 Q275 15 262 15 H192 Q180 15 180 26"/></svg>
-            <div class="vpn-layer"><strong>Failoverly VPN servers</strong><span>Encrypted tunnel from your Mac</span></div>
+            <div class="vpn-layer"><strong>Failoverly VPN servers</strong> <span>Encrypted tunnel from your Mac</span></div>
             <div class="stable-path" aria-hidden="true"></div>
-            <div class="session"><div class="session-icon" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div><strong>Same online session</strong><span>Still connected</span></div></div>
+            <div class="session"><div class="session-icon" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div> <div><strong>Same online session</strong> <span>Still connected</span></div></div>
           </div>
           <figcaption>
-            <p id="preview-caption" aria-live="polite">Your phone is ready if Wi-Fi lets you down.</p>
+            <p id="preview-caption" aria-live="off">Your iPhone hotspot is ready.</p>
             <div class="preview-controls" role="group" aria-label="Diagram controls">
-              <button class="preview-button" type="button" id="simulate" aria-pressed="false">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7a8.5 8.5 0 0 0-14-2L3 8m0 0V3m0 5h5M4 17a8.5 8.5 0 0 0 14 2l3-3m0 0v5m0-5h-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span class="preview-button-label"><span id="simulate-label">Simulate primary internet provider outage</span><span class="preview-button-reserve" aria-hidden="true">Simulate primary internet provider outage</span></span>
+              <button class="preview-refresh" type="button" aria-label="Show iPhone hotspot" title="Show iPhone hotspot" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7a8.5 8.5 0 0 0-14-2L3 8m0 0V3m0 5h5M4 17a8.5 8.5 0 0 0 14 2l3-3m0 0v5m0-5h-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
             </div>
           </figcaption>
@@ -317,32 +324,32 @@
       </section>
 
       <section class="section" aria-labelledby="use-cases-title">
-        <h2 id="use-cases-title">Backup internet for calls, streams, and more</h2>
+        <h2 id="use-cases-title">Backup internet for Mac: calls, streams, and more</h2>
         <div class="use-cases">
           <article class="use-case">
             <h3>Work calls &amp; online coaching</h3>
-            <p class="case-offer">Internet provider glitched. You’re still on the call.</p>
-            <p class="case-description">Show up for your team’s Zoom meeting and give clients the full coaching session. Less worry about dropped calls, more attention for the people counting on you.</p>
+            <p class="case-offer">The call freezes. Your reputation shouldn’t.</p>
+            <p class="case-description">Dropped calls on Zoom, Microsoft Teams, or Google Meet leave everyone waiting. Keep colleagues engaged and give paying clients the time they booked.</p>
           </article>
           <article class="use-case">
             <h3>Webinars &amp; live streaming</h3>
-            <p class="case-offer">Make it to “Thanks for watching.”</p>
-            <p class="case-description">Keep your live stream going when Wi-Fi lets you down. Deliver the demo, take the last question, and give your audience the ending they came for.</p>
+            <p class="case-offer">Hold their attention to the last frame.</p>
+            <p class="case-description">An unstable connection can cause bitrate drops and dropped frames in your OBS stream on Twitch. Keep your audience with you through your sign-off.</p>
           </article>
           <article class="use-case">
             <h3>Online gaming</h3>
-            <p class="case-offer">Internet access hiccuped. You’re still in the match.</p>
-            <p class="case-description">Be there for the final push, the clutch play, and the teammates counting on you.</p>
+            <p class="case-offer">Don’t leave your team a player down.</p>
+            <p class="case-description">Lag spikes and disconnects hit hardest mid-match. Stay in the game, make the next play, and be there when your teammates need you.</p>
           </article>
           <article class="use-case">
             <h3>Developers &amp; DevOps</h3>
-            <p class="case-offer">Your SSH session outlives your internet connection.</p>
-            <p class="case-description">A drop mid-deploy or a slowdown during an incident can lead to mistakes, delayed responses, and costly cleanup. Keep your SSH session running as Failoverly switches to backup.</p>
+            <p class="case-offer">Your SSH session outlives the outage.</p>
+            <p class="case-description">A dropped connection and a “broken pipe” error mid-deploy can mean costly recovery. Keep configuring, deploying, and troubleshooting without reconnecting.</p>
           </article>
           <article class="use-case">
             <h3>Traders</h3>
-            <p class="case-offer">The market moves. Stay with it.</p>
-            <p class="case-description">Follow your charts and check your orders without a Wi-Fi drop sending you back to the login screen.</p>
+            <p class="case-offer">The price moves. You’re ready.</p>
+            <p class="case-description">Connection delays shouldn’t decide your next move. Stay connected to your trading platform to react when prices change, adjust positions, and manage risk.</p>
           </article>
         </div>
       </section>
@@ -350,135 +357,185 @@
       <section class="section" id="how-it-works" aria-labelledby="how-title">
         <h2 id="how-title">How automatic internet failover works on your Mac</h2>
         <ol class="steps">
-          <li><h3>Connect your iPhone as a backup.</h3><p>Keep using your usual internet connection. Your phone provides a second way online.</p></li>
-          <li><h3>Let the Failoverly app watch your connection.</h3><p>It runs in your Mac’s menu bar and checks connection quality, including latency and packet loss. It can react even when Wi-Fi still looks connected.</p></li>
-          <li><h3>Keep your session going.</h3><p>An encrypted VPN tunnel through Failoverly’s servers keeps your online sessions connected as traffic moves to your phone. Failoverly switches back when your main connection recovers, saving cellular data for when you need backup.</p></li>
+          <li><h3>Set up your iPhone hotspot.</h3> <p>Connect via USB and enable Personal Hotspot. Keep using your usual internet connection until backup is needed.</p></li>
+          <li><h3>Let the Failoverly app watch your connection.</h3> <p>The app runs in your Mac’s menu bar and monitors latency and packet loss. It can switch to your iPhone hotspot during outages or sudden slowdowns, even while Wi-Fi stays connected.</p></li>
+          <li><h3>Keep your session going.</h3> <p>An encrypted VPN tunnel through Failoverly’s servers keeps your online sessions connected as traffic moves to your iPhone hotspot.</p></li>
+          <li><h3>Switch back. Save cellular data.</h3> <p>When your main connection recovers, Failoverly automatically switches back to save cellular data and help avoid unnecessary mobile data charges.</p></li>
         </ol>
       </section>
 
       <section class="context" aria-labelledby="when-title">
         <h2 id="when-title">When you need a backup internet connection</h2>
         <p class="qualification">If your internet is rock-solid, you don’t need Failoverly.</p>
-        <p class="context-description">For hotel Wi-Fi on a work trip, life as a digital nomad, busy cafés and public Wi-Fi, or an unreliable day at home. When the connection is uncertain and what you’re doing matters.</p>
+        <p class="context-description">For flaky Wi-Fi at home, unreliable hotel Wi-Fi while traveling, or congested public Wi-Fi in cafés and coworking spaces. A backup internet connection helps remote workers and digital nomads stay connected when it matters.</p>
       </section>
 
       <section class="section faq-layout" id="faq" aria-labelledby="faq-title">
-        <div class="faq-heading"><h2 id="faq-title">Internet failover<br />for Mac: FAQ</h2><p>The setup, the tradeoffs,<br />and what happens next.</p><a href="#final-signup">Join the waitlist</a></div>
+        <div class="faq-heading"><h2 id="faq-title">Internet failover<br /> for Mac: FAQ</h2> <p>The setup, the tradeoffs,<br /> and what happens next.</p> <a href="#final-signup">Join the waitlist</a></div>
         <div class="faq-list">
-          <details><summary>What is Failoverly?</summary><div class="answer"><p>Failoverly is an automatic internet failover app for macOS. It uses your wired iPhone as backup internet, preserving online sessions when your main connection fails or performs poorly. It’s currently in prelaunch; join the waitlist to hear when it’s available.</p></div></details>
-          <details><summary>What do I need to use Failoverly?</summary><div class="answer"><p>A Mac, your usual internet connection, and <strong>an iPhone connected over USB with Personal Hotspot enabled</strong>. The iPhone needs cellular coverage and a plan that supports Personal Hotspot. Keep it plugged in while you want backup protection.</p><p>Your primary connection can be any internet connection your Mac uses, including Wi-Fi or Ethernet. At launch, backups are limited to iPhone over USB; Android and wireless hotspots aren’t supported.</p></div></details>
-          <details><summary>Will my call or session disconnect when Failoverly switches connections?</summary><div class="answer"><p>Failoverly preserves online sessions when it switches your Mac to a working backup. A brief slowdown or pause is still possible, especially with a weak cellular signal. It can’t keep you online if both connections lose internet access or the online service itself is unavailable.</p></div></details>
-          <details><summary>How does Failoverly keep sessions connected, and is my connection secure?</summary><div class="answer"><p>Your traffic passes through an encrypted VPN tunnel to servers we operate. Those servers maintain the connection to your online services while your Mac changes networks, so the session stays connected.</p><p>The tunnel adds encryption between your Mac and our servers, including on public Wi-Fi. Connections from our servers to online services use those services’ own security, such as HTTPS.</p></div></details>
-          <details><summary>Why use Failoverly instead of my Mac’s built-in hotspot features?</summary><div class="answer"><p>Apple’s Auto-Join Hotspot can connect a Mac to a nearby hotspot when Wi-Fi isn’t available, automatically in macOS Tahoe 26 and later. Failoverly also reacts to poor connection quality and returns traffic to your main connection when it recovers.</p><p>Your session stays connected during the switch, so you don’t need to log in again just because your connection changed.</p></div></details>
+          <details><summary>What is Failoverly?</summary> <div class="answer"><p>Failoverly is an automatic internet failover app for macOS. If your internet keeps disconnecting or has sudden slowdowns, it switches to your iPhone hotspot while preserving your online sessions. It’s currently in prelaunch; join the waitlist to hear when it’s available.</p></div></details>
+          <details><summary>What if my Mac’s Wi-Fi keeps dropping during video calls?</summary> <div class="answer"><p>Failoverly provides automatic Wi-Fi failover through your iPhone hotspot over USB when your internet keeps cutting out. It keeps your calls connected using the backup connection; it doesn’t repair your Wi-Fi or your internet provider’s connection.</p></div></details>
+          <details><summary>What do I need to use Failoverly?</summary> <div class="answer"><p>Failoverly runs only on macOS. You need a Mac, your usual internet connection, and <strong>an iPhone connected over USB with Personal Hotspot enabled</strong>. This is USB tethering. Cellular coverage and a data plan that supports Personal Hotspot are required. Keep the USB cable connected while you want backup protection.</p> <p>Your primary connection can be any internet connection your Mac uses, including Wi-Fi or Ethernet. At launch, Android phones and wireless tethering aren’t supported as backup connections.</p></div></details>
+          <details><summary>Will my call or session disconnect when it switches?</summary> <div class="answer"><p>Failoverly is designed to keep your call or session connected during the switch. A brief pause is possible; your iPhone needs working cellular service.</p> <p>It can also switch during sudden slowdowns while Wi-Fi remains connected. Failoverly doesn’t speed up your internet connection or guarantee lower ping. It can’t resolve problems with the online service itself or keep you online if both connections fail.</p></div></details>
+          <details><summary>How much cellular data will Failoverly use?</summary> <div class="answer"><p>A one-to-one 720p Zoom call can use roughly <strong>180 MB of video data in 10 minutes</strong>—about <strong>1 GB per hour</strong>. Estimate based on <a href="https://library.zoom.com/admin-corner/network-management/quality-of-service-and-network-best-practices-explainer/calculating-bandwidth-usage-for-zoom-meetings-and-phone">Zoom’s published peak rates</a>; actual total data usage varies.</p> <p>Failoverly automatically switches back when your main connection recovers to help save cellular data. Check your data plan’s hotspot allowance and any extra charges with your carrier.</p></div></details>
+          <details><summary>How is Failoverly different from channel bonding?</summary> <div class="answer"><p>Channel bonding apps such as Speedify use multiple internet connections at once to combine bandwidth.</p> <p>Failoverly focuses on keeping sessions connected. It moves traffic to the backup connection when your main connection drops or becomes unreliable, then switches back when it recovers. It does not add the two connections’ speeds together.</p></div></details>
+          <details><summary>How does Failoverly keep sessions connected, and is my connection secure?</summary> <div class="answer"><p>Your traffic passes through an encrypted VPN tunnel to servers we operate. Those servers maintain the connection to your online services while your Mac changes networks, so the session stays connected.</p> <p>The tunnel adds encryption between your Mac and our servers, including on public Wi-Fi. Connections from our servers to online services use those services’ own security, such as HTTPS.</p></div></details>
+          <details><summary>Can my Mac automatically switch from Wi-Fi to my iPhone hotspot?</summary> <div class="answer"><p>Yes. Failoverly automatically switches your Mac to your iPhone hotspot over USB when your main connection drops or becomes unreliable—even while Wi-Fi stays connected. Your session stays connected, so you don’t need to log in again just because the connection changed.</p> <p>Apple’s Auto-Join Hotspot can connect a Mac to a nearby hotspot when a Wi-Fi network isn’t available. Its Automatic setting is available in macOS Tahoe 26 and later.</p></div></details>
         </div>
       </section>
 
       <section class="section final" id="final-signup" aria-labelledby="final-title">
         <h2 id="final-title">Give your next online session a backup plan.</h2>
         <div>
-          <p class="offer">Join before launch for <strong>your first month free.</strong><br /><span class="price">US$6.99/month</span> after that.<span class="compatibility">Requires macOS + iPhone connected via USB.</span></p>
+          <p class="offer">Join before launch for <strong>your first month free.</strong> <br /> <span class="price">US$6.99/month</span> after that. <span class="compatibility">Requires a Mac and an iPhone connected over USB.</span></p>
           <form class="signup" novalidate aria-label="Join the Failoverly waitlist at the end of the page" data-preview-form>
             <label for="final-email">Email address</label>
             <div class="input-row"><input id="final-email" name="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required disabled placeholder="you@example.com" aria-describedby="final-privacy final-message" /><button class="button" type="submit" disabled>Join the waitlist</button></div>
-            <p class="signup-note" id="final-privacy">We’ll email you only when the app launches. No spam. We recommend Apple’s <a href="https://support.apple.com/guide/icloud/what-you-can-do-with-icloud-and-hide-my-email-mme38e1602db/icloud" target="_blank" rel="noopener noreferrer">Hide My Email (iCloud+)</a> to keep your real address private.</p>
+            <p class="signup-note" id="final-privacy">We’ll email you only when the app launches. No spam. We recommend Apple’s Hide My Email (iCloud+) to keep your real address private. <a href="#privacy-policy" data-privacy-link aria-haspopup="dialog">Privacy Policy</a>.</p>
             <div class="form-message" id="final-message" role="status" aria-live="polite"></div>
           </form>
         </div>
       </section>
     </main>
     <noscript><p class="wrap">The forms are disabled in this wireframe. Enable JavaScript to preview their states; no signup will be sent.</p></noscript>
-    <footer class="wrap"><span translate="no">Failoverly</span><span>Wireframe only. Forms don’t send or save data.</span></footer>
-    <dialog class="survey" id="profile-survey" aria-labelledby="survey-title">
-      <div class="survey-top"><p class="survey-preview">Prototype preview · no data sent or saved</p><button class="skip-survey" type="button" id="skip-survey">Skip</button></div>
-      <div id="survey-questions">
-        <h2 class="survey-title" id="survey-title" tabindex="-1">You’re on the list.</h2>
-        <form id="survey-form" novalidate>
-          <fieldset>
-            <legend>What did internet problems interrupt?</legend>
-            <p class="survey-hint" id="activity-hint">Select all that apply.</p>
-            <div class="survey-options" aria-describedby="activity-hint">
-              <label class="survey-choice"><input type="checkbox" name="activities" value="work-calls" disabled />Work calls</label>
-              <label class="survey-choice"><input type="checkbox" name="activities" value="coaching-teaching" disabled />Coaching or teaching</label>
-              <label class="survey-choice"><input type="checkbox" name="activities" value="live-streaming" disabled />Hosting webinars or live streams</label>
-              <label class="survey-choice"><input type="checkbox" name="activities" value="gaming" disabled />Online games</label>
-              <label class="survey-choice"><input type="checkbox" name="activities" value="remote-development" disabled />SSH or remote development</label>
-              <label class="survey-choice"><input type="checkbox" name="activities" value="trading" disabled />Trading</label>
-              <label class="survey-choice"><input type="checkbox" name="activities" value="other" disabled />Other activities</label>
-              <label class="survey-choice"><input type="checkbox" name="activities" value="none" disabled />No internet-related interruptions</label>
-            </div>
-          </fieldset>
-          <fieldset>
-            <legend id="frequency-question">How often do you experience failures and interruptions?</legend>
-            <div class="frequency-options">
-              <label class="frequency-choice"><input type="radio" name="frequency" value="less-than-monthly" disabled />Less than once a month</label>
-              <label class="frequency-choice"><input type="radio" name="frequency" value="several-times-monthly" disabled />Several times a month</label>
-              <label class="frequency-choice"><input type="radio" name="frequency" value="daily" disabled />Every day</label>
-            </div>
-          </fieldset>
-          <div class="survey-actions"><button class="button" type="submit" disabled>Save answers</button></div>
-        </form>
-      </div>
-      <div id="survey-done" class="survey-done" hidden>
-        <h2 class="survey-title" id="survey-done-title" tabindex="-1">Thanks for sharing.</h2>
-        <p>Your answers will help us understand where unreliable internet gets in the way.</p>
-        <button class="button" type="button" id="close-survey">Back to the page</button>
-      </div>
-    </dialog>
+    <footer class="wrap"><span translate="no">Failoverly</span> <span>Wireframe only. Forms don’t send or save data.</span></footer>
+    <template id="survey-template">
+      <dialog class="survey" id="profile-survey" aria-labelledby="survey-title">
+        <div class="survey-top"><p class="survey-preview">Prototype preview · no data sent or saved</p> <button class="skip-survey" type="button" id="skip-survey">Skip</button></div>
+        <div id="survey-questions">
+          <h2 class="survey-title" id="survey-title" tabindex="-1">You’re on the list.</h2>
+          <form id="survey-form" novalidate>
+            <fieldset>
+              <legend>What do internet problems interrupt for you?</legend>
+              <p class="survey-hint" id="activity-hint">Select all that apply.</p>
+              <div class="survey-options" aria-describedby="activity-hint">
+                <label class="survey-choice"><input type="checkbox" name="activities" value="work-calls" disabled />Work calls</label>
+                <label class="survey-choice"><input type="checkbox" name="activities" value="coaching-teaching" disabled />Coaching or teaching</label>
+                <label class="survey-choice"><input type="checkbox" name="activities" value="live-streaming" disabled />Hosting webinars or live streams</label>
+                <label class="survey-choice"><input type="checkbox" name="activities" value="gaming" disabled />Online games</label>
+                <label class="survey-choice"><input type="checkbox" name="activities" value="remote-development" disabled />SSH or remote development</label>
+                <label class="survey-choice"><input type="checkbox" name="activities" value="trading" disabled />Trading</label>
+                <label class="survey-choice"><input type="checkbox" name="activities" value="other" disabled />Other activities</label>
+                <label class="survey-choice"><input type="checkbox" name="activities" value="none" disabled />No internet-related interruptions</label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend id="frequency-question">How often do you experience failures and interruptions?</legend>
+              <div class="frequency-options">
+                <label class="frequency-choice"><input type="radio" name="frequency" value="less-than-monthly" disabled />Less than once a month</label>
+                <label class="frequency-choice"><input type="radio" name="frequency" value="several-times-monthly" disabled />Several times a month</label>
+                <label class="frequency-choice"><input type="radio" name="frequency" value="several-times-weekly" disabled />Several times a week</label>
+                <label class="frequency-choice"><input type="radio" name="frequency" value="daily" disabled />Every day</label>
+              </div>
+            </fieldset>
+            <div class="survey-actions"><button class="button" type="submit" disabled>Save answers</button></div>
+          </form>
+        </div>
+        <div id="survey-done" class="survey-done" hidden>
+          <h2 class="survey-title" id="survey-done-title" tabindex="-1">Thanks for sharing.</h2>
+          <p>Your answers will help us understand where unreliable internet gets in the way.</p>
+          <button class="button" type="button" id="close-survey">Back to the page</button>
+        </div>
+      </dialog>
+    </template>
+    <template id="privacy-template">
+      <dialog class="privacy-placeholder" id="privacy-policy" aria-labelledby="privacy-title">
+        <h2 id="privacy-title" tabindex="-1">Privacy Policy</h2>
+        <p>This is a placeholder. The privacy policy will be available before launch.</p>
+        <button class="button" type="button" data-close-privacy>Back to the page</button>
+      </dialog>
+    </template>
     <script>
       const preview = document.querySelector('.preview');
-      const simulate = document.querySelector('#simulate');
-      simulate.addEventListener('click', () => {
-        const backup = preview.dataset.backup !== 'true';
-        preview.dataset.backup = String(backup);
-        simulate.setAttribute('aria-pressed', String(backup));
-        document.querySelector('#simulate-label').textContent = backup ? 'Restore primary internet connection' : 'Simulate primary internet provider outage';
-        document.querySelector('#wifi-state').textContent = backup ? 'Connection lost or too slow' : 'Active';
-        document.querySelector('#phone-state').textContent = backup ? 'Active' : 'Backup ready';
-        document.querySelector('#preview-caption').textContent = backup
-          ? 'Our servers keep the same session connected.'
-          : 'Your phone is ready if Wi-Fi lets you down.';
-      });
-      const survey = document.querySelector('#profile-survey');
-      const surveyForm = document.querySelector('#survey-form');
-      const activityInputs = [...surveyForm.querySelectorAll('[name="activities"]')];
-      let activeSignup = null;
+      const previewControls = preview.querySelector('.preview-controls');
+      const previewRefresh = previewControls.querySelector('.preview-refresh');
+      let previewTimer = null;
 
-      function openSurvey(form) {
-        activeSignup = form;
-        surveyForm.reset();
-        document.querySelector('#survey-questions').hidden = false;
-        document.querySelector('#survey-done').hidden = true;
-        survey.setAttribute('aria-labelledby', 'survey-title');
-        survey.showModal();
-        document.querySelector('#survey-title').focus();
+      function showConnection(backup) {
+        preview.dataset.backup = String(backup);
+        const nextStateLabel = backup ? 'Show primary internet connection' : 'Show iPhone hotspot';
+        previewRefresh.setAttribute('aria-label', nextStateLabel);
+        previewRefresh.setAttribute('title', nextStateLabel);
+        document.querySelector('#wifi-state').textContent = backup ? 'Outage or slowdown' : 'Active';
+        document.querySelector('#phone-state').textContent = backup ? 'Active' : 'Ready';
+        document.querySelector('#preview-caption').textContent = backup
+          ? 'Same session, now on your iPhone hotspot.'
+          : 'Your iPhone hotspot is ready.';
       }
 
-      activityInputs.forEach((input) => {
-        input.addEventListener('change', () => {
-          if (input.checked) {
-            activityInputs.forEach((other) => {
-              if (other !== input && (input.value === 'none' || other.value === 'none')) other.checked = false;
-            });
-          }
+      function stopPreviewRotation() {
+        window.clearInterval(previewTimer);
+        previewTimer = null;
+        document.querySelector('#preview-caption').setAttribute('aria-live', 'polite');
+      }
+
+      previewRefresh.addEventListener('click', () => {
+        stopPreviewRotation();
+        showConnection(preview.dataset.backup !== 'true');
+      });
+      previewRefresh.disabled = false;
+      previewControls.addEventListener('focusin', stopPreviewRotation);
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (!reducedMotion.matches) {
+        previewTimer = window.setInterval(() => {
+          if (!document.hidden) showConnection(preview.dataset.backup !== 'true');
+        }, 5000);
+      }
+      reducedMotion.addEventListener('change', (event) => {
+        if (event.matches) stopPreviewRotation();
+      });
+
+      function mountDialog(templateId, returnFocus) {
+        const fragment = document.querySelector(templateId).content.cloneNode(true);
+        const dialog = fragment.querySelector('dialog');
+        document.body.append(fragment);
+        dialog.addEventListener('close', () => {
+          dialog.remove();
+          returnFocus.focus();
+        }, { once: true });
+        return dialog;
+      }
+
+      function openSurvey(form) {
+        const survey = mountDialog('#survey-template', form.querySelector('button[type="submit"]'));
+        const surveyForm = survey.querySelector('#survey-form');
+        const activityInputs = [...surveyForm.querySelectorAll('[name="activities"]')];
+        activityInputs.forEach((input) => {
+          input.addEventListener('change', () => {
+            if (input.checked) {
+              activityInputs.forEach((other) => {
+                if (other !== input && (input.value === 'none' || other.value === 'none')) other.checked = false;
+              });
+            }
+          });
+        });
+        surveyForm.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const activities = activityInputs.filter((input) => input.checked).map((input) => input.value);
+          const frequency = surveyForm.querySelector('[name="frequency"]:checked')?.value;
+          if (!activities.length && !frequency) { survey.close(); return; }
+          survey.querySelector('#survey-questions').hidden = true;
+          survey.querySelector('#survey-done').hidden = false;
+          survey.setAttribute('aria-labelledby', 'survey-done-title');
+          survey.querySelector('#survey-done-title').focus();
+        });
+        survey.querySelector('#skip-survey').addEventListener('click', () => survey.close());
+        survey.querySelector('#close-survey').addEventListener('click', () => survey.close());
+        // Mount only on signup; this prototype never sends or persists any responses.
+        surveyForm.querySelectorAll('input, button[type="submit"]').forEach((control) => { control.disabled = false; });
+        survey.showModal();
+        survey.querySelector('#survey-title').focus();
+      }
+
+      document.querySelectorAll('[data-privacy-link]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+          const privacy = mountDialog('#privacy-template', link);
+          privacy.querySelector('[data-close-privacy]').addEventListener('click', () => privacy.close());
+          privacy.showModal();
+          privacy.querySelector('#privacy-title').focus();
         });
       });
-      surveyForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const activities = activityInputs.filter((input) => input.checked).map((input) => input.value);
-        const frequency = surveyForm.querySelector('[name="frequency"]:checked')?.value;
-        if (!activities.length && !frequency) { survey.close(); return; }
-        document.querySelector('#survey-questions').hidden = true;
-        document.querySelector('#survey-done').hidden = false;
-        survey.setAttribute('aria-labelledby', 'survey-done-title');
-        document.querySelector('#survey-done-title').focus();
-      });
-      document.querySelector('#skip-survey').addEventListener('click', () => survey.close());
-      document.querySelector('#close-survey').addEventListener('click', () => survey.close());
-      survey.addEventListener('close', () => {
-        activeSignup?.querySelector('button[type="submit"]').focus();
-      });
-      // This prototype never sends or persists emails or survey responses.
-      surveyForm.querySelectorAll('input, button[type="submit"]').forEach((control) => { control.disabled = false; });
 
       document.querySelectorAll('[data-preview-form]').forEach((form) => {
         const input = form.querySelector('input');
