@@ -3,345 +3,605 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Failoverly – Perfect Streaming on Any Connection</title>
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Automatic Internet Failover for Mac | Failoverly</title>
     <meta
       name="description"
-      content="Failoverly (Connect Buddy) is a macOS app that auto-switches between your primary and backup internet connections, keeping streams, meetings and games running without reconnects."
+      content="Failoverly is an automatic internet failover app for macOS. Use your iPhone as backup internet to keep sessions connected during outages and sudden slowdowns."
     />
-    <meta property="og:title" content="Failoverly – Perfect Streaming on Any Connection" />
+    <link rel="canonical" href="https://failoverly.app/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Failoverly" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Automatic Internet Failover for Mac | Failoverly" />
     <meta
       property="og:description"
-      content="macOS app that auto-switches between your primary and backup internet connections — no reconnects, no rebuffering, no content loss."
+      content="Failoverly is an automatic internet failover app for macOS. Use your iPhone as backup internet to keep sessions connected during outages and sudden slowdowns."
     />
-    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://failoverly.app/" />
+    <meta property="og:image" content="https://failoverly.app/images/social-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Failoverly. Your internet slows or drops. Your session stays." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Automatic Internet Failover for Mac | Failoverly" />
+    <meta
+      name="twitter:description"
+      content="Failoverly is an automatic internet failover app for macOS. Use your iPhone as backup internet to keep sessions connected during outages and sudden slowdowns."
+    />
+    <meta name="twitter:image" content="https://failoverly.app/images/social-card.png" />
+    <meta name="twitter:image:alt" content="Failoverly. Your internet slows or drops. Your session stays." />
     <link rel="icon" href="images/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32" />
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" sizes="180x180" />
+    <link rel="preload" href="fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="css/main.css" />
     <script type="module" src="scripts/main.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://failoverly.app/#website",
+            "name": "Failoverly",
+            "url": "https://failoverly.app/",
+            "inLanguage": "en"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://failoverly.app/#app",
+            "name": "Failoverly",
+            "url": "https://failoverly.app/",
+            "operatingSystem": "macOS",
+            "applicationCategory": "UtilitiesApplication",
+            "description": "Automatic internet failover for macOS. Uses an iPhone connected over USB with Personal Hotspot as backup internet to preserve online sessions during outages and sudden slowdowns. Currently in prelaunch.",
+            "featureList": [
+              "Automatic internet failover and recovery",
+              "iPhone Personal Hotspot over USB as backup internet",
+              "Encrypted VPN tunnel through Failoverly servers",
+              "Session continuity when the primary connection becomes unreliable"
+            ],
+            "softwareRequirements": "A Mac, an iPhone connected over USB with Personal Hotspot enabled, cellular coverage, and a data plan that supports Personal Hotspot."
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
-    <div class="trigger_wrapper">
-      <div class="trigger"></div>
-    </div>
-    <header class="header">
-      <div class="wrapper">
-        <div class="left_part">
-          <img src="images/logo.svg" width="286" height="47" alt="" />
-          <h4>| Perfect Streaming on Any Connection</h4>
-        </div>
-        <div class="right_part">
-          <button class="header_btn">
-            <img src="images/app_store_badge.svg" width="120" height="40" alt="Download on the App Store" />
-          </button>
-        </div>
-        <h4 class="mobile_text">Perfect Streaming on Any Connection</h4>
-      </div>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a class="brand" href="#main" aria-label="Failoverly — Internet failover for Mac — home">
+        <svg
+          class="brand-logo"
+          role="img"
+          aria-label="Failoverly — Internet failover for Mac"
+          width="183.45"
+          height="62"
+          viewBox="100 4.84033 183.45 62"
+          fill="#000000"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <clipPath id="brand-o-outline">
+              <path
+                d="M175.827 38.2938C173.522 38.2938 171.525 37.7867 169.835 36.7725C168.146 35.7583 166.835 34.3394 165.903 32.5159C164.981 30.6924 164.52 28.5615 164.52 26.1233C164.52 23.6851 164.981 21.5492 165.903 19.7154C166.835 17.8816 168.146 16.4576 169.835 15.4434C171.525 14.4292 173.522 13.9221 175.827 13.9221C178.131 13.9221 180.128 14.4292 181.818 15.4434C183.508 16.4576 184.814 17.8816 185.735 19.7154C186.667 21.5492 187.133 23.6851 187.133 26.1233C187.133 28.5615 186.667 30.6924 185.735 32.5159C184.814 34.3394 183.508 35.7583 181.818 36.7725C180.128 37.7867 178.131 38.2938 175.827 38.2938Z"
+              />
+            </clipPath>
+          </defs>
+          <!-- Pair-specific optical kerning; move the o and its slash together. -->
+          <g data-letter="F" transform="translate(0 0)">
+            <path d="M100 38.2395V6.40576H120.237V11.2399H105.723V19.8823H118.849V24.7164H105.723V38.2395H100Z" />
+          </g>
+          <g data-letter="a" transform="translate(0.55 0)">
+            <path
+              d="M127.519 38.3092C126.024 38.3092 124.677 38.0428 123.479 37.5101C122.291 36.9672 121.349 36.1681 120.652 35.1129C119.966 34.0577 119.623 32.7567 119.623 31.2097C119.623 29.878 119.869 28.7767 120.36 27.9059C120.852 27.0351 121.523 26.3385 122.373 25.816C123.223 25.2935 124.181 24.8991 125.246 24.6328C126.321 24.3562 127.432 24.1564 128.579 24.0334C129.962 23.89 131.083 23.762 131.944 23.6493C132.804 23.5263 133.429 23.3419 133.818 23.0961C134.217 22.84 134.417 22.4455 134.417 21.9128V21.8206C134.417 20.663 134.074 19.7666 133.388 19.1314C132.702 18.4963 131.713 18.1787 130.423 18.1787C129.061 18.1787 127.98 18.4758 127.181 19.07C126.393 19.6642 125.86 20.3659 125.584 21.1752L120.391 20.4376C120.801 19.0034 121.477 17.8048 122.419 16.8418C123.361 15.8686 124.513 15.1412 125.876 14.6597C127.238 14.168 128.743 13.9221 130.392 13.9221C131.529 13.9221 132.661 14.0553 133.787 14.3216C134.914 14.588 135.943 15.0285 136.875 15.6432C137.807 16.2476 138.555 17.0723 139.118 18.1172C139.691 19.1622 139.978 20.4684 139.978 22.0358V37.8328H134.632V34.5904H134.448C134.11 35.2461 133.633 35.8608 133.019 36.4344C132.415 36.9979 131.652 37.4538 130.73 37.8021C129.819 38.1402 128.748 38.3092 127.519 38.3092ZM128.963 34.2216C130.08 34.2216 131.047 34.0014 131.867 33.5609C132.686 33.1101 133.316 32.5159 133.756 31.7783C134.207 31.0407 134.432 30.2365 134.432 29.3657V26.5843C134.258 26.7278 133.961 26.8609 133.541 26.9839C133.132 27.1066 132.671 27.2144 132.159 27.3066C131.647 27.3988 131.14 27.4807 130.638 27.5524C130.136 27.6242 129.701 27.6856 129.332 27.7368C128.502 27.8495 127.76 28.0339 127.104 28.2901C126.449 28.5462 125.932 28.9047 125.553 29.3657C125.174 29.8165 124.984 30.4004 124.984 31.1175C124.984 32.142 125.358 32.9155 126.106 33.4379C126.854 33.9604 127.806 34.2216 128.963 34.2216Z"
+            />
+          </g>
+          <g data-letter="i" transform="translate(0.55 0)">
+            <path
+              d="M144.705 37.8328V14.2294H150.266V37.8328H144.705ZM147.501 10.8795C146.62 10.8795 145.862 10.5875 145.227 10.0036C144.592 9.40939 144.275 8.69739 144.275 7.86759C144.275 7.02754 144.592 6.31554 145.227 5.7316C145.862 5.13742 146.62 4.84033 147.501 4.84033C148.392 4.84033 149.15 5.13742 149.774 5.7316C150.409 6.31554 150.727 7.02754 150.727 7.86759C150.727 8.69739 150.409 9.40939 149.774 10.0036C149.15 10.5875 148.392 10.8795 147.501 10.8795Z"
+            />
+          </g>
+          <g data-letter="l" transform="translate(0.3 0)">
+            <path d="M160.681 6.36164V37.8328H155.119V6.36164H160.681Z" />
+          </g>
+          <g data-letter="o" transform="translate(-0.05 0)">
+            <path
+              d="M175.827 38.2938C173.522 38.2938 171.525 37.7867 169.835 36.7725C168.146 35.7583 166.835 34.3394 165.903 32.5159C164.981 30.6924 164.52 28.5615 164.52 26.1233C164.52 23.6851 164.981 21.5492 165.903 19.7154C166.835 17.8816 168.146 16.4576 169.835 15.4434C171.525 14.4292 173.522 13.9221 175.827 13.9221C178.131 13.9221 180.128 14.4292 181.818 15.4434C183.508 16.4576 184.814 17.8816 185.735 19.7154C186.667 21.5492 187.133 23.6851 187.133 26.1233C187.133 28.5615 186.667 30.6924 185.735 32.5159C184.814 34.3394 183.508 35.7583 181.818 36.7725C180.128 37.7867 178.131 38.2938 175.827 38.2938ZM175.857 33.8375C177.107 33.8375 178.152 33.4943 178.991 32.8079C179.831 32.1113 180.456 31.179 180.866 30.0111C181.285 28.8433 181.495 27.5422 181.495 26.108C181.495 24.6635 181.285 23.3573 180.866 22.1894C180.456 21.0113 179.831 20.0739 178.991 19.3773C178.152 18.6807 177.107 18.3324 175.857 18.3324C174.577 18.3324 173.512 18.6807 172.662 19.3773C171.822 20.0739 171.192 21.0113 170.773 22.1894C170.363 23.3573 170.158 24.6635 170.158 26.108C170.158 27.5422 170.363 28.8433 170.773 30.0111C171.192 31.179 171.822 32.1113 172.662 32.8079C173.512 33.4943 174.577 33.8375 175.857 33.8375Z"
+            />
+            <path
+              d="M170.1 33.7L181.6 18.4"
+              fill="none"
+              stroke="#000000"
+              stroke-width="5.56"
+              stroke-linecap="butt"
+              clip-path="url(#brand-o-outline)"
+            />
+          </g>
+          <g data-letter="v" transform="translate(-0.55 0)">
+            <path
+              d="M211.263 14.2294L202.859 37.8328H196.715L188.311 14.2294H194.241L199.664 31.7629H199.91L205.348 14.2294H211.263Z"
+            />
+          </g>
+          <g data-letter="e" transform="translate(-1.05 0)">
+            <path
+              d="M223.889 38.2938C221.524 38.2938 219.48 37.8021 217.76 36.8186C216.05 35.8249 214.733 34.4214 213.812 32.6081C212.89 30.7846 212.429 28.6384 212.429 26.1694C212.429 23.7415 212.89 21.6106 213.812 19.7768C214.744 17.9328 216.044 16.4986 217.714 15.4741C219.383 14.4395 221.344 13.9221 223.598 13.9221C225.052 13.9221 226.424 14.1577 227.715 14.629C229.015 15.09 230.162 15.8071 231.156 16.7803C232.159 17.7536 232.948 18.9931 233.522 20.4991C234.095 21.9948 234.382 23.7773 234.382 25.8467V27.5524H215.041V23.8029H229.051C229.041 22.7375 228.81 21.7899 228.36 20.9601C227.909 20.12 227.279 19.4593 226.47 18.9778C225.671 18.4963 224.739 18.2555 223.674 18.2555C222.538 18.2555 221.539 18.5321 220.679 19.0853C219.818 19.6283 219.148 20.3454 218.666 21.2367C218.195 22.1177 217.954 23.0858 217.944 24.141V27.4141C217.944 28.7869 218.195 29.965 218.697 30.9485C219.199 31.9217 219.9 32.6696 220.802 33.1921C221.703 33.7043 222.758 33.9604 223.966 33.9604C224.775 33.9604 225.508 33.8477 226.163 33.6223C226.819 33.3867 227.387 33.0435 227.868 32.5928C228.35 32.142 228.713 31.5837 228.959 30.9178L234.151 31.5017C233.824 32.8745 233.199 34.0731 232.277 35.0975C231.366 36.1117 230.198 36.9006 228.775 37.464C227.351 38.0172 225.723 38.2938 223.889 38.2938Z"
+            />
+          </g>
+          <g data-letter="r" transform="translate(-1.3 0)">
+            <path
+              d="M238.221 37.8328V14.2294H243.614V18.1633H243.859C244.289 16.8008 245.027 15.7508 246.072 15.0131C247.126 14.2653 248.33 13.8914 249.682 13.8914C249.989 13.8914 250.332 13.9067 250.711 13.9375C251.1 13.958 251.423 13.9938 251.679 14.045V19.1622C251.443 19.0802 251.069 19.0085 250.557 18.947C250.055 18.875 249.569 18.8395 249.098 18.8395C248.084 18.8395 247.173 19.0597 246.363 19.5002C245.565 19.9305 244.935 20.5298 244.474 21.2982C244.013 22.0665 243.783 22.9527 243.783 23.9566V37.8328H238.221Z"
+            />
+          </g>
+          <g data-letter="l" transform="translate(-2 0)">
+            <path d="M260.069 6.36164V37.8328H254.508V6.36164H260.069Z" />
+          </g>
+          <g data-letter="y" transform="translate(-2.55 0)">
+            <path
+              d="M268.379 46.6841C267.621 46.6841 266.92 46.6226 266.275 46.4997C265.64 46.387 265.133 46.2538 264.754 46.1002L266.044 41.7667C266.853 42.0023 267.575 42.115 268.21 42.1048C268.845 42.0946 269.403 41.8948 269.885 41.5055C270.376 41.1264 270.791 40.4913 271.129 39.6L271.605 38.3246L263.049 14.2294H268.948L274.386 32.0549H274.632L280.085 14.2294H286L276.552 40.6911C276.112 41.9409 275.528 43.0114 274.801 43.9027C274.074 44.8042 273.183 45.4906 272.128 45.9619C271.083 46.4433 269.834 46.6841 268.379 46.6841Z"
+            />
+          </g>
+          <!-- Align the visible letter edges, compensating for Inter's sidebearings. -->
+          <text class="brand-tagline" x="98.681640625" y="62" textLength="185.50078125" lengthAdjust="spacing">
+            Internet failover for Mac
+          </text>
+        </svg>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#how-it-works">How it works</a>
+        <a href="#faq">FAQ</a>
+        <a class="button nav-cta" href="#final-signup">Join the waitlist</a>
+      </nav>
     </header>
-    <section class="supheader">
-      <div class="wrapper">
-        <div class="superheader_wrapper">
-          <div class="supheader_item">
-            <div class="supheader_item_image">
-              <img src="images/header_icon_1.svg" width="70" height="71" alt="" loading="lazy" decoding="async" fetchpriority="low" />
-            </div>
-            <p>You need<br />streaming services</p>
-          </div>
-          <div class="supheader_item">
-            <div class="supheader_item_image">
-              <img src="images/header_icon_2.svg" width="70" height="72" alt="" loading="lazy" decoding="async" fetchpriority="low" />
-            </div>
-            <p>
-              Uninterrupted<br />connection required
-            </p>
-          </div>
-          <div class="supheader_item">
-            <div class="supheader_item_image">
-              <img src="images/header_icon_3.svg" width="70" height="71" alt="" loading="lazy" decoding="async" fetchpriority="low" />
-            </div>
-            <p>
-              Even with primary Buggy <br />
-              and Slow Connection.
-            </p>
-          </div>
-          <div class="supheader_item">
-            <div class="supheader_item_image">
-              <img src="images/header_icon_4.svg" width="70" height="71" alt="" loading="lazy" decoding="async" fetchpriority="low" />
-            </div>
-            <p>
-              With controlled usage of <br />
-              Backup Stable but Pricey Connection.
-            </p>
-          </div>
-          <div class="supheader_item">
-            <div class="supheader_item_image">
-              <img src="images/header_icon_5.svg" width="70" height="71" alt="" loading="lazy" decoding="async" fetchpriority="low" />
-            </div>
-            <p>
-              Provided by Connect Buddy <br />
-              MacOS Application that Manages Auto-Switching.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <div class="main_wrapper">
-      <section class="first_screen">
-        <div class="first_screen_image">
-          <img src="images/big_logo.svg" width="788" height="317" alt="" fetchpriority="high" />
-          <img src="images/big_logo.svg" width="788" height="317" alt="" class="flying_clone" aria-hidden="true" />
-        </div>
-        <div class="first_screen_text">
-          Stream online meetings, content, games without glitches<br />and reconnects even on unstable connection.
+    <main id="main" class="wrap">
+      <section class="hero" aria-labelledby="hero-title">
+        <h1 id="hero-title"><span>Your internet slows or drops.</span> <span>Your session stays.</span></h1>
+        <div class="hero-body">
+          <div class="hero-copy">
+            <p class="hero-description">
+              Failoverly keeps calls, streams, and online sessions connected through outages and sudden slowdowns—even
+              when Wi-Fi says &quot;connected&quot;. It automatically switches to your iPhone hotspot over USB and back.
+            </p>
+            <p class="offer">
+              Join before launch for <strong>your first month free.</strong> <br />
+              <span class="price">US$6.99/month</span> after that.
+              <span class="compatibility">Requires a Mac and an iPhone connected over USB.</span>
+            </p>
+            <form class="signup" novalidate aria-label="Join the Failoverly waitlist" data-signup-form>
+              <label for="hero-email">Email address</label>
+              <div class="input-row">
+                <input
+                  id="hero-email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  inputmode="email"
+                  spellcheck="false"
+                  required
+                  disabled
+                  placeholder="you@example.com"
+                  aria-describedby="hero-privacy hero-message"
+                />
+                <button class="button" type="submit" disabled>Join the waitlist</button>
+              </div>
+              <p class="signup-note" id="hero-privacy">
+                We’ll email you only when the app launches. No spam. We recommend Apple’s Hide My Email (iCloud+) to
+                keep your real address private.
+                <a href="#privacy-policy" data-privacy-link aria-haspopup="dialog">Privacy Policy</a>.
+              </p>
+              <p class="signup-preview-note">Form preview only. No data is sent or saved.</p>
+              <div class="form-message" id="hero-message" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+
+          <figure
+            class="preview"
+            data-backup="false"
+            aria-label="Illustration of a session staying connected while traffic switches to an iPhone hotspot over USB"
+          >
+            <div class="preview-top"><strong>One session. Two ways online.</strong></div>
+            <div class="connection-diagram">
+              <div class="source source-wifi">
+                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M2 8a17 17 0 0 1 21 0M5.5 12a11 11 0 0 1 14 0M9 16a5.5 5.5 0 0 1 7 0"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                  />
+                  <circle cx="12.5" cy="20" r="1.4" fill="currentColor" />
+                </svg>
+                <div class="source-labels">
+                  <span class="source-name">Wi-Fi</span> <span class="source-state" id="wifi-state">Active</span>
+                </div>
+              </div>
+              <div class="source source-phone">
+                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" aria-hidden="true">
+                  <rect x="6.5" y="1" width="12" height="22" rx="2.5" stroke="currentColor" stroke-width="1.7" />
+                  <path d="M11 19.5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                <div class="source-labels">
+                  <span class="source-name">iPhone hotspot (USB)</span>
+                  <span class="source-state" id="phone-state">Ready</span>
+                </div>
+              </div>
+              <svg class="path" viewBox="0 0 360 26" preserveAspectRatio="none" aria-hidden="true">
+                <path class="wifi-path" d="M85 0 V8 Q85 15 98 15 H168 Q180 15 180 26" />
+                <path class="phone-path" d="M275 0 V8 Q275 15 262 15 H192 Q180 15 180 26" />
+              </svg>
+              <div class="vpn-layer">
+                <strong>Failoverly VPN servers</strong> <span>Encrypted tunnel from your Mac</span>
+              </div>
+              <div class="stable-path" aria-hidden="true"></div>
+              <div class="session">
+                <div class="session-icon" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                <div><strong>Same online session</strong> <span>Still connected</span></div>
+              </div>
+            </div>
+            <figcaption>
+              <p id="preview-caption" aria-live="off">Your iPhone hotspot is ready.</p>
+              <div class="preview-controls" role="group" aria-label="Diagram controls">
+                <button
+                  class="preview-refresh"
+                  type="button"
+                  aria-label="Show iPhone hotspot"
+                  title="Show iPhone hotspot"
+                  disabled
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                      d="M20 7a8.5 8.5 0 0 0-14-2L3 8m0 0V3m0 5h5M4 17a8.5 8.5 0 0 0 14 2l3-3m0 0v5m0-5h-5"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </figcaption>
+          </figure>
         </div>
       </section>
-      <main class="container">
-        <section class="animation_item _with_image">
-          <div class="content_container">
-            <div class="image_part">
-              <img src="images/image_1.webp" width="960" height="883" alt="" fetchpriority="high" decoding="async" />
-              <img src="images/image_1.webp" width="960" height="883" alt="" class="flying_clone" aria-hidden="true" loading="lazy" decoding="async" />
-            </div>
-            <div class="text_part">
-              <h2>You need streaming services</h2>
-              <ul>
-                <li>
-                  <img src="images/icon_1.webp" width="55" height="50" alt="" loading="lazy" decoding="async" />
-                  <span>for work </span>
-                </li>
-                <li>
-                  <img src="images/icon_2.webp" width="55" height="50" alt="" loading="lazy" decoding="async" />
-                  <span>for content</span>
-                </li>
-                <li>
-                  <img src="images/icon_3.webp" width="55" height="50" alt="" loading="lazy" decoding="async" />
-                  <span>for leasure</span>
-                </li>
-              </ul>
-              <div class="running_logos">
-                <div class="running_logos_track">
-                  <img src="images/01.webp" width="205" height="105" alt="" loading="lazy" decoding="async" />
-                  <img src="images/02.webp" width="188" height="105" alt="" loading="lazy" decoding="async" />
-                  <img src="images/03.webp" width="299" height="105" alt="" loading="lazy" decoding="async" />
-                  <img src="images/04.webp" width="201" height="105" alt="" loading="lazy" decoding="async" />
-                  <img src="images/05.webp" width="382" height="105" alt="" loading="lazy" decoding="async" />
-                  <img src="images/06.webp" width="271" height="105" alt="" loading="lazy" decoding="async" />
-                  <img src="images/07.webp" width="338" height="143" alt="" loading="lazy" decoding="async" />
-                </div>
-                <div class="running_logos_track" aria-hidden="true">
-                  <img src="images/01.webp" width="205" height="105" alt="" loading="lazy" decoding="async" />
-                  <img src="images/02.webp" width="188" height="105" alt="" loading="lazy" decoding="async" />
-                  <img src="images/03.webp" width="299" height="105" alt="" loading="lazy" decoding="async" />
-                  <img src="images/04.webp" width="201" height="105" alt="" loading="lazy" decoding="async" />
-                  <img src="images/05.webp" width="382" height="105" alt="" loading="lazy" decoding="async" />
-                  <img src="images/06.webp" width="271" height="105" alt="" loading="lazy" decoding="async" />
-                  <img src="images/07.webp" width="338" height="143" alt="" loading="lazy" decoding="async" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section class="animation_item">
-          <div class="content_container">
-            <div class="image_part">
-              <img src="images/illustration_1.webp" width="556" height="554" alt="" loading="lazy" decoding="async" />
-              <img src="images/illustration_1.webp" width="556" height="554" alt="" class="flying_clone" aria-hidden="true" loading="lazy" decoding="async" />
-            </div>
-            <div class="text_part">
-              <h2>Uninterrupted connection required</h2>
-              <p>
-                So you need seamless connection for steaming content. Reconnects, buffering, <br />
-                pauses kill streaming experience.
-              </p>
-            </div>
-          </div>
-        </section>
-        <section class="animation_item">
-          <div class="content_container">
-            <div class="image_part">
-              <img src="images/illustration_2.webp" width="556" height="554" alt="" loading="lazy" decoding="async" />
-              <img src="images/illustration_2.webp" width="556" height="554" alt="" class="flying_clone" aria-hidden="true" loading="lazy" decoding="async" />
-            </div>
-            <div class="text_part">
-              <h2>Primary connection could fail</h2>
-              <p>
-                But your current primary connection could be not so smooth.
-                <br />
-                You could travel or stay places with limited connection.
-              </p>
-            </div>
-          </div>
-        </section>
-        <section class="animation_item _with_image">
-          <div class="content_container">
-            <div class="image_part">
-              <img src="images/illustration.webp" width="960" height="743" alt="" loading="lazy" decoding="async" />
-              <img src="images/illustration.webp" width="960" height="743" alt="" class="flying_clone" aria-hidden="true" loading="lazy" decoding="async" />
-            </div>
-            <div class="text_part">
-              <h2>backup connection</h2>
-              <p>
-                And for sure you can use your mobile as a backup <br />connection.
-                <br />
-                But it could be too expensive for streaming...
-              </p>
-            </div>
-          </div>
-        </section>
-        <section class="animation_item">
-          <div class="content_container">
-            <div class="image_part">
-              <img src="images/illustration_3.webp" width="556" height="554" alt="" loading="lazy" decoding="async" />
-              <img src="images/illustration_3.webp" width="556" height="554" alt="" class="flying_clone" aria-hidden="true" loading="lazy" decoding="async" />
-            </div>
-            <div class="text_part">
-              <h2>Automatic switching between primary & backup connections</h2>
-              <p>
-                Connect Buddy MacOS App auto-switches primary and backup connections depending on its quality making
-                service connection always stable. It minimizes usage of backup one saving your money.
-                <br /><br />
-                And the most cool thing is hidden seamless switching - no service relogins, reconnects, rebufferings,
-                content loss. Your streaming service even doesn't know that you switches internet connection.
-              </p>
-            </div>
-          </div>
-        </section>
-        <section class="animation_item _faq_block">
-          <div class="content_container">
-            <div class="image_part">
-              <img src="images/illustration_4.webp" width="556" height="554" alt="" loading="lazy" decoding="async" />
-              <img src="images/illustration_4.webp" width="556" height="554" alt="" class="flying_clone" aria-hidden="true" loading="lazy" decoding="async" />
-            </div>
-            <div class="text_part">
-              <h2>FAQ</h2>
-              <div class="faq">
-                <div class="faq_item">
-                  <button
-                    class="faq_question"
-                    type="button"
-                    aria-expanded="false"
-                    aria-controls="faq-answer-1"
-                    id="faq-question-1"
-                  >
-                    <span class="faq_question_text">What is Connect Buddy?</span>
-                    <span class="faq_icon" aria-hidden="true">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M12.0003 13.172L16.9503 8.222L18.3643 9.636L12.0003 16L5.63626 9.636L7.05026 8.222L12.0003 13.172Z"
-                          fill="#1D1D1F"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                  <div class="faq_answer" id="faq-answer-1" role="region" aria-labelledby="faq-question-1">
-                    <div class="faq_answer_inner">
-                      <p>
-                        Connect Buddy is a MacOS app that automatically switches between your primary and backup
-                        internet connections, keeping your streaming sessions uninterrupted.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="faq_item">
-                  <button
-                    class="faq_question"
-                    type="button"
-                    aria-expanded="false"
-                    aria-controls="faq-answer-2"
-                    id="faq-question-2"
-                  >
-                    <span class="faq_question_text">How does automatic switching work?</span>
-                    <span class="faq_icon" aria-hidden="true">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M12.0003 13.172L16.9503 8.222L18.3643 9.636L12.0003 16L5.63626 9.636L7.05026 8.222L12.0003 13.172Z"
-                          fill="#1D1D1F"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                  <div class="faq_answer" id="faq-answer-2" role="region" aria-labelledby="faq-question-2">
-                    <div class="faq_answer_inner">
-                      <p>
-                        Connect Buddy constantly monitors the quality of your primary and backup connections and
-                        switches between them the moment it detects a drop, without any manual input.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="faq_item">
-                  <button
-                    class="faq_question"
-                    type="button"
-                    aria-expanded="false"
-                    aria-controls="faq-answer-3"
-                    id="faq-question-3"
-                  >
-                    <span class="faq_question_text">Will switching interrupt my stream?</span>
-                    <span class="faq_icon" aria-hidden="true">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M12.0003 13.172L16.9503 8.222L18.3643 9.636L12.0003 16L5.63626 9.636L7.05026 8.222L12.0003 13.172Z"
-                          fill="#1D1D1F"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                  <div class="faq_answer" id="faq-answer-3" role="region" aria-labelledby="faq-question-3">
-                    <div class="faq_answer_inner">
-                      <p>
-                        No. Switching happens seamlessly in the background, so your streaming service stays connected
-                        with no relogins, reconnects, or content loss.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="faq_item">
-                  <button
-                    class="faq_question"
-                    type="button"
-                    aria-expanded="false"
-                    aria-controls="faq-answer-4"
-                    id="faq-question-4"
-                  >
-                    <span class="faq_question_text">Which backup connections are supported?</span>
-                    <span class="faq_icon" aria-hidden="true">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M12.0003 13.172L16.9503 8.222L18.3643 9.636L12.0003 16L5.63626 9.636L7.05026 8.222L12.0003 13.172Z"
-                          fill="#1D1D1F"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                  <div class="faq_answer" id="faq-answer-4" role="region" aria-labelledby="faq-question-4">
-                    <div class="faq_answer_inner">
-                      <p>
-                        Connect Buddy works with mobile hotspots, secondary Wi-Fi networks, and wired connections, so
-                        you can pick whatever backup fits your setup.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section class="animation_item">
-          <div class="center_part">
-            <h2>Launching soon</h2>
-            <p>
-              Get stable seamless Streaming without glitches and session reconnects. With any provider. At home or a
-              trip. <br />
-              Just for <span class="price_highlight"> $6.99</span> per month.
+
+      <section class="section" aria-labelledby="use-cases-title">
+        <h2 id="use-cases-title">Backup internet for Mac: calls, streams, and more</h2>
+        <div class="use-cases">
+          <article class="use-case">
+            <h3><span class="case-tag">Work calls &amp; online coaching</span></h3>
+            <p class="case-offer">The call freezes. Your reputation shouldn’t.</p>
+            <p class="case-description">
+              Dropped calls on Zoom, Microsoft Teams, or Google Meet leave everyone waiting. Keep colleagues engaged and
+              give paying clients the time they booked.
             </p>
-            <button class="download_button" aria-label="Download">
-              <img src="images/app_store_badge.svg" width="120" height="40" alt="Download on the App Store" loading="lazy" decoding="async" />
-            </button>
-          </div>
-        </section>
-      </main>
-    </div>
+          </article>
+          <article class="use-case">
+            <h3><span class="case-tag">Webinars &amp; live streaming</span></h3>
+            <p class="case-offer">Hold their attention to the last frame.</p>
+            <p class="case-description">
+              An unstable connection can cause bitrate drops and dropped frames in your OBS stream on Twitch. Keep your
+              audience with you through your sign-off.
+            </p>
+          </article>
+          <article class="use-case">
+            <h3><span class="case-tag">Online gaming</span></h3>
+            <p class="case-offer">Don’t leave your team a player down.</p>
+            <p class="case-description">
+              Lag spikes and disconnects hit hardest mid-match. Stay in the game, make the next play, and be there when
+              your teammates need you.
+            </p>
+          </article>
+          <article class="use-case">
+            <h3><span class="case-tag">Developers &amp; DevOps</span></h3>
+            <p class="case-offer">Your SSH session outlives the outage.</p>
+            <p class="case-description">
+              A dropped connection and a “broken pipe” error mid-deploy can mean costly recovery. Keep configuring,
+              deploying, and troubleshooting without reconnecting.
+            </p>
+          </article>
+          <article class="use-case">
+            <h3><span class="case-tag">Traders</span></h3>
+            <p class="case-offer">The price moves. You’re ready.</p>
+            <p class="case-description">
+              Connection delays shouldn’t decide your next move. Stay connected to your trading platform to react when
+              prices change, adjust positions, and manage risk.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="how-it-works" aria-labelledby="how-title">
+        <h2 id="how-title">How automatic internet failover works on your Mac</h2>
+        <ol class="steps">
+          <li>
+            <h3>Set up your iPhone hotspot.</h3>
+            <p>
+              Connect via USB and enable Personal Hotspot. Keep using your usual internet connection until backup is
+              needed.
+            </p>
+          </li>
+          <li>
+            <h3>Let the Failoverly app watch your connection.</h3>
+            <p>
+              The app runs in your Mac’s menu bar and monitors latency and packet loss. It can switch to your iPhone
+              hotspot during outages or sudden slowdowns, even while Wi-Fi stays connected.
+            </p>
+          </li>
+          <li>
+            <h3>Keep your session going.</h3>
+            <p>
+              An encrypted VPN tunnel through Failoverly’s servers keeps your online sessions connected as traffic moves
+              to your iPhone hotspot.
+            </p>
+          </li>
+          <li>
+            <h3>Switch back. Save cellular data.</h3>
+            <p>
+              When your main connection recovers, Failoverly automatically switches back to save cellular data and help
+              avoid unnecessary mobile data charges.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="context" aria-labelledby="when-title">
+        <h2 id="when-title">When you need a backup internet connection</h2>
+        <div class="context-statement">
+          <p class="qualification">If your internet is rock-solid, you don’t need Failoverly.</p>
+        </div>
+        <p class="context-description">
+          For flaky Wi-Fi at home, unreliable hotel Wi-Fi while traveling, or congested public Wi-Fi in cafés and
+          coworking spaces. A backup internet connection helps remote workers and digital nomads stay connected when it
+          matters.
+        </p>
+      </section>
+
+      <section class="section faq-layout" id="faq" aria-labelledby="faq-title">
+        <div class="faq-heading">
+          <h2 id="faq-title">
+            Internet failover<br />
+            for Mac: FAQ
+          </h2>
+          <p>
+            The setup, the tradeoffs,<br />
+            and what happens next.
+          </p>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>What is Failoverly?</summary>
+            <div class="answer">
+              <p>
+                Failoverly is an automatic internet failover app for macOS. If your internet keeps disconnecting or has
+                sudden slowdowns, it automatically switches your Mac to your iPhone hotspot over USB—even while Wi-Fi
+                stays connected. Your online sessions stay connected, so you don’t need to log in again just because the
+                connection changed.
+              </p>
+              <p>
+                Apple’s Auto-Join Hotspot can connect a Mac to a nearby hotspot when a Wi-Fi network isn’t available. It
+                reconnects your Mac, but doesn’t guarantee that your current call or online session stays connected
+                during the switch. Its Automatic setting is available in macOS Tahoe 26 and later. Failoverly also
+                responds when your primary connection is still available but becomes unreliable.
+              </p>
+              <p>Failoverly is currently in prelaunch; join the waitlist to hear when it’s available.</p>
+            </div>
+          </details>
+          <details>
+            <summary>What if my Mac’s Wi-Fi keeps dropping during video calls?</summary>
+            <div class="answer">
+              <p>
+                Failoverly provides automatic Wi-Fi failover through your iPhone hotspot over USB when your internet
+                keeps cutting out. It keeps your calls connected using the backup connection; it doesn’t repair your
+                Wi-Fi or your internet provider’s connection.
+              </p>
+            </div>
+          </details>
+          <details>
+            <summary>What do I need to use Failoverly?</summary>
+            <div class="answer">
+              <p>
+                Failoverly runs only on macOS. You need a Mac, your usual internet connection, and
+                <strong>an iPhone connected over USB with Personal Hotspot enabled</strong>. This is USB tethering.
+                Cellular coverage and a data plan that supports Personal Hotspot are required. Keep the USB cable
+                connected while you want backup protection.
+              </p>
+              <p>
+                Your primary connection can be any internet connection your Mac uses, including Wi-Fi or Ethernet. At
+                launch, Android phones and wireless tethering aren’t supported as backup connections.
+              </p>
+            </div>
+          </details>
+          <details>
+            <summary>Will my call or session disconnect when it switches?</summary>
+            <div class="answer">
+              <p>
+                Failoverly is designed to keep your call or session connected during the switch. A brief pause is
+                possible; your iPhone needs working cellular service.
+              </p>
+              <p>
+                It can also switch during sudden slowdowns while Wi-Fi remains connected. Failoverly doesn’t speed up
+                your internet connection or guarantee lower ping. It can’t resolve problems with the online service
+                itself or keep you online if both connections fail.
+              </p>
+            </div>
+          </details>
+          <details>
+            <summary>How much cellular data will Failoverly use?</summary>
+            <div class="answer">
+              <p>
+                A one-to-one 720p Zoom call can use roughly <strong>180 MB of video data in 10 minutes</strong>—about
+                <strong>1 GB per hour</strong>. Estimate based on
+                <a
+                  href="https://library.zoom.com/admin-corner/network-management/quality-of-service-and-network-best-practices-explainer/calculating-bandwidth-usage-for-zoom-meetings-and-phone"
+                  >Zoom’s published peak rates</a
+                >; actual total data usage varies.
+              </p>
+              <p>
+                Failoverly automatically switches back when your main connection recovers to help save cellular data.
+                Check your data plan’s hotspot allowance and any extra charges with your carrier.
+              </p>
+            </div>
+          </details>
+          <details>
+            <summary>How is Failoverly different from channel bonding?</summary>
+            <div class="answer">
+              <p>
+                Channel bonding apps such as Speedify use multiple internet connections at once to combine bandwidth.
+              </p>
+              <p>
+                Failoverly focuses on keeping sessions connected. It moves traffic to the backup connection when your
+                main connection drops or becomes unreliable, then switches back when it recovers. It does not add the
+                two connections’ speeds together.
+              </p>
+            </div>
+          </details>
+          <details>
+            <summary>How does Failoverly keep sessions connected, and is my connection secure?</summary>
+            <div class="answer">
+              <p>
+                Your traffic passes through an encrypted VPN tunnel to servers we operate. Those servers maintain the
+                connection to your online services while your Mac changes networks, so the session stays connected.
+              </p>
+              <p>
+                The tunnel adds encryption between your Mac and our servers, including on public Wi-Fi. Connections from
+                our servers to online services use those services’ own security, such as HTTPS.
+              </p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="section final" id="final-signup" aria-labelledby="final-title">
+        <div class="final-heading"><h2 id="final-title">Give your next online session a backup plan.</h2></div>
+        <div>
+          <p class="offer">
+            Join before launch for <strong>your first month free.</strong> <br />
+            <span class="price">US$6.99/month</span> after that.
+            <span class="compatibility">Requires a Mac and an iPhone connected over USB.</span>
+          </p>
+          <form
+            class="signup"
+            novalidate
+            aria-label="Join the Failoverly waitlist at the end of the page"
+            data-signup-form
+          >
+            <label for="final-email">Email address</label>
+            <div class="input-row">
+              <input
+                id="final-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                inputmode="email"
+                spellcheck="false"
+                required
+                disabled
+                placeholder="you@example.com"
+                aria-describedby="final-privacy final-message"
+              /><button class="button" type="submit" disabled>Join the waitlist</button>
+            </div>
+            <p class="signup-note" id="final-privacy">
+              We’ll email you only when the app launches. No spam. We recommend Apple’s Hide My Email (iCloud+) to keep
+              your real address private.
+              <a href="#privacy-policy" data-privacy-link aria-haspopup="dialog">Privacy Policy</a>.
+            </p>
+            <p class="signup-preview-note">Form preview only. No data is sent or saved.</p>
+            <div class="form-message" id="final-message" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </section>
+    </main>
+    <noscript
+      ><p class="wrap">
+        Enable JavaScript to preview the forms. Waitlist signup is not connected yet; no data is sent or saved.
+      </p></noscript
+    >
+    <footer class="wrap">
+      <span translate="no">Failoverly</span> <span>Automatic internet failover for macOS.</span>
+    </footer>
+    <template id="survey-template">
+      <dialog class="survey" id="profile-survey" aria-labelledby="survey-title">
+        <div class="survey-top">
+          <p class="survey-preview">Form preview · no data sent or saved</p>
+          <button class="skip-survey" type="button" id="skip-survey">Skip</button>
+        </div>
+        <div id="survey-questions">
+          <h2 class="survey-title" id="survey-title" tabindex="-1">Preview the optional questions.</h2>
+          <form id="survey-form" novalidate>
+            <fieldset>
+              <legend>What do internet problems interrupt for you?</legend>
+              <p class="survey-hint" id="activity-hint">Select all that apply.</p>
+              <div class="survey-options" aria-describedby="activity-hint">
+                <label class="survey-choice"
+                  ><input type="checkbox" name="activities" value="work-calls" disabled />Work calls</label
+                >
+                <label class="survey-choice"
+                  ><input type="checkbox" name="activities" value="coaching-teaching" disabled />Coaching or
+                  teaching</label
+                >
+                <label class="survey-choice"
+                  ><input type="checkbox" name="activities" value="live-streaming" disabled />Hosting webinars or live
+                  streams</label
+                >
+                <label class="survey-choice"
+                  ><input type="checkbox" name="activities" value="gaming" disabled />Online games</label
+                >
+                <label class="survey-choice"
+                  ><input type="checkbox" name="activities" value="remote-development" disabled />SSH or remote
+                  development</label
+                >
+                <label class="survey-choice"
+                  ><input type="checkbox" name="activities" value="trading" disabled />Trading</label
+                >
+                <label class="survey-choice"
+                  ><input type="checkbox" name="activities" value="other" disabled />Other activities</label
+                >
+                <label class="survey-choice"
+                  ><input type="checkbox" name="activities" value="none" disabled />No internet-related
+                  interruptions</label
+                >
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend id="frequency-question">How often do you experience failures and interruptions?</legend>
+              <div class="frequency-options">
+                <label class="frequency-choice"
+                  ><input type="radio" name="frequency" value="less-than-monthly" disabled />Less than once a
+                  month</label
+                >
+                <label class="frequency-choice"
+                  ><input type="radio" name="frequency" value="several-times-monthly" disabled />Several times a
+                  month</label
+                >
+                <label class="frequency-choice"
+                  ><input type="radio" name="frequency" value="several-times-weekly" disabled />Several times a
+                  week</label
+                >
+                <label class="frequency-choice"
+                  ><input type="radio" name="frequency" value="daily" disabled />Every day</label
+                >
+              </div>
+            </fieldset>
+            <div class="survey-actions"><button class="button" type="submit" disabled>Save answers</button></div>
+          </form>
+        </div>
+        <div id="survey-done" class="survey-done" hidden>
+          <h2 class="survey-title" id="survey-done-title" tabindex="-1">Preview complete.</h2>
+          <p>Your answers were not sent or saved.</p>
+          <button class="button" type="button" id="close-survey">Back to the page</button>
+        </div>
+      </dialog>
+    </template>
+    <!-- TODO (launch): replace this placeholder with the final policy before collecting personal data. -->
+    <template id="privacy-template">
+      <dialog class="privacy-placeholder" id="privacy-policy" aria-labelledby="privacy-title">
+        <h2 id="privacy-title" tabindex="-1">Privacy Policy</h2>
+        <p>This is a placeholder. The privacy policy will be available before launch.</p>
+        <button class="button" type="button" data-close-privacy>Back to the page</button>
+      </dialog>
+    </template>
   </body>
 </html>

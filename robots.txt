@@ -1,2 +1,6 @@
+# Allow search engines and AI search crawlers to read the page and render its assets.
+# Crawl permissions belong here; llms.txt provides optional product context.
 User-agent: *
 Allow: /
+
+Sitemap: https://failoverly.app/sitemap.xml

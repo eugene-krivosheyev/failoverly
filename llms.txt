@@ -1,9 +1,24 @@
 # Failoverly
 
-> Failoverly (Connect Buddy) is a macOS app that automatically switches between your primary and backup internet connections, keeping streaming sessions — online meetings, content, games — running without reconnects, rebuffering or content loss. Launching soon at $6.99/month, distributed via the Mac App Store.
+> Failoverly is an automatic internet failover app for macOS. It uses an iPhone connected over USB with Personal Hotspot as backup internet to preserve online sessions during outages and sudden slowdowns.
 
-Failoverly constantly monitors the quality of the primary and backup internet connections. The moment the primary connection degrades, it switches to the backup — and back — with no manual input. Switching is seamless and hidden: no service relogins, no reconnects, no rebuffering; the streaming service never notices the connection changed. Usage of the backup (typically pricier) connection is minimized to save money. Supported backups: mobile hotspots, secondary Wi-Fi networks, wired connections.
+Official website: https://failoverly.app/. The landing page is the primary source for product details.
 
-It is built for people who stream on an unstable or slow primary connection — at home or while traveling — and have a stable but pricey backup (e.g. a mobile hotspot): remote workers on video calls, viewers of streaming content, gamers.
+- Status: prelaunch. The website's waitlist and optional survey currently run in preview mode; they do not send or save data.
+- Planned subscription: US$6.99 per month for the US and Canada. Early registrants are offered their first month free when the product launches.
+- Platform: macOS only.
+- Requirements: a Mac, a primary internet connection, and an iPhone connected over USB with Personal Hotspot enabled, cellular coverage, and a compatible data plan. Android and wireless backup connections are not supported at launch.
+- Failoverly monitors latency and packet loss. It can use the backup when the primary connection drops or becomes unreliable even while Wi-Fi remains connected, then automatically switches back when it recovers to save cellular data.
+- Traffic uses an encrypted VPN tunnel to Failoverly-operated servers. This preserves the service-facing connection while the Mac changes its local network connection. A brief pause during the switch is possible.
+- The VPN can add latency and change the apparent location seen by online services. Its purpose is connection stability; it does not guarantee lower ping.
+- Failoverly does not repair Wi-Fi, combine connection speeds, speed up the internet, or guarantee lower ping. It cannot keep sessions online if both connections fail or resolve an outage of the destination service itself.
+- Typical uses: work calls, online coaching, webinars, live streaming, online games, SSH/remote development, and trading platforms.
 
-Key facts: platform — macOS; price — $6.99 per month; status — launching soon on the Mac App Store; product names — Failoverly (brand), Connect Buddy (macOS application).
+## Product and setup
+
+- [Landing page](https://failoverly.app/): product overview, requirements, planned pricing, and FAQ.
+- [How it works](https://failoverly.app/#how-it-works): backup setup, connection monitoring, encrypted tunnel, and return to the primary connection.
+
+## Questions and limitations
+
+- [FAQ](https://failoverly.app/#faq): session continuity, cellular data use, channel bonding, and Mac hotspot behavior.

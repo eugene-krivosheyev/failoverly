@@ -1,0 +1,6 @@
+dist/
+reports/
+node_modules/
+images/
+fonts/
+bun.lock

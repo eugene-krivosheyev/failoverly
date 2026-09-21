@@ -13,10 +13,14 @@ Thumbs.db
 dist/
 *.log
 
-# Sass cache
-.sass-cache/
-
 .claude/
 .antigravity/
 
 .playwright-mcp
+
+# Local quality reports and secrets
+reports/
+.env
+.env.*
+!.env.example
+.vercel/

@@ -1,34 +1,147 @@
-# Animation Project (HTML / SCSS / JS)
+# Failoverly
 
-Quick scaffold for a small animation project using plain HTML, SCSS and ES modules.
+Статический сайт для **https://failoverly.app** на HTML, CSS и небольших ES-модулях. Единственный исходник страницы — корневой `index.html`.
 
-Structure
-- `index.html` — HTML entry, links `css/main.css` and `scripts/main.js`
-- `scss/` — SCSS sources (`_reset.scss`, `main.scss`)
-- `css/` — compiled CSS (`main.css`) included for immediate preview
-- `scripts/` — JS modules (`main.js`); GSAP comes from npm (`bun install`), not a CDN
-- `images/` — images (WebP/SVG, optimized)
-- `fonts/` — self-hosted Inter (variable woff2, latin subset), registered via FontFace API in `scripts/fonts.js`
-- `_headers` — Cloudflare Pages cache headers, copied to `dist/` on build
+## Разработка
 
-Develop (bun)
+Нужен Bun 1.3.11 или новее.
 
-```bash
-bun install       # once
-bun run dev       # dev server at http://localhost:8000 + SCSS watch
+```sh
+bun install --frozen-lockfile
+bun run dev
 ```
 
-Other scripts:
+Сайт откроется на `http://localhost:8000`. CSS и HTML/JS обновляются при изменении исходников; отдельный препроцессор не нужен.
 
-```bash
-bun run serve     # dev server only, no SCSS watch
-bun run styles    # compile SCSS once (scss/main.scss -> css/main.css)
-bun run build     # production build -> dist/ (bundled, minified, hashed assets)
+| Что менять                                           | Файл                                      |
+| ---------------------------------------------------- | ----------------------------------------- |
+| Тексты, семантическая разметка, логотип, метаданные  | `index.html`                              |
+| Цвета, размеры, отступы и адаптивная flexbox-вёрстка | `css/main.css`                            |
+| Переключение диаграммы                               | `scripts/connection-preview.js`           |
+| Формы, опрос и модальные окна                        | `scripts/signup-forms.js`                 |
+| Будущее подключение сервиса рассылок                 | `scripts/waitlist.js`                     |
+| Основной домен и дата изменения контента             | `site.config.json`                        |
+| Доступ краулеров и ссылка на sitemap                 | `robots.txt`                              |
+| Краткое описание продукта для AI-инструментов        | `llms.txt`                                |
+| Генерация иконок и изображения для соцсетей          | `tooling/brand-assets.mjs`                |
+| Сборка и конфигурация размещения                     | `tooling/build.mjs`, `vercel.json`        |
+| Политика безопасности контента (CSP)                 | `tooling/security.mjs`                    |
+| Публикация релиза по Git-тегу                        | `.github/workflows/deploy-production.yml` |
+
+`css/main.css` — редактируемый исходник, который хранится в Git. Минифицированный CSS создаётся только внутри production-сборки. `bun run format` форматирует исходники; `bun run format:check` проверяет форматирование.
+
+Масштаб основного текста и подписей контролов задаётся через `--type-scale` в `css/main.css` (сейчас `1.1`, то есть +10%). Заголовки и подзаголовки сохраняют собственные размеры. Цвета находятся в `:root`; границы полей и кнопки диаграммы используют `--control-border` с контрастом выше 3:1 на обоих фонах. Для системных шрифтов используются веса 400/600/700.
+
+## Production-сборка
+
+```sh
+bun run build
+bun run preview
 ```
 
-Deploy the contents of `dist/` to Cloudflare Pages — it is self-contained (JS bundled with GSAP and minified, CSS minified, assets hashed). `dist/_headers` gives hashed assets a 1-year immutable cache while `index.html` is always revalidated.
+Готовый сайт находится в `dist/`, локальный предпросмотр — `http://127.0.0.1:4173/`.
 
-Notes
-- `css/main.css` is compiled from `scss/` — edit styles in `scss/main.scss` only, never `css/main.css` directly.
-- Compiled `css/main.css` is committed, so `index.html` can be opened without a build step; recompile after any SCSS change.
-- The dev server is Bun's built-in frontend server (`bun index.html`) with hot reloading; change the port via the `--port` flag in `package.json`.
+- CSS и JS минифицируются и встраиваются в HTML: первый экран и формы не ждут отдельных запросов. JS остаётся модулем (`type="module"`), который выполняется после разбора HTML. Исходники CSS и ES-модулей остаются читаемыми и раздельными.
+- Подпись логотипа превращается в SVG-контуры из локального Inter при сборке: браузеру не требуется загружать шрифт. Основной текст использует системный стек. SVG, иконки и social card включены в сборку; CDN и внешние библиотеки в браузере не используются.
+- В HTML сохранены весь контент и FAQ: JavaScript нужен только для диаграммы и форм.
+- Сборка создаёт `sitemap.xml`, переносит `robots.txt`, `llms.txt` и лицензию шрифта.
+- В `dist/` попадают только готовая страница, используемые assets, лицензия шрифта и файлы для краулеров.
+- Для Vercel одновременно создаётся `.vercel/output/` в формате Build Output API v3: копия сайта в `static/` и `config.json` с маршрутами и HTTP-заголовками, включая CSP. Оба каталога сборки игнорируются Git.
+
+Домен задаётся в `site.config.json`. При необходимости его можно переопределить переменной `SITE_URL`, например `SITE_URL=https://example.com bun run build`. Она должна содержать HTTPS origin без пути. Сборка обновляет canonical, Open Graph, JSON-LD, sitemap, robots и ссылки в `llms.txt`. Пример локальной конфигурации — `.env.example`; для домена `failoverly.app` ничего переопределять не нужно.
+
+Каждая production-сборка обновляет брендовые assets из логотипа в `index.html`. Перегенерировать их отдельно можно командой:
+
+```sh
+bun run assets
+```
+
+## SEO и AI-краулеры
+
+`robots.txt` разрешает всем краулерам читать страницу и её assets, содержит абсолютный URL sitemap. Отдельные повторяющиеся правила для Googlebot, Bingbot, OAI-SearchBot и других ботов не нужны. Это разрешение на обход, а не гарантия индексации: доступ также зависит от настроек Vercel/CDN. См. [правила Google для robots.txt](https://developers.google.com/crawling/docs/robots-txt/create-robots-txt).
+
+`llms.txt` следует [предложенному формату llms.txt](https://llmstxt.org/): краткое определение, проверяемые факты, ограничения и ссылки на доступные разделы сайта. Он не заменяет HTML, sitemap или structured data и не гарантирует цитирование. [Google не требует специальных AI-файлов](https://developers.google.com/search/docs/appearance/ai-features); основной контент и FAQ доступны в HTML без JavaScript.
+
+Sitemap включает только опубликованную страницу. Модальные окна и несуществующие страницы в него не добавляются. При смене цены, требований или статуса запуска обновляйте `index.html` и `llms.txt` вместе.
+
+`lastmod` берётся из `contentLastModified` в `site.config.json`. **TODO при изменении контента:** обновляйте эту дату при существенных правках текста, ссылок или structured data. Повторная сборка, правка CSS или конфигурации CI не должны менять дату. Сборка проверяет формат `YYYY-MM-DD` и запрещает будущие даты.
+
+Приложение описано как prelaunch без предложения купить или оформить предзаказ. **TODO после появления реального предложения:** добавить `offers` с ценой подписки и месячным периодом, отражающими видимые условия страницы. Для расширенного результата Google также нужен реальный отзыв или рейтинг; лист ожидания не является `PreOrder`.
+
+## Vercel и GitHub Actions
+
+Импортируйте репозиторий в Vercel. Настройки уже находятся в `vercel.json`:
+
+- Framework Preset: **Other**.
+- Install Command: `bun install --frozen-lockfile`.
+- Build Command: `bun run build && bun tooling/check-build.mjs`.
+- Output Directory: `dist` для обычного статического предпросмотра; Vercel автоматически использует выпускаемый сборкой `.vercel/output/`.
+
+Сборка создаёт готовую конфигурацию [Vercel Build Output API](https://vercel.com/docs/build-output-api), поэтому фактические маршруты и заголовки находятся в `.vercel/output/config.json`. Настройки `headers` из исходного `vercel.json` переносятся туда сборщиком. CSP добавляется после минификации; вручную прописывать меняющиеся хеши в `vercel.json` не нужно. Тот же механизм работает при `vercel build --prod` в GitHub Actions и при сборке на Vercel.
+
+Workflow `.github/workflows/deploy-production.yml` запускается при push тега **`v*`**. Он проверяет, что помеченный коммит уже находится в истории `origin/main`, затем собирает именно этот коммит и публикует production-версию через Vercel CLI. Обычный push в `main` публикацию не запускает. Тег коммита из невлитой ветки завершится ошибкой до обращения к Vercel. Фильтры branch и tag в GitHub Actions не образуют условие «И», поэтому принадлежность `main` проверяется отдельно.
+
+Автоматические деплои Git-интеграции Vercel отключены через `git.deploymentEnabled: false`: релизами управляет workflow. Это также отключает автоматические preview-деплои веток. Vercel CLI по-прежнему может создавать ручные preview-сборки. См. [инструкцию Vercel для GitHub Actions](https://vercel.com/kb/guide/how-can-i-use-github-actions-with-vercel) и [настройку Git-деплоев](https://vercel.com/docs/project-configuration/git-configuration#git.deploymentenabled).
+
+### TODO: настройка перед первым релизом
+
+| Когда                      | Что заполнить                                                             | Где и зачем                                                                                                                                                                                                                                                                   |
+| -------------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Build/deploy               | **TODO:** создать GitHub environment `production`                         | Repository → Settings → Environments. Если ограничиваете разрешённые refs, разрешите теги `v*`; правило только для ветки `main` блокирует запуск по тегу.                                                                                                                     |
+| Build/deploy               | **TODO:** `VERCEL_TOKEN`                                                  | Secret в GitHub environment `production` или secrets репозитория. Токен Vercel с доступом к целевому проекту.                                                                                                                                                                 |
+| Build/deploy               | **TODO:** `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`                            | Там же. ID команды/аккаунта и проекта Vercel; доступны в `.vercel/project.json` после `vercel link`. Этот файл игнорируется Git.                                                                                                                                              |
+| Hosting                    | **TODO:** домен и DNS                                                     | Добавьте `failoverly.app` в Domains проекта Vercel и примените DNS-записи, которые покажет Vercel.                                                                                                                                                                            |
+| Build time                 | `SITE_URL=https://failoverly.app` — уже задано                            | Публичное значение берётся из `site.config.json`. Необязательный override — Vercel → Environment Variables → Production; workflow загрузит его через `vercel pull`. Секреты для сборки самой страницы не нужны.                                                               |
+| Runtime, позже             | **TODO:** endpoint форм, ключ выбранного провайдера и ID списка/аудитории | Сейчас runtime-переменных нет: сайт статический, формы — заглушки. После выбора сервиса создайте серверный endpoint и храните его секреты только в серверном окружении Vercel. Точки подключения отмечены в `scripts/waitlist.js`; названия переменных зависят от провайдера. |
+| Запуск сбора данных, позже | **TODO:** Privacy Policy и статус форм                                    | Замените заглушку в `index.html`, уведомления preview и статус в `llms.txt` после подключения настоящего сервиса.                                                                                                                                                             |
+
+Создавайте новый тег после попадания нужного коммита в `main`, например:
+
+```sh
+git switch main
+git pull --ff-only origin main
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
+```
+
+Используйте следующий свободный номер версии для нового релиза. Workflow проверяет наличие секретов, фиксирует версии инструментов, последовательно выполняет `vercel pull` → `vercel build --prod` → `vercel deploy --prebuilt --prod`. Ошибка сборки или проверки сайта останавливает публикацию. URL результата появляется в GitHub Actions summary и environment `production`.
+
+Production разрешает индексацию. Сборки с `VERCEL_ENV=preview` получают `noindex, nofollow`; robots остаётся открытым, чтобы краулер мог прочитать этот запрет. Кеширование хешированных assets и основные HTTP-заголовки заданы в `vercel.json` и переносятся в Build Output API. Отсутствующие страницы возвращают 404; `/index` и `/index.html` перенаправляются на `/`.
+
+После первого релиза проверьте `https://failoverly.app/robots.txt`, `/sitemap.xml`, `/llms.txt` и добавьте sitemap в Google Search Console / Bing Webmaster Tools. Подтверждение домена через DNS не требует менять код страницы.
+
+Публикация из этой задачи не выполнялась.
+
+## Content Security Policy
+
+`tooling/security.mjs` разрешает только SHA-256-хеши итоговых inline-скриптов и стилей, а изображения — с собственного origin. Политика передаётся HTTP-заголовком; локальный `bun run preview` читает те же заголовки из `.vercel/output/config.json`. После пересборки он подхватывает новые хеши без перезапуска.
+
+Произвольные скрипты, обработчики в HTML-атрибутах, встроенные style-атрибуты, сетевые запросы JS на внешние origin и native-отправка форм запрещены. Запросы к собственному origin разрешены, в том числе для чтения `robots.txt` инструментами аудита Chrome. `base-uri`, `object-src` и `frame-ancestors` также закрыты. В исходниках нет `unsafe-inline` или `unsafe-eval`; разрешённые хеши пересчитываются после каждого изменения сборки.
+
+**TODO при подключении сбора контактов:** для API на другом origin разрешить его адрес в `connect-src` внутри `tooling/security.mjs`; серверный endpoint на собственном origin уже разрешён. Если выбранный сервис потребует сторонний скрипт, сначала проверить его требования и расширить CSP только необходимыми разрешениями. Dev-сервер на порту 8000 использует Bun HMR; строгую production-политику проверяйте через `bun run preview`.
+
+## Формы и Privacy Policy
+
+По текущему решению формы — **явно обозначенная заглушка**: email и ответы никуда не отправляются, не записываются в localStorage/cookies и не выводятся в логи. Можно проверить валидацию, опрос, Skip/Escape и подтверждение предпросмотра.
+
+При подключении сервиса замените две функции в `scripts/waitlist.js`. Они должны возвращать `{ mode: 'success', signupId }` только после подтверждённой записи, а при ошибке — отклонять Promise. Секретные ключи должны оставаться на сервере. После подключения замените видимые уведомления о preview и текст `llms.txt`, а также заполните текущую заглушку Privacy Policy.
+
+## Проверки
+
+```sh
+bun run check
+bun run audit
+bun run audit:3g
+```
+
+`check` проверяет форматирование и production-сборку, включая локальные assets, отсутствие дубликатов, метаданные, правила robots, sitemap, ссылки из `llms.txt` и режим индексации. Он сверяет CSP-хеши с финальным HTML и проверяет соответствие файлов для Vercel локальному предпросмотру. Та же проверка сборки выполняется перед публикацией в workflow. `audit` пересобирает сайт, запускает локальный сервер и проверяет его в Chrome Lighthouse с обычными мобильным и десктопным профилями. Нужны Google Chrome и Node.js 22.19+; при нестандартном пути к Chrome задайте `CHROME_PATH`.
+
+HTML/JSON-отчёты сохраняются в `reports/`; краткий результат — `reports/summary.json`. Команда завершится ошибкой, если хотя бы одна из четырёх категорий ниже 100. Отчёты не коммитятся.
+
+`audit:3g` отдельно проверяет холодную загрузку с реальным ограничением DevTools: **400 Кбит/с в обе стороны, 2000 мс задержки**, CPU ×4 на mobile и ×1 на desktop. Сетевые значения соответствуют [профилю Slow 3G в Chromium](https://chromium.googlesource.com/devtools/devtools-frontend/+/HEAD/front_end/core/sdk/NetworkManager.ts). Отчёты: `reports/lighthouse-mobile-slow-3g.report.html`, `reports/lighthouse-desktop-slow-3g.report.html` и `reports/summary-slow-3g.json`. В summary записаны параметры, FCP, LCP, Speed Index, TBT и CLS. Этот стресс-профиль сохраняет реальные оценки и не требует 100: сама двухсекундная задержка сети влияет на метрики даже без блокирующих ресурсов. Сравнивайте результаты только при одинаковых настройках.
+
+Проверка Slow 3G от 2026-09-21 после перехода на CSS и добавления CSP: Performance **96 mobile / 75 desktop**, FCP **2,22 / 2,20 с** (до оптимизации загрузки — **74 / 59**, FCP **4,37 / 4,40 с**). LCP — **2,32 / 2,30 с**, TBT — **0 мс**, CLS — **0**. Accessibility, Best Practices и SEO — по **100**. CSS, JS и шрифт больше не требуют отдельных сетевых запросов для первого экрана.
+
+Проверенная сборка: **100 / 100 / 100 / 100** на mobile и desktop (Lighthouse 13.4.1, Chrome 153). После публикации стоит повторить аудит по настоящему HTTPS-адресу: сервер, сторонние интеграции и версия браузера могут изменить результат.
+
+В Chrome также проверены обе формы, опрос, Privacy Policy и диаграмма под CSP, блокировка посторонних скрипта и стиля, чтение `robots.txt` и отсутствие горизонтального скролла на ширинах 320–1280 px. Настоящая отправка контактов остаётся отключена.
