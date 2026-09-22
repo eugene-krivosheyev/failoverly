@@ -13,20 +13,19 @@ bun run dev
 
 Сайт откроется на `http://localhost:8000`. CSS и HTML/JS обновляются при изменении исходников; отдельный препроцессор не нужен.
 
-| Что менять                                           | Файл                                      |
-| ---------------------------------------------------- | ----------------------------------------- |
-| Тексты, семантическая разметка, логотип, метаданные  | `index.html`                              |
-| Краткая политика приватности сайта от бренда         | `privacy.html`                            |
-| Цвета, размеры, отступы и адаптивная flexbox-вёрстка | `css/main.css`                            |
-| Переключение диаграммы                               | `scripts/connection-preview.js`           |
-| Доступность и загрузка встроенных форм Kit           | `scripts/signup-forms.js`                 |
-| Основной домен и дата изменения контента             | `site.config.json`                        |
-| Доступ краулеров и ссылка на sitemap                 | `robots.txt`                              |
-| Краткое описание продукта для AI-инструментов        | `llms.txt`                                |
-| Генерация иконок и изображения для соцсетей          | `tooling/brand-assets.mjs`                |
-| Сборка и конфигурация размещения                     | `tooling/build.mjs`, `vercel.json`        |
-| Политика безопасности контента (CSP)                 | `tooling/security.mjs`                    |
-| Публикация релиза по Git-тегу                        | `.github/workflows/deploy-production.yml` |
+| Что менять                                           | Файл                               |
+| ---------------------------------------------------- | ---------------------------------- |
+| Тексты, семантическая разметка, логотип, метаданные  | `index.html`                       |
+| Краткая политика приватности сайта от бренда         | `privacy.html`                     |
+| Цвета, размеры, отступы и адаптивная flexbox-вёрстка | `css/main.css`                     |
+| Переключение диаграммы                               | `scripts/connection-preview.js`    |
+| Доступность и загрузка встроенных форм Kit           | `scripts/signup-forms.js`          |
+| Основной домен и дата изменения контента             | `site.config.json`                 |
+| Доступ краулеров и ссылка на sitemap                 | `robots.txt`                       |
+| Краткое описание продукта для AI-инструментов        | `llms.txt`                         |
+| Генерация иконок и изображения для соцсетей          | `tooling/brand-assets.mjs`         |
+| Сборка и конфигурация размещения                     | `tooling/build.mjs`, `vercel.json` |
+| Политика безопасности контента (CSP)                 | `tooling/security.mjs`             |
 
 `css/main.css` — редактируемый исходник, который хранится в Git. Минифицированный CSS создаётся только внутри production-сборки. `bun run format` форматирует исходники; `bun run format:check` проверяет форматирование.
 
@@ -68,58 +67,55 @@ Sitemap включает только индексируемый лендинг.
 
 Приложение описано как prelaunch без предложения купить или оформить предзаказ. **TODO после появления реального предложения:** добавить `offers` с ценой подписки и месячным периодом, отражающими видимые условия страницы. Для расширенного результата Google также нужен реальный отзыв или рейтинг; лист ожидания не является `PreOrder`.
 
-## Vercel и GitHub Actions
+## Vercel
 
-Импортируйте репозиторий в Vercel. Настройки уже находятся в `vercel.json`:
+Подключите GitHub-репозиторий к проекту Vercel и выберите `main` как Production Branch. После этого push или merge в `main` запускает production-деплой; изменения в других ветках и pull request создают Preview согласно настройкам проекта. Теги для публикации не нужны. Статус и URL сборки доступны в Vercel и GitHub. См. [нативную интеграцию Vercel с GitHub](https://vercel.com/docs/git/vercel-for-github).
+
+Настройки сборки уже находятся в `vercel.json`:
 
 - Framework Preset: **Other**.
 - Install Command: `bun install --frozen-lockfile`.
 - Build Command: `bun run build && bun tooling/check-build.mjs`.
-- Output Directory: `dist` для обычного статического предпросмотра; Vercel автоматически использует выпускаемый сборкой `.vercel/output/`.
+- Output Directory: `dist`; Vercel использует выпускаемый сборкой `.vercel/output/` в формате [Build Output API](https://vercel.com/docs/build-output-api).
 
-Сборка создаёт готовую конфигурацию [Vercel Build Output API](https://vercel.com/docs/build-output-api), поэтому фактические маршруты и заголовки находятся в `.vercel/output/config.json`. Настройки `headers` из исходного `vercel.json` переносятся туда сборщиком. CSP добавляется после минификации; вручную прописывать меняющиеся хеши в `vercel.json` не нужно. Тот же механизм работает при `vercel build --prod` в GitHub Actions и при сборке на Vercel.
+Фактические маршруты и заголовки находятся в `.vercel/output/config.json`. Настройки `headers` из исходного `vercel.json` переносятся туда сборщиком. CSP добавляется после минификации; вручную прописывать меняющиеся хеши в `vercel.json` не нужно. Ошибка сборки или проверки сайта останавливает публикацию.
 
-Workflow `.github/workflows/deploy-production.yml` запускается при push тега **`v*`**. Он проверяет, что помеченный коммит уже находится в истории `origin/main`, затем собирает именно этот коммит и публикует production-версию через Vercel CLI. Обычный push в `main` публикацию не запускает. Тег коммита из невлитой ветки завершится ошибкой до обращения к Vercel. Фильтры branch и tag в GitHub Actions не образуют условие «И», поэтому принадлежность `main` проверяется отдельно.
+В Domains проекта добавьте `failoverly.app` и примените DNS-записи, которые покажет Vercel. GitHub Actions secrets, Variables и environment `production` для нативной интеграции не требуются. Публичный `SITE_URL` уже задан в `site.config.json`; при необходимости переопределите его в Vercel → Environment Variables для нужного окружения. Секреты для сборки страницы и runtime-переменные для формы Kit не нужны. Перед запуском waitlist завершите настройки Kit и сквозную проверку регистрации, описанные ниже.
 
-Автоматические деплои Git-интеграции Vercel отключены через `git.deploymentEnabled: false`: релизами управляет workflow. Это также отключает автоматические preview-деплои веток. Vercel CLI по-прежнему может создавать ручные preview-сборки. См. [инструкцию Vercel для GitHub Actions](https://vercel.com/kb/guide/how-can-i-use-github-actions-with-vercel) и [настройку Git-деплоев](https://vercel.com/docs/project-configuration/git-configuration#git.deploymentenabled).
+### Ручная публикация через CLI
 
-### TODO: настройка перед первым релизом
-
-Для входа и привязки локальной папки к созданному проекту Vercel:
+В корне репозитория один раз войдите в Vercel и привяжите папку к существующему проекту:
 
 ```sh
 bunx vercel@59.17.0 login
 bunx vercel@59.17.0 link
 ```
 
-Та же версия CLI закреплена в workflow. Она опубликована 14 сентября 2026 года и на момент проверки 22 сентября проходит настроенный в Bun `minimumReleaseAge = 604800` (7 дней). Запуск `bunx vercel@59.17.0 --version` проверен с этим ограничением. При обновлении версии согласованно меняйте команды выше и `VERCEL_CLI_VERSION`; учитывайте возраст релиза.
+При `link` выберите тот же проект, который подключён к GitHub. Локальная привязка хранится в `.vercel/project.json` и не коммитится. Версия CLI `59.17.0` проверена с настроенным в Bun `minimumReleaseAge = 604800` (7 дней); при обновлении учитывайте возраст релиза.
 
-| Когда                   | Что заполнить                                     | Где и зачем                                                                                                                                                                                                     |
-| ----------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Build/deploy            | **TODO:** создать GitHub environment `production` | Repository → Settings → Environments. Если ограничиваете разрешённые refs, разрешите теги `v*`; правило только для ветки `main` блокирует запуск по тегу.                                                       |
-| Build/deploy            | **TODO:** `VERCEL_TOKEN`                          | Secret в GitHub environment `production` или secrets репозитория. Токен Vercel с доступом к целевому проекту.                                                                                                   |
-| Build/deploy            | **TODO:** `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`    | Variables в GitHub environment `production` или репозитории. ID команды/аккаунта и проекта Vercel; доступны в `.vercel/project.json` после `vercel link`. Этот файл игнорируется Git.                           |
-| Hosting                 | **TODO:** домен и DNS                             | Добавьте `failoverly.app` в Domains проекта Vercel и примените DNS-записи, которые покажет Vercel.                                                                                                              |
-| Build time              | `SITE_URL=https://failoverly.app` — уже задано    | Публичное значение берётся из `site.config.json`. Необязательный override — Vercel → Environment Variables → Production; workflow загрузит его через `vercel pull`. Секреты для сборки самой страницы не нужны. |
-| Runtime                 | Не требуется                                      | Нативная форма Kit отправляет заявки напрямую провайдеру. API-ключи, серверный endpoint и runtime-переменные для неё не нужны.                                                                                  |
-| Перед запуском waitlist | **TODO:** настройки Kit и сквозная проверка       | Проверьте incentive email, отключённый Auto-confirm, отправителя/домен и полный путь регистрации с собственным разрешённым адресом. Подробности ниже.                                                           |
-
-Создавайте новый тег после попадания нужного коммита в `main`, например:
+Перед публикацией проверьте сайт:
 
 ```sh
-git switch main
-git pull --ff-only origin main
-git tag -a v1.0.0 -m "Release v1.0.0"
-git push origin v1.0.0
+bun run check
 ```
 
-Используйте следующий свободный номер версии для нового релиза. Workflow проверяет наличие токена в Secrets и двух ID в Variables, фиксирует версии инструментов, последовательно выполняет `vercel pull` → `vercel build --prod` → `vercel deploy --prebuilt --prod`. Ошибка сборки или проверки сайта останавливает публикацию. URL результата появляется в GitHub Actions summary и environment `production`.
+Для Preview уже созданного проекта после первого деплоя:
+
+```sh
+bunx vercel@59.17.0
+```
+
+Для Production:
+
+```sh
+bunx vercel@59.17.0 --prod
+```
+
+Обе команды отправляют исходники из текущей локальной папки, включая незакоммиченные изменения, и выполняют сборку на Vercel по `vercel.json`. У нового проекта самый первый деплой становится Production даже без `--prod`; поэтому для Preview сначала завершите первоначальный импорт и деплой через GitHub. Подробнее — [Vercel CLI deploy](https://vercel.com/docs/cli/deploy).
 
 Production разрешает индексацию. Сборки с `VERCEL_ENV=preview` получают `noindex, nofollow`; robots остаётся открытым, чтобы краулер мог прочитать этот запрет. Кеширование хешированных assets и основные HTTP-заголовки заданы в `vercel.json` и переносятся в Build Output API. Отсутствующие страницы возвращают 404; `/index` и `/index.html` перенаправляются на `/`.
 
-После первого релиза проверьте `https://failoverly.app/robots.txt`, `/sitemap.xml`, `/llms.txt` и добавьте sitemap в Google Search Console / Bing Webmaster Tools. Подтверждение домена через DNS не требует менять код страницы.
-
-Публикация из этой задачи не выполнялась.
+После первой публикации проверьте `https://failoverly.app/robots.txt`, `/sitemap.xml`, `/llms.txt` и добавьте sitemap в Google Search Console / Bing Webmaster Tools. Подтверждение домена через DNS не требует менять код страницы.
 
 ## Content Security Policy
 
@@ -169,7 +165,7 @@ bun run audit
 bun run audit:3g
 ```
 
-`check` проверяет форматирование и production-сборку, включая локальные assets, отсутствие дубликатов, метаданные, правила robots, sitemap, ссылки из `llms.txt` и режим индексации. Он сверяет CSP-хеши с финальным HTML и проверяет соответствие файлов для Vercel локальному предпросмотру. Та же проверка сборки выполняется перед публикацией в workflow. `audit` пересобирает сайт, запускает локальный сервер и проверяет его в Chrome Lighthouse с обычными мобильным и десктопным профилями. Нужны Google Chrome и Node.js 22.19+; при нестандартном пути к Chrome задайте `CHROME_PATH`.
+`check` проверяет форматирование и production-сборку, включая локальные assets, отсутствие дубликатов, метаданные, правила robots, sitemap, ссылки из `llms.txt` и режим индексации. Он сверяет CSP-хеши с финальным HTML и проверяет соответствие файлов для Vercel локальному предпросмотру. Та же проверка сборки выполняется в Build Command на Vercel перед публикацией. `audit` пересобирает сайт, запускает локальный сервер и проверяет его в Chrome Lighthouse с обычными мобильным и десктопным профилями. Нужны Google Chrome и Node.js 22.19+; при нестандартном пути к Chrome задайте `CHROME_PATH`.
 
 HTML/JSON-отчёты сохраняются в `reports/`; краткий результат — `reports/summary.json`. Команда завершится ошибкой, если хотя бы одна из четырёх категорий ниже 100. Отчёты не коммитятся.
 
