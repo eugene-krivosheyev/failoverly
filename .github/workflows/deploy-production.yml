@@ -28,12 +28,13 @@ jobs:
       run:
         shell: bash
     env:
-      VERCEL_CLI_VERSION: '59.23.2'
+      VERCEL_CLI_VERSION: '59.17.0'
       VERCEL_TELEMETRY_DISABLED: '1'
-      # TODO: Add these secrets in GitHub's production environment or repository.
+      # TODO: Add the two IDs as GitHub variables and the token as a secret
+      # in the production environment or repository.
       # VERCEL_ORG_ID and VERCEL_PROJECT_ID come from .vercel/project.json after linking.
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
     steps:
@@ -62,7 +63,11 @@ jobs:
           missing=0
           for variable in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
             if [[ -z "${!variable}" ]]; then
-              echo "::error::Missing $variable. Add it as a GitHub secret for the production environment or repository."
+              setting_type=variable
+              if [[ "$variable" == VERCEL_TOKEN ]]; then
+                setting_type=secret
+              fi
+              echo "::error::Missing $variable. Add it as a GitHub $setting_type for the production environment or repository."
               missing=1
             fi
           done

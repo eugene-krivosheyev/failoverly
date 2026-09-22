@@ -85,11 +85,20 @@ Workflow `.github/workflows/deploy-production.yml` запускается при
 
 ### TODO: настройка перед первым релизом
 
+Для входа и привязки локальной папки к созданному проекту Vercel:
+
+```sh
+bunx vercel@59.17.0 login
+bunx vercel@59.17.0 link
+```
+
+Та же версия CLI закреплена в workflow. Она опубликована 14 сентября 2026 года и на момент проверки 22 сентября проходит настроенный в Bun `minimumReleaseAge = 604800` (7 дней). Запуск `bunx vercel@59.17.0 --version` проверен с этим ограничением. При обновлении версии согласованно меняйте команды выше и `VERCEL_CLI_VERSION`; учитывайте возраст релиза.
+
 | Когда                   | Что заполнить                                     | Где и зачем                                                                                                                                                                                                     |
 | ----------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Build/deploy            | **TODO:** создать GitHub environment `production` | Repository → Settings → Environments. Если ограничиваете разрешённые refs, разрешите теги `v*`; правило только для ветки `main` блокирует запуск по тегу.                                                       |
 | Build/deploy            | **TODO:** `VERCEL_TOKEN`                          | Secret в GitHub environment `production` или secrets репозитория. Токен Vercel с доступом к целевому проекту.                                                                                                   |
-| Build/deploy            | **TODO:** `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`    | Там же. ID команды/аккаунта и проекта Vercel; доступны в `.vercel/project.json` после `vercel link`. Этот файл игнорируется Git.                                                                                |
+| Build/deploy            | **TODO:** `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`    | Variables в GitHub environment `production` или репозитории. ID команды/аккаунта и проекта Vercel; доступны в `.vercel/project.json` после `vercel link`. Этот файл игнорируется Git.                           |
 | Hosting                 | **TODO:** домен и DNS                             | Добавьте `failoverly.app` в Domains проекта Vercel и примените DNS-записи, которые покажет Vercel.                                                                                                              |
 | Build time              | `SITE_URL=https://failoverly.app` — уже задано    | Публичное значение берётся из `site.config.json`. Необязательный override — Vercel → Environment Variables → Production; workflow загрузит его через `vercel pull`. Секреты для сборки самой страницы не нужны. |
 | Runtime                 | Не требуется                                      | Нативная форма Kit отправляет заявки напрямую провайдеру. API-ключи, серверный endpoint и runtime-переменные для неё не нужны.                                                                                  |
@@ -104,7 +113,7 @@ git tag -a v1.0.0 -m "Release v1.0.0"
 git push origin v1.0.0
 ```
 
-Используйте следующий свободный номер версии для нового релиза. Workflow проверяет наличие секретов, фиксирует версии инструментов, последовательно выполняет `vercel pull` → `vercel build --prod` → `vercel deploy --prebuilt --prod`. Ошибка сборки или проверки сайта останавливает публикацию. URL результата появляется в GitHub Actions summary и environment `production`.
+Используйте следующий свободный номер версии для нового релиза. Workflow проверяет наличие токена в Secrets и двух ID в Variables, фиксирует версии инструментов, последовательно выполняет `vercel pull` → `vercel build --prod` → `vercel deploy --prebuilt --prod`. Ошибка сборки или проверки сайта останавливает публикацию. URL результата появляется в GitHub Actions summary и environment `production`.
 
 Production разрешает индексацию. Сборки с `VERCEL_ENV=preview` получают `noindex, nofollow`; robots остаётся открытым, чтобы краулер мог прочитать этот запрет. Кеширование хешированных assets и основные HTTP-заголовки заданы в `vercel.json` и переносятся в Build Output API. Отсутствующие страницы возвращают 404; `/index` и `/index.html` перенаправляются на `/`.
 
