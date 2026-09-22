@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto'
 import { readFile, access, readdir } from 'node:fs/promises'
 import { resolve, dirname, relative, sep } from 'node:path'
 import config from '../site.config.json'
-import { WAITLIST_ENABLED } from '../scripts/waitlist.js'
+import { KIT_FORM_UID, KIT_FORM_SCRIPT, KIT_RUNTIME_SCRIPT, KIT_FORM_ACTION, KIT_VISIT_URL } from './security.mjs'
 
 const root = resolve(import.meta.dir, '../dist')
 const vercelRoot = resolve(import.meta.dir, '../.vercel/output')
@@ -32,11 +32,25 @@ async function checkAsset(reference, fromFile) {
   }
 }
 
-for (const [tag] of `${html}\n${privacy}`.matchAll(/<(?:script|link|img)\b[^>]*>/g)) {
-  if (tag.startsWith('<link') && !/rel="(?:stylesheet|preload|icon|apple-touch-icon)"/.test(tag)) continue
-  const reference = tag.match(/(?:src|href)="([^"]+)"/)?.[1]
-  if (reference) await checkAsset(reference, resolve(root, 'index.html'))
+let kitEmbeds = 0
+for (const [name, document] of [
+  ['index.html', html],
+  ['privacy.html', privacy]
+]) {
+  for (const [tag] of document.matchAll(/<(?:script|link|img)\b[^>]*>/g)) {
+    if (tag.startsWith('<link') && !/rel="(?:stylesheet|preload|icon|apple-touch-icon)"/.test(tag)) continue
+    const reference = tag.match(/(?:src|href)="([^"]+)"/)?.[1]
+    if (name === 'index.html' && tag.startsWith('<script') && reference === KIT_FORM_SCRIPT) {
+      assert(tag.includes(`data-uid="${KIT_FORM_UID}"`), 'Kit embed must use the approved form UID.')
+      assert(/\sasync(?:\s|>|=)/.test(tag), 'The Kit form must load asynchronously.')
+      kitEmbeds++
+    } else if (reference) {
+      await checkAsset(reference, resolve(root, name))
+      assert(!tag.startsWith('<script'), 'Local production interactions must remain inline.')
+    }
+  }
 }
+assert(kitEmbeds > 0, 'The approved Kit form embed is missing.')
 
 assert.equal(privacy.match(/rel="canonical"\s+href="([^"]+)"/)?.[1], `${origin}/privacy.html`)
 assert.equal(
@@ -53,17 +67,13 @@ assert.equal(
   3,
   'Both forms and the footer must link to the privacy page.'
 )
-if (!WAITLIST_ENABLED) {
-  for (const [, form] of html.matchAll(/<form\b[^>]*data-signup-form[^>]*>([\s\S]*?)<\/form>/g)) {
-    assert(/<button\b[^>]*\bdisabled(?:\s|>|=)/.test(form), 'Paused signup must be disabled before JS loads.')
-  }
-  assert(html.includes('Waitlist signup is temporarily unavailable.'), 'Explain why signup is paused.')
-}
+assert(!html.includes('data-signup-form'), 'Remove the replaced signup placeholders.')
+assert(!html.includes('survey-template'), 'Remove the disconnected survey placeholder.')
+assert(!html.includes('Waitlist signup is temporarily unavailable.'), 'Remove the obsolete signup pause notice.')
 
 // Keep the first paint independent of additional stylesheet/font round trips.
 assert(!/<link\b[^>]*rel="stylesheet"/.test(html), 'Production CSS must be embedded in the document.')
 assert(!/<link\b[^>]*as="font"/.test(html), 'The outlined production logo must not preload a font.')
-assert(!/<script\b[^>]*src=/.test(html), 'Production controls must not wait for a separate script request.')
 assert(/<script type="module">/.test(html), 'Inline interactions must retain deferred module execution.')
 for (const [, css] of html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/g)) {
   for (const [, url] of css.matchAll(/url\(["']?([^"')]+)["']?\)/g)) {
@@ -125,42 +135,42 @@ assert.equal(
 )
 const globalRoute = deployment.routes.find(route => route.continue && route.headers?.['Content-Security-Policy'])
 assert(globalRoute && new RegExp(globalRoute.src).test('/'), 'CSP must be an HTTP header on the landing page.')
-function checkPolicy(header, document) {
+function checkPolicy(header, document, kitForm = false) {
   const policy = new Map(
     header.split(';').map(directive => {
       const [name, ...values] = directive.trim().split(/\s+/)
       return [name, values]
     })
   )
-  for (const directive of [
-    'default-src',
-    'script-src-attr',
-    'style-src-attr',
-    'form-action',
-    'base-uri',
-    'object-src',
-    'frame-ancestors'
-  ]) {
+  for (const directive of ['default-src', 'script-src-attr', 'base-uri', 'object-src', 'frame-ancestors']) {
     assert.deepEqual(policy.get(directive), ["'none'"], `Unexpected CSP permission: ${directive}`)
   }
-  assert.deepEqual(policy.get('img-src'), ["'self'"])
-  assert.deepEqual(policy.get('connect-src'), ["'self'"])
+  assert.deepEqual(policy.get('style-src-attr'), [kitForm ? "'unsafe-inline'" : "'none'"])
+  assert.deepEqual(policy.get('img-src'), kitForm ? ["'self'", 'data:'] : ["'self'"])
+  assert.deepEqual(policy.get('connect-src'), kitForm ? ["'self'", KIT_VISIT_URL, KIT_FORM_ACTION] : ["'self'"])
+  assert.deepEqual(policy.get('form-action'), [kitForm ? KIT_FORM_ACTION : "'none'"])
+  assert.deepEqual(
+    policy.get('frame-src'),
+    kitForm ? ['https://app.kit.com', 'https://app.convertkit.com'] : ["'none'"]
+  )
   for (const [tag, directive] of [
     ['script', 'script-src'],
     ['style', 'style-src']
   ]) {
-    const expected = [...document.matchAll(new RegExp(`<${tag}\\b[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'g'))].map(
-      ([, contents]) => `'sha256-${createHash('sha256').update(contents).digest('base64')}'`
-    )
+    const expected = [...document.matchAll(new RegExp(`<${tag}\\b([^>]*)>([\\s\\S]*?)<\\/${tag}>`, 'g'))]
+      .filter(([, attributes]) => tag !== 'script' || !/\bsrc\s*=/.test(attributes))
+      .map(([, , contents]) => `'sha256-${createHash('sha256').update(contents).digest('base64')}'`)
+    if (kitForm && tag === 'script') expected.push(KIT_FORM_SCRIPT, KIT_RUNTIME_SCRIPT)
+    if (kitForm && tag === 'style') expected.splice(0, expected.length, "'unsafe-inline'")
     assert.deepEqual(
       new Set(policy.get(directive)),
       new Set(expected.length ? expected : ["'none'"]),
-      `CSP hashes must match final ${tag} contents only.`
+      `Unexpected CSP permissions for ${tag}.`
     )
   }
   assert(!/<[^>]+\s(?:style|on\w+)\s*=/i.test(document), 'Inline attributes need refactoring before strict CSP.')
 }
-checkPolicy(globalRoute.headers['Content-Security-Policy'], html)
+checkPolicy(globalRoute.headers['Content-Security-Policy'], html, true)
 const privacyRoute = deployment.routes.find(route => route.src === '^/privacy\\.html$' && route.continue)
 assert(privacyRoute, 'The privacy page needs its own CSP header.')
 checkPolicy(privacyRoute.headers['Content-Security-Policy'], privacy)

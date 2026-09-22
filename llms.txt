@@ -4,7 +4,7 @@
 
 Official website: https://failoverly.app/. The landing page is the primary source for product details.
 
-- Status: prelaunch. Website waitlist signup is temporarily disabled and the optional survey is unavailable; email addresses and survey answers are not sent or saved.
+- Status: prelaunch. Visitors can join the email waitlist through an embedded Kit form to receive the launch announcement. Joining does not purchase the app or start a paid subscription.
 - Planned subscription: US$6.99 per month for the US and Canada. Early registrants are offered their first month free when the product launches.
 - Platform: macOS only.
 - Requirements: a Mac, a primary internet connection, and an iPhone connected over USB with Personal Hotspot enabled, cellular coverage, and a compatible data plan. Android and wireless backup connections are not supported at launch.

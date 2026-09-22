@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile, copyFile, cp, rm } from 'node:fs/promises'
 import { resolve, posix } from 'node:path'
 import config from '../site.config.json'
 import hosting from '../vercel.json'
-import { contentSecurityPolicy } from './security.mjs'
+import { contentSecurityPolicy, KIT_FORM_SCRIPT } from './security.mjs'
 
 // A single origin drives canonical, social metadata, structured data, and sitemap.
 const siteUrl = new URL(process.env.SITE_URL || config.url)
@@ -29,7 +29,7 @@ const result = await Bun.build({
   target: 'browser',
   minify: true,
   // The editable logo's font is removed after its text is replaced with outlines.
-  external: ['*.woff2'],
+  external: ['*.woff2', KIT_FORM_SCRIPT],
   sourcemap: 'none',
   naming: {
     entry: '[name].[ext]',
@@ -127,7 +127,7 @@ const routes = hosting.headers.map(({ source, headers }) => ({
   headers: Object.fromEntries(headers.map(({ key, value }) => [key, value])),
   continue: true
 }))
-routes[0].headers['Content-Security-Policy'] = contentSecurityPolicy(pages.get('index.html'))
+routes[0].headers['Content-Security-Policy'] = contentSecurityPolicy(pages.get('index.html'), { kitForm: true })
 routes[0].headers['Cache-Control'] = 'public, max-age=0, must-revalidate'
 routes.push(
   {

@@ -170,31 +170,22 @@
               <span class="price">US$6.99/month</span> after that.
               <span class="compatibility">Requires a Mac and an iPhone connected over USB.</span>
             </p>
-            <form class="signup" novalidate aria-label="Join the Failoverly waitlist" data-signup-form>
+            <div class="signup" data-kit-signup="hero">
               <label for="hero-email">Email address</label>
-              <div class="input-row">
-                <input
-                  id="hero-email"
-                  name="email"
-                  type="email"
-                  autocomplete="email"
-                  inputmode="email"
-                  spellcheck="false"
-                  required
-                  disabled
-                  placeholder="you@example.com"
-                  aria-describedby="hero-privacy hero-message"
-                />
-                <button class="button" type="submit" disabled>Join the waitlist</button>
+              <div class="kit-embed">
+                <!-- Managed in Kit: fields, confirmation email, and success message. -->
+                <script async data-uid="eba19436d6" src="https://failoverly-app.kit.com/eba19436d6/index.js"></script>
+                <p class="signup-fallback">
+                  If the form doesn’t appear,
+                  <a data-kit-fallback href="https://failoverly-app.kit.com/eba19436d6">join the waitlist on Kit</a>.
+                </p>
               </div>
               <p class="signup-note" id="hero-privacy">
-                We’ll email you only when the app launches. No spam. We recommend Apple’s Hide My Email (iCloud+) to
-                keep your real address private.
+                Sign up for our launch announcement. No spam. We recommend Apple’s Hide My Email (iCloud+) to keep your
+                real address private.
                 <a href="privacy.html">Privacy Policy</a>.
               </p>
-              <p class="signup-preview-note">Waitlist signup is temporarily unavailable. No data is sent or saved.</p>
-              <div class="form-message" id="hero-message" role="status" aria-live="polite"></div>
-            </form>
+            </div>
           </div>
 
           <figure
@@ -482,121 +473,30 @@
             <span class="price">US$6.99/month</span> after that.
             <span class="compatibility">Requires a Mac and an iPhone connected over USB.</span>
           </p>
-          <form
-            class="signup"
-            novalidate
-            aria-label="Join the Failoverly waitlist at the end of the page"
-            data-signup-form
-          >
+          <div class="signup" data-kit-signup="final">
             <label for="final-email">Email address</label>
-            <div class="input-row">
-              <input
-                id="final-email"
-                name="email"
-                type="email"
-                autocomplete="email"
-                inputmode="email"
-                spellcheck="false"
-                required
-                disabled
-                placeholder="you@example.com"
-                aria-describedby="final-privacy final-message"
-              /><button class="button" type="submit" disabled>Join the waitlist</button>
+            <div class="kit-embed">
+              <!-- Managed in Kit: fields, confirmation email, and success message. -->
+              <script async data-uid="eba19436d6" src="https://failoverly-app.kit.com/eba19436d6/index.js"></script>
+              <p class="signup-fallback">
+                If the form doesn’t appear,
+                <a data-kit-fallback href="https://failoverly-app.kit.com/eba19436d6">join the waitlist on Kit</a>.
+              </p>
             </div>
             <p class="signup-note" id="final-privacy">
-              We’ll email you only when the app launches. No spam. We recommend Apple’s Hide My Email (iCloud+) to keep
-              your real address private.
+              Sign up for our launch announcement. No spam. We recommend Apple’s Hide My Email (iCloud+) to keep your
+              real address private.
               <a href="privacy.html">Privacy Policy</a>.
             </p>
-            <p class="signup-preview-note">Waitlist signup is temporarily unavailable. No data is sent or saved.</p>
-            <div class="form-message" id="final-message" role="status" aria-live="polite"></div>
-          </form>
+          </div>
         </div>
       </section>
     </main>
-    <noscript
-      ><p class="wrap">
-        Waitlist signup is temporarily unavailable. No email addresses or survey answers are sent or saved.
-      </p></noscript
-    >
     <footer class="wrap">
       <span>© 2026 <span translate="no">Failoverly</span></span>
       <span>Automatic internet failover for macOS.</span>
       <!-- TODO (launch): verify the brand privacy contact and any required operator disclosures. -->
       <a href="privacy.html">Privacy Policy</a>
     </footer>
-    <template id="survey-template">
-      <dialog class="survey" id="profile-survey" aria-labelledby="survey-title">
-        <div class="survey-top">
-          <p class="survey-preview">Form preview · no data sent or saved</p>
-          <button class="skip-survey" type="button" id="skip-survey">Skip</button>
-        </div>
-        <div id="survey-questions">
-          <h2 class="survey-title" id="survey-title" tabindex="-1">Preview the optional questions.</h2>
-          <form id="survey-form" novalidate>
-            <fieldset>
-              <legend>What do internet problems interrupt for you?</legend>
-              <p class="survey-hint" id="activity-hint">Select all that apply.</p>
-              <div class="survey-options" aria-describedby="activity-hint">
-                <label class="survey-choice"
-                  ><input type="checkbox" name="activities" value="work-calls" disabled />Work calls</label
-                >
-                <label class="survey-choice"
-                  ><input type="checkbox" name="activities" value="coaching-teaching" disabled />Coaching or
-                  teaching</label
-                >
-                <label class="survey-choice"
-                  ><input type="checkbox" name="activities" value="live-streaming" disabled />Hosting webinars or live
-                  streams</label
-                >
-                <label class="survey-choice"
-                  ><input type="checkbox" name="activities" value="gaming" disabled />Online games</label
-                >
-                <label class="survey-choice"
-                  ><input type="checkbox" name="activities" value="remote-development" disabled />SSH or remote
-                  development</label
-                >
-                <label class="survey-choice"
-                  ><input type="checkbox" name="activities" value="trading" disabled />Trading</label
-                >
-                <label class="survey-choice"
-                  ><input type="checkbox" name="activities" value="other" disabled />Other activities</label
-                >
-                <label class="survey-choice"
-                  ><input type="checkbox" name="activities" value="none" disabled />No internet-related
-                  interruptions</label
-                >
-              </div>
-            </fieldset>
-            <fieldset>
-              <legend id="frequency-question">How often do you experience failures and interruptions?</legend>
-              <div class="frequency-options">
-                <label class="frequency-choice"
-                  ><input type="radio" name="frequency" value="less-than-monthly" disabled />Less than once a
-                  month</label
-                >
-                <label class="frequency-choice"
-                  ><input type="radio" name="frequency" value="several-times-monthly" disabled />Several times a
-                  month</label
-                >
-                <label class="frequency-choice"
-                  ><input type="radio" name="frequency" value="several-times-weekly" disabled />Several times a
-                  week</label
-                >
-                <label class="frequency-choice"
-                  ><input type="radio" name="frequency" value="daily" disabled />Every day</label
-                >
-              </div>
-            </fieldset>
-            <div class="survey-actions"><button class="button" type="submit" disabled>Save answers</button></div>
-          </form>
-        </div>
-        <div id="survey-done" class="survey-done" hidden>
-          <h2 class="survey-title" id="survey-done-title" tabindex="-1">Preview complete.</h2>
-          <p>Your answers were not sent or saved.</p>
-          <button class="button" type="button" id="close-survey">Back to the page</button>
-        </div>
-      </dialog>
-    </template>
   </body>
 </html>
