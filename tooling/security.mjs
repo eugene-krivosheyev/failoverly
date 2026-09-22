@@ -4,7 +4,8 @@ import { createHash } from 'node:crypto'
 export function contentSecurityPolicy(html) {
   const hashes = tag => {
     const blocks = [...html.matchAll(new RegExp(`<${tag}\\b[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'g'))]
-    if (!blocks.length) throw new Error(`Expected inline ${tag} blocks for CSP.`)
+    // A document such as the privacy page intentionally has no JavaScript.
+    if (!blocks.length) return "'none'"
     return [
       ...new Set(blocks.map(([, contents]) => `'sha256-${createHash('sha256').update(contents).digest('base64')}'`))
     ].join(' ')

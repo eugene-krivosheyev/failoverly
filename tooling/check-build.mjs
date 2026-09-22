@@ -3,10 +3,12 @@ import { createHash } from 'node:crypto'
 import { readFile, access, readdir } from 'node:fs/promises'
 import { resolve, dirname, relative, sep } from 'node:path'
 import config from '../site.config.json'
+import { WAITLIST_ENABLED } from '../scripts/waitlist.js'
 
 const root = resolve(import.meta.dir, '../dist')
 const vercelRoot = resolve(import.meta.dir, '../.vercel/output')
 const html = await readFile(resolve(root, 'index.html'), 'utf8')
+const privacy = await readFile(resolve(root, 'privacy.html'), 'utf8')
 const origin = new URL(process.env.SITE_URL || config.url).origin
 const checked = new Set()
 
@@ -30,10 +32,32 @@ async function checkAsset(reference, fromFile) {
   }
 }
 
-for (const [tag] of html.matchAll(/<(?:script|link|img)\b[^>]*>/g)) {
+for (const [tag] of `${html}\n${privacy}`.matchAll(/<(?:script|link|img)\b[^>]*>/g)) {
   if (tag.startsWith('<link') && !/rel="(?:stylesheet|preload|icon|apple-touch-icon)"/.test(tag)) continue
   const reference = tag.match(/(?:src|href)="([^"]+)"/)?.[1]
   if (reference) await checkAsset(reference, resolve(root, 'index.html'))
+}
+
+assert.equal(privacy.match(/rel="canonical"\s+href="([^"]+)"/)?.[1], `${origin}/privacy.html`)
+assert.equal(
+  privacy.match(/name="robots"\s+content="([^"]+)"/)?.[1],
+  'noindex, follow',
+  'Keep the website privacy notice out of search results.'
+)
+assert.equal((privacy.match(/<h1\b/g) || []).length, 1)
+assert(!/<script\b/.test(privacy), 'The privacy document must work without JavaScript.')
+assert(!/<link\b[^>]*rel="stylesheet"/.test(privacy), 'Privacy CSS must be embedded too.')
+assert(!html.includes('privacy-template'), 'Remove the obsolete modal privacy placeholder.')
+assert.equal(
+  (html.match(/href="privacy\.html"/g) || []).length,
+  3,
+  'Both forms and the footer must link to the privacy page.'
+)
+if (!WAITLIST_ENABLED) {
+  for (const [, form] of html.matchAll(/<form\b[^>]*data-signup-form[^>]*>([\s\S]*?)<\/form>/g)) {
+    assert(/<button\b[^>]*\bdisabled(?:\s|>|=)/.test(form), 'Paused signup must be disabled before JS loads.')
+  }
+  assert(html.includes('Waitlist signup is temporarily unavailable.'), 'Explain why signup is paused.')
 }
 
 // Keep the first paint independent of additional stylesheet/font round trips.
@@ -94,42 +118,52 @@ assert.equal(
   html,
   'Vercel HTML differs from preview.'
 )
+assert.equal(
+  await readFile(resolve(vercelRoot, 'static/privacy.html'), 'utf8'),
+  privacy,
+  'Vercel privacy document differs from preview.'
+)
 const globalRoute = deployment.routes.find(route => route.continue && route.headers?.['Content-Security-Policy'])
 assert(globalRoute && new RegExp(globalRoute.src).test('/'), 'CSP must be an HTTP header on the landing page.')
-const policy = new Map(
-  globalRoute.headers['Content-Security-Policy'].split(';').map(directive => {
-    const [name, ...values] = directive.trim().split(/\s+/)
-    return [name, values]
-  })
-)
-for (const directive of [
-  'default-src',
-  'script-src-attr',
-  'style-src-attr',
-  'form-action',
-  'base-uri',
-  'object-src',
-  'frame-ancestors'
-]) {
-  assert.deepEqual(policy.get(directive), ["'none'"], `Unexpected CSP permission: ${directive}`)
-}
-assert.deepEqual(policy.get('img-src'), ["'self'"])
-assert.deepEqual(policy.get('connect-src'), ["'self'"])
-for (const [tag, directive] of [
-  ['script', 'script-src'],
-  ['style', 'style-src']
-]) {
-  const expected = [...html.matchAll(new RegExp(`<${tag}\\b[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'g'))].map(
-    ([, contents]) => `'sha256-${createHash('sha256').update(contents).digest('base64')}'`
+function checkPolicy(header, document) {
+  const policy = new Map(
+    header.split(';').map(directive => {
+      const [name, ...values] = directive.trim().split(/\s+/)
+      return [name, values]
+    })
   )
-  assert(expected.length > 0)
-  assert.deepEqual(
-    new Set(policy.get(directive)),
-    new Set(expected),
-    `CSP hashes must match final ${tag} contents only.`
-  )
+  for (const directive of [
+    'default-src',
+    'script-src-attr',
+    'style-src-attr',
+    'form-action',
+    'base-uri',
+    'object-src',
+    'frame-ancestors'
+  ]) {
+    assert.deepEqual(policy.get(directive), ["'none'"], `Unexpected CSP permission: ${directive}`)
+  }
+  assert.deepEqual(policy.get('img-src'), ["'self'"])
+  assert.deepEqual(policy.get('connect-src'), ["'self'"])
+  for (const [tag, directive] of [
+    ['script', 'script-src'],
+    ['style', 'style-src']
+  ]) {
+    const expected = [...document.matchAll(new RegExp(`<${tag}\\b[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'g'))].map(
+      ([, contents]) => `'sha256-${createHash('sha256').update(contents).digest('base64')}'`
+    )
+    assert.deepEqual(
+      new Set(policy.get(directive)),
+      new Set(expected.length ? expected : ["'none'"]),
+      `CSP hashes must match final ${tag} contents only.`
+    )
+  }
+  assert(!/<[^>]+\s(?:style|on\w+)\s*=/i.test(document), 'Inline attributes need refactoring before strict CSP.')
 }
-assert(!/<[^>]+\s(?:style|on\w+)\s*=/i.test(html), 'Inline attributes need refactoring before strict CSP.')
+checkPolicy(globalRoute.headers['Content-Security-Policy'], html)
+const privacyRoute = deployment.routes.find(route => route.src === '^/privacy\\.html$' && route.continue)
+assert(privacyRoute, 'The privacy page needs its own CSP header.')
+checkPolicy(privacyRoute.headers['Content-Security-Policy'], privacy)
 assert(
   deployment.routes.some(route => route.src === '^/$' && route.dest === '/index.html'),
   'Missing root document route.'

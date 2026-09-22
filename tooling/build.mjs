@@ -24,7 +24,7 @@ const outdir = resolve(import.meta.dir, '../dist')
 await rm(outdir, { recursive: true, force: true })
 
 const result = await Bun.build({
-  entrypoints: ['index.html'],
+  entrypoints: ['index.html', 'privacy.html'],
   outdir,
   target: 'browser',
   minify: true,
@@ -42,8 +42,6 @@ if (!result.success) {
   process.exit(1)
 }
 
-const htmlPath = resolve(outdir, 'index.html')
-let html = await readFile(htmlPath, 'utf8')
 const exportedLogo = await readFile('images/logo.svg', 'utf8')
 const logoContents = exportedLogo
   .match(/<svg\b[^>]*>([\s\S]*?)<\/svg>/)?.[1]
@@ -51,46 +49,59 @@ const logoContents = exportedLogo
   // The enclosing inline SVG already has the complete accessible brand name.
   .replace(/\saria-label="[^"]*"/g, '')
 const inlineLogo = /(<svg\b(?=[^>]*class="brand-logo")[^>]*>)[\s\S]*?<\/svg>/
-if (!logoContents || !inlineLogo.test(html) || /<text\b/.test(logoContents)) {
-  throw new Error('Expected an outlined brand asset and an inline production logo.')
-}
-html = html.replace(inlineLogo, (_, opening) => `${opening}${logoContents}</svg>`)
-html = html.replace(/<link\b(?=[^>]*rel="preload")(?=[^>]*href="fonts\/inter-latin-var\.woff2")[^>]*>/g, '')
+const pages = new Map()
+const embeddedFiles = new Set()
+for (const name of ['index.html', 'privacy.html']) {
+  const htmlPath = resolve(outdir, name)
+  let html = await readFile(htmlPath, 'utf8')
+  if (name === 'index.html') {
+    if (!logoContents || !inlineLogo.test(html) || /<text\b/.test(logoContents)) {
+      throw new Error('Expected an outlined brand asset and an inline production logo.')
+    }
+    html = html.replace(inlineLogo, (_, opening) => `${opening}${logoContents}</svg>`)
+  }
+  html = html.replace(/<link\b(?=[^>]*rel="preload")(?=[^>]*href="fonts\/inter-latin-var\.woff2")[^>]*>/g, '')
 
-// This one-page site's small stylesheet belongs in the document: an extra
-// render-blocking request adds an entire round trip on a high-latency connection.
-for (const [tag, href] of html.matchAll(/<link\b(?=[^>]*rel="stylesheet")[^>]*href="([^"]+)"[^>]*>/g)) {
-  const stylesheetPath = resolve(outdir, href)
-  let css = await readFile(stylesheetPath, 'utf8')
-  css = css.replace(/@font-face\{[^}]*font-family:Inter;[^}]*\}/g, '')
-  // Bundled asset references were relative to the CSS file, not the document.
-  css = css.replace(/url\((['"]?)([^)'"\s]+)\1\)/g, (original, quote, url) =>
-    /^(?:[a-z]+:|\/|#)/i.test(url) ? original : `url(${quote}${posix.join(posix.dirname(href), url)}${quote})`
-  )
-  html = html.replace(tag, () => `<style>${css}</style>`)
-  await rm(stylesheetPath)
-}
+  // This small site's stylesheet belongs in each document: an extra
+  // render-blocking request adds an entire round trip on a high-latency connection.
+  for (const [tag, href] of html.matchAll(/<link\b(?=[^>]*rel="stylesheet")[^>]*href="([^"]+)"[^>]*>/g)) {
+    const stylesheetPath = resolve(outdir, href)
+    let css = await readFile(stylesheetPath, 'utf8')
+    css = css.replace(/@font-face\{[^}]*font-family:Inter;[^}]*\}/g, '')
+    // Bundled asset references were relative to the CSS file, not the document.
+    css = css.replace(/url\((['"]?)([^)'"\s]+)\1\)/g, (original, quote, url) =>
+      /^(?:[a-z]+:|\/|#)/i.test(url) ? original : `url(${quote}${posix.join(posix.dirname(href), url)}${quote})`
+    )
+    html = html.replace(tag, () => `<style>${css}</style>`)
+    embeddedFiles.add(stylesheetPath)
+  }
 
-// The complete interaction bundle is small enough to travel with the page.
-// Inline modules still defer until parsing finishes, without a second network
-// round trip before signup controls and the connection preview become usable.
-for (const [tag, src] of html.matchAll(/<script\b(?=[^>]*type="module")[^>]*src="([^"]+)"[^>]*>\s*<\/script>/g)) {
-  const scriptPath = resolve(outdir, src)
-  const script = (await readFile(scriptPath, 'utf8')).replace(/<\/script/gi, '<\\/script')
-  html = html.replace(tag, () => `<script type="module">${script}</script>`)
-  await rm(scriptPath)
+  // The complete interaction bundle is small enough to travel with the page.
+  // Inline modules still defer until parsing finishes, without a second network
+  // round trip before signup controls and the connection preview become usable.
+  for (const [tag, src] of html.matchAll(/<script\b(?=[^>]*type="module")[^>]*src="([^"]+)"[^>]*>\s*<\/script>/g)) {
+    const scriptPath = resolve(outdir, src)
+    const script = (await readFile(scriptPath, 'utf8')).replace(/<\/script/gi, '<\\/script')
+    // Bun may emit an empty module for a CSS-only HTML entry point.
+    html = html.replace(tag, () => (script.trim() ? `<script type="module">${script}</script>` : ''))
+    embeddedFiles.add(scriptPath)
+  }
+  html = html.replaceAll('https://failoverly.app', origin)
+  // Vercel preview builds should not compete with the real domain in search.
+  if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production') {
+    html = html.replace('content="index, follow"', 'content="noindex, nofollow"')
+  }
+  await writeFile(htmlPath, html)
+  pages.set(name, html)
 }
-html = html.replaceAll('https://failoverly.app', origin)
-// Vercel preview builds should not compete with the real domain in search.
-if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production') {
-  html = html.replace('content="index, follow"', 'content="noindex, nofollow"')
-}
-await writeFile(htmlPath, html)
+// Shared CSS bundles can be referenced by both pages. Remove them only after
+// every document has embedded its copy and CSP hashes can use the final bytes.
+for (const file of embeddedFiles) await rm(file)
 
-// Stable URLs for shared branding. The page's icons already live in assets/;
-// copying them again under images/ would duplicate the same bytes.
+// The social card needs a stable metadata URL. Other images are bundled once
+// under assets/, including the logo used on the privacy page.
 await mkdir(resolve(outdir, 'images'), { recursive: true })
-for (const name of ['logo.svg', 'social-card.png']) {
+for (const name of ['social-card.png']) {
   await copyFile(resolve('images', name), resolve(outdir, 'images', name))
 }
 await mkdir(resolve(outdir, 'fonts'), { recursive: true })
@@ -116,9 +127,14 @@ const routes = hosting.headers.map(({ source, headers }) => ({
   headers: Object.fromEntries(headers.map(({ key, value }) => [key, value])),
   continue: true
 }))
-routes[0].headers['Content-Security-Policy'] = contentSecurityPolicy(html)
+routes[0].headers['Content-Security-Policy'] = contentSecurityPolicy(pages.get('index.html'))
 routes[0].headers['Cache-Control'] = 'public, max-age=0, must-revalidate'
 routes.push(
+  {
+    src: '^/privacy\\.html$',
+    headers: { 'Content-Security-Policy': contentSecurityPolicy(pages.get('privacy.html')) },
+    continue: true
+  },
   { src: '^/index(?:\\.html)?/?$', headers: { Location: '/' }, status: 308 },
   { src: '^/(.+)/$', headers: { Location: '/$1' }, status: 308 },
   { src: '^/$', dest: '/index.html' },

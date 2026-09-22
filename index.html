@@ -190,9 +190,9 @@
               <p class="signup-note" id="hero-privacy">
                 We’ll email you only when the app launches. No spam. We recommend Apple’s Hide My Email (iCloud+) to
                 keep your real address private.
-                <a href="#privacy-policy" data-privacy-link aria-haspopup="dialog">Privacy Policy</a>.
+                <a href="privacy.html">Privacy Policy</a>.
               </p>
-              <p class="signup-preview-note">Form preview only. No data is sent or saved.</p>
+              <p class="signup-preview-note">Waitlist signup is temporarily unavailable. No data is sent or saved.</p>
               <div class="form-message" id="hero-message" role="status" aria-live="polite"></div>
             </form>
           </div>
@@ -506,9 +506,9 @@
             <p class="signup-note" id="final-privacy">
               We’ll email you only when the app launches. No spam. We recommend Apple’s Hide My Email (iCloud+) to keep
               your real address private.
-              <a href="#privacy-policy" data-privacy-link aria-haspopup="dialog">Privacy Policy</a>.
+              <a href="privacy.html">Privacy Policy</a>.
             </p>
-            <p class="signup-preview-note">Form preview only. No data is sent or saved.</p>
+            <p class="signup-preview-note">Waitlist signup is temporarily unavailable. No data is sent or saved.</p>
             <div class="form-message" id="final-message" role="status" aria-live="polite"></div>
           </form>
         </div>
@@ -516,11 +516,14 @@
     </main>
     <noscript
       ><p class="wrap">
-        Enable JavaScript to preview the forms. Waitlist signup is not connected yet; no data is sent or saved.
+        Waitlist signup is temporarily unavailable. No email addresses or survey answers are sent or saved.
       </p></noscript
     >
     <footer class="wrap">
-      <span translate="no">Failoverly</span> <span>Automatic internet failover for macOS.</span>
+      <span>© 2026 <span translate="no">Failoverly</span></span>
+      <span>Automatic internet failover for macOS.</span>
+      <!-- TODO (launch): verify the brand privacy contact and any required operator disclosures. -->
+      <a href="privacy.html">Privacy Policy</a>
     </footer>
     <template id="survey-template">
       <dialog class="survey" id="profile-survey" aria-labelledby="survey-title">
@@ -593,14 +596,6 @@
           <p>Your answers were not sent or saved.</p>
           <button class="button" type="button" id="close-survey">Back to the page</button>
         </div>
-      </dialog>
-    </template>
-    <!-- TODO (launch): replace this placeholder with the final policy before collecting personal data. -->
-    <template id="privacy-template">
-      <dialog class="privacy-placeholder" id="privacy-policy" aria-labelledby="privacy-title">
-        <h2 id="privacy-title" tabindex="-1">Privacy Policy</h2>
-        <p>This is a placeholder. The privacy policy will be available before launch.</p>
-        <button class="button" type="button" data-close-privacy>Back to the page</button>
       </dialog>
     </template>
   </body>

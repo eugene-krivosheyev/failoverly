@@ -12,9 +12,12 @@
  * TODO (runtime): implement a server endpoint for the chosen mailing provider.
  * Configure its API key and list/audience ID in Vercel's server-side Production
  * environment. These browser modules must never contain provider credentials.
- * TODO (launch): replace preview notices, llms.txt status and the privacy-policy
- * placeholder only after the real integration is ready.
+ * TODO (launch): finalize privacy.html, connect and test the real provider,
+ * update public notices and llms.txt, then enable WAITLIST_ENABLED below.
  */
+
+// Temporary pause: keep both forms unavailable, including Enter/requestSubmit.
+export const WAITLIST_ENABLED = false
 
 /** @param {{ email: string }} _signup */
 export async function submitWaitlist(_signup) {

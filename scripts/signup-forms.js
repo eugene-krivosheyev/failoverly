@@ -1,4 +1,4 @@
-import { submitWaitlist, submitProfile } from './waitlist.js'
+import { submitWaitlist, submitProfile, WAITLIST_ENABLED } from './waitlist.js'
 
 function checkResult(result) {
   if (result?.mode !== 'preview' && result?.mode !== 'success') {
@@ -116,16 +116,6 @@ export function initSignupForms() {
   const forms = [...document.querySelectorAll('[data-signup-form]')]
   let pending = false
 
-  document.querySelectorAll('[data-privacy-link]').forEach(link => {
-    link.addEventListener('click', event => {
-      event.preventDefault()
-      const privacy = mountDialog('#privacy-template', link)
-      privacy.querySelector('[data-close-privacy]').addEventListener('click', () => privacy.close())
-      privacy.showModal()
-      privacy.querySelector('#privacy-title').focus()
-    })
-  })
-
   forms.forEach(form => {
     const input = form.querySelector('input[name="email"]')
     const button = form.querySelector('button[type="submit"]')
@@ -134,7 +124,7 @@ export function initSignupForms() {
 
     form.addEventListener('submit', async event => {
       event.preventDefault()
-      if (pending) return
+      if (!WAITLIST_ENABLED || pending) return
       input.value = input.value.trim()
       if (!input.validity.valid) {
         input.setAttribute('aria-invalid', 'true')
@@ -171,7 +161,8 @@ export function initSignupForms() {
       input.removeAttribute('aria-invalid')
       setMessage(message)
     })
-    // Enable only after the submit handler prevents native form navigation.
-    setBusy(form, false)
+    // Leave the initial disabled HTML controls in place while signup is paused.
+    // If resumed, enable only after submit handlers prevent native navigation.
+    if (WAITLIST_ENABLED) setBusy(form, false)
   })
 }
