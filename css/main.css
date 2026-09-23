@@ -212,7 +212,7 @@ h3 {
 
 .hero-description {
   max-width: 510px;
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1.55;
   color: var(--secondary);
 }
@@ -233,6 +233,11 @@ h3 {
 
 .price {
   white-space: nowrap;
+}
+
+.signup {
+  --signup-spacing: 9px;
+  margin-top: var(--signup-spacing);
 }
 
 .button {
@@ -267,9 +272,8 @@ h3 {
   font-size: calc(14px * var(--type-scale));
 }
 
-.signup-note,
-.signup-fallback {
-  margin-top: 9px;
+.signup-note {
+  margin-top: var(--signup-spacing);
   color: var(--muted);
   font-size: calc(14px * var(--type-scale));
 }
@@ -277,10 +281,6 @@ h3 {
 /* Override the provider stylesheet's layout and theme; Kit owns submission and status. */
 .kit-embed {
   min-height: 48px;
-}
-
-.signup[data-kit-ready='true'] .signup-fallback {
-  display: none;
 }
 
 .signup .kit-embed form.formkit-form[data-uid] {
@@ -868,7 +868,7 @@ footer {
     font-size: 49px;
   }
   .hero-description {
-    font-size: 18px;
+    font-size: 20px;
   }
   .preview {
     padding: 18px;
