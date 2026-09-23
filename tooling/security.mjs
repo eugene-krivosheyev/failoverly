@@ -8,26 +8,41 @@ export const KIT_RUNTIME_SCRIPT = 'https://f.convertkit.com/ckjs/ck.5.js'
 export const KIT_FORM_ACTION = 'https://app.kit.com/forms/9949657/subscriptions'
 export const KIT_VISIT_URL = 'https://app.convertkit.com/forms/9949657/visit'
 
+export const ANALYTICS_SCRIPT_PATH = '/_vercel/insights/script.js'
+
+export function analyticsScriptSources(origin) {
+  const url = new URL(origin)
+  const domain = url.hostname.replace(/^www\./, '')
+  return [domain, `www.${domain}`].map(hostname => {
+    url.hostname = hostname
+    return new URL(ANALYTICS_SCRIPT_PATH, url).href
+  })
+}
+
 /** Hash the final inline blocks, after minification and metadata substitution. */
-export function contentSecurityPolicy(html, { kitForm = false } = {}) {
+export function contentSecurityPolicy(html, { kitForm = false, analyticsOrigin } = {}) {
   const hashes = tag => {
     const blocks = [...html.matchAll(new RegExp(`<${tag}\\b([^>]*)>([\\s\\S]*?)<\\/${tag}>`, 'g'))].filter(
       ([, attributes]) => tag !== 'script' || !/\bsrc\s*=/.test(attributes)
     )
-    // A document such as the privacy page intentionally has no JavaScript.
+    // Documents with no inline blocks need no inline script/style permission.
     if (!blocks.length) return "'none'"
     return [
       ...new Set(blocks.map(([, , contents]) => `'sha256-${createHash('sha256').update(contents).digest('base64')}'`))
     ].join(' ')
   }
 
+  const scripts = [hashes('script')]
+  if (kitForm) scripts.push(KIT_FORM_SCRIPT, KIT_RUNTIME_SCRIPT)
+  if (analyticsOrigin) scripts.push(...analyticsScriptSources(analyticsOrigin))
+
   return [
     "default-src 'none'",
-    `script-src ${hashes('script')}${kitForm ? ` ${KIT_FORM_SCRIPT} ${KIT_RUNTIME_SCRIPT}` : ''}`,
+    `script-src ${scripts.filter(source => source !== "'none'").join(' ') || "'none'"}`,
     "script-src-attr 'none'",
     // Kit injects provider-managed style elements and style attributes. Permit
     // inline CSS only on the landing page; scripts still require hashes or the
-    // two explicit URLs, and the script-free privacy page retains hashed CSS.
+    // explicit provider URLs, and the privacy page retains hashed CSS.
     `style-src ${kitForm ? "'unsafe-inline'" : hashes('style')}`,
     `style-src-attr ${kitForm ? "'unsafe-inline'" : "'none'"}`,
     `img-src 'self'${kitForm ? ' data:' : ''}`,

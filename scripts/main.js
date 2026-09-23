@@ -1,5 +1,6 @@
 import { initConnectionPreview } from './connection-preview.js'
 import { initSignupForms } from './signup-forms.js'
+import './analytics.js'
 
 initConnectionPreview()
 initSignupForms()

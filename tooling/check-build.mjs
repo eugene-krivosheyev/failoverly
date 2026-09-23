@@ -3,7 +3,14 @@ import { createHash } from 'node:crypto'
 import { readFile, access, readdir } from 'node:fs/promises'
 import { resolve, dirname, relative, sep } from 'node:path'
 import config from '../site.config.json'
-import { KIT_FORM_UID, KIT_FORM_SCRIPT, KIT_RUNTIME_SCRIPT, KIT_FORM_ACTION, KIT_VISIT_URL } from './security.mjs'
+import {
+  KIT_FORM_UID,
+  KIT_FORM_SCRIPT,
+  KIT_RUNTIME_SCRIPT,
+  KIT_FORM_ACTION,
+  KIT_VISIT_URL,
+  analyticsScriptSources
+} from './security.mjs'
 
 const root = resolve(import.meta.dir, '../dist')
 const vercelRoot = resolve(import.meta.dir, '../.vercel/output')
@@ -59,7 +66,8 @@ assert.equal(
   'Keep the website privacy notice out of search results.'
 )
 assert.equal((privacy.match(/<h1\b/g) || []).length, 1)
-assert(!/<script\b/.test(privacy), 'The privacy document must work without JavaScript.')
+assert(/<script type="module">/.test(privacy), 'Privacy analytics must retain deferred module execution.')
+assert(!privacy.includes(KIT_FORM_SCRIPT), 'Do not load signup forms on the privacy document.')
 assert(!/<link\b[^>]*rel="stylesheet"/.test(privacy), 'Privacy CSS must be embedded too.')
 assert(!html.includes('privacy-template'), 'Remove the obsolete modal privacy placeholder.')
 assert.equal(
@@ -161,6 +169,7 @@ function checkPolicy(header, document, kitForm = false) {
       .filter(([, attributes]) => tag !== 'script' || !/\bsrc\s*=/.test(attributes))
       .map(([, , contents]) => `'sha256-${createHash('sha256').update(contents).digest('base64')}'`)
     if (kitForm && tag === 'script') expected.push(KIT_FORM_SCRIPT, KIT_RUNTIME_SCRIPT)
+    if (tag === 'script') expected.push(...analyticsScriptSources(origin))
     if (kitForm && tag === 'style') expected.splice(0, expected.length, "'unsafe-inline'")
     assert.deepEqual(
       new Set(policy.get(directive)),
