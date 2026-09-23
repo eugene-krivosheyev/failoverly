@@ -10,6 +10,7 @@ if (siteUrl.protocol !== 'https:' || siteUrl.pathname !== '/' || siteUrl.search 
   throw new Error('SITE_URL must be an HTTPS origin, e.g. https://failoverly.app')
 }
 const origin = siteUrl.origin
+if (config.metaPixelId && !/^\d+$/.test(config.metaPixelId)) throw new Error('metaPixelId must contain only digits.')
 // An editorial date, not the build time: repeat builds must not fake freshness.
 const lastModified = config.contentLastModified
 if (
@@ -133,14 +134,18 @@ const routes = hosting.headers.map(({ source, headers }) => ({
 }))
 routes[0].headers['Content-Security-Policy'] = contentSecurityPolicy(pages.get('index.html'), {
   kitForm: true,
-  analyticsOrigin: origin
+  analyticsOrigin: origin,
+  metaPixel: Boolean(config.metaPixelId)
 })
 routes[0].headers['Cache-Control'] = 'public, max-age=0, must-revalidate'
 routes.push(
   {
     src: '^/privacy\\.html$',
     headers: {
-      'Content-Security-Policy': contentSecurityPolicy(pages.get('privacy.html'), { analyticsOrigin: origin })
+      'Content-Security-Policy': contentSecurityPolicy(pages.get('privacy.html'), {
+        analyticsOrigin: origin,
+        metaPixel: Boolean(config.metaPixelId)
+      })
     },
     continue: true
   },

@@ -568,7 +568,27 @@
       <span>© 2026 <span translate="no">Failoverly</span></span>
       <span>Automatic internet failover for macOS.</span>
       <!-- TODO (launch): verify the brand privacy contact and any required operator disclosures. -->
-      <a href="privacy.html">Privacy Policy</a>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="privacy.html">Privacy Policy</a>
+        <button class="cookie-settings" type="button" data-cookie-settings hidden>Cookie settings</button>
+      </nav>
     </footer>
+    <template id="ad-consent-template">
+      <section class="ad-consent" role="region" aria-labelledby="ad-consent-title">
+        <div class="ad-consent-copy">
+          <p class="ad-consent-title" id="ad-consent-title">Advertising cookies</p>
+          <p>
+            We use Meta Pixel to measure ad visits and waitlist signups. You can join the waitlist without allowing
+            advertising cookies. <a href="privacy.html">Privacy Policy</a>.
+          </p>
+          <p data-consent-status hidden></p>
+        </div>
+        <div class="ad-consent-actions">
+          <button type="button" data-ad-consent="granted">Allow</button>
+          <button type="button" data-ad-consent="denied">Reject</button>
+          <button type="button" data-consent-close hidden>Close</button>
+        </div>
+      </section>
+    </template>
   </body>
 </html>

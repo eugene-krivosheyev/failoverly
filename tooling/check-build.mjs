@@ -9,6 +9,8 @@ import {
   KIT_RUNTIME_SCRIPT,
   KIT_FORM_ACTION,
   KIT_VISIT_URL,
+  META_SCRIPT_SOURCES,
+  META_EVENT_URL,
   analyticsScriptSources
 } from './security.mjs'
 
@@ -97,7 +99,7 @@ assert(!privacy.includes(KIT_RUNTIME_SCRIPT), 'Do not load signup forms on the p
 assert(!/<link\b[^>]*rel="stylesheet"/.test(privacy), 'Privacy CSS must be embedded too.')
 assert(!html.includes('privacy-template'), 'Remove the obsolete modal privacy placeholder.')
 assert.equal(
-  (html.match(/href="privacy\.html"/g) || []).length,
+  (html.replace(/<template\b[^>]*>[\s\S]*?<\/template>/g, '').match(/href="privacy\.html"/g) || []).length,
   3,
   'Both forms and the footer must link to the privacy page.'
 )
@@ -170,6 +172,7 @@ assert.equal(
 const globalRoute = deployment.routes.find(route => route.continue && route.headers?.['Content-Security-Policy'])
 assert(globalRoute && new RegExp(globalRoute.src).test('/'), 'CSP must be an HTTP header on the landing page.')
 function checkPolicy(header, document, kitForm = false) {
+  const metaSources = config.metaPixelId ? [META_EVENT_URL] : []
   const policy = new Map(
     header.split(';').map(directive => {
       const [name, ...values] = directive.trim().split(/\s+/)
@@ -180,13 +183,16 @@ function checkPolicy(header, document, kitForm = false) {
     assert.deepEqual(policy.get(directive), ["'none'"], `Unexpected CSP permission: ${directive}`)
   }
   assert.deepEqual(policy.get('style-src-attr'), [kitForm ? "'unsafe-inline'" : "'none'"])
-  assert.deepEqual(policy.get('img-src'), kitForm ? ["'self'", 'data:'] : ["'self'"])
-  assert.deepEqual(policy.get('connect-src'), kitForm ? ["'self'", KIT_VISIT_URL, KIT_FORM_ACTION] : ["'self'"])
-  assert.deepEqual(policy.get('form-action'), [kitForm ? KIT_FORM_ACTION : "'none'"])
-  assert.deepEqual(
-    policy.get('frame-src'),
-    kitForm ? ['https://app.kit.com', 'https://app.convertkit.com'] : ["'none'"]
-  )
+  assert.deepEqual(policy.get('img-src'), ["'self'", ...(kitForm ? ['data:'] : []), ...metaSources])
+  assert.deepEqual(policy.get('connect-src'), [
+    "'self'",
+    ...(kitForm ? [KIT_VISIT_URL, KIT_FORM_ACTION] : []),
+    ...metaSources
+  ])
+  const formSources = [...(kitForm ? [KIT_FORM_ACTION] : []), ...metaSources]
+  assert.deepEqual(policy.get('form-action'), formSources.length ? formSources : ["'none'"])
+  const frameSources = [...(kitForm ? ['https://app.kit.com', 'https://app.convertkit.com'] : []), ...metaSources]
+  assert.deepEqual(policy.get('frame-src'), frameSources.length ? frameSources : ["'none'"])
   for (const [tag, directive] of [
     ['script', 'script-src'],
     ['style', 'style-src']
@@ -196,6 +202,7 @@ function checkPolicy(header, document, kitForm = false) {
       .map(([, , contents]) => `'sha256-${createHash('sha256').update(contents).digest('base64')}'`)
     if (kitForm && tag === 'script') expected.push(KIT_RUNTIME_SCRIPT)
     if (tag === 'script') expected.push(...analyticsScriptSources(origin))
+    if (tag === 'script' && config.metaPixelId) expected.push(...META_SCRIPT_SOURCES)
     if (kitForm && tag === 'style') expected.splice(0, expected.length, "'unsafe-inline'")
     assert.deepEqual(
       new Set(policy.get(directive)),

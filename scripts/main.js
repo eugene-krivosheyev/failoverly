@@ -1,7 +1,9 @@
 import { initConnectionPreview } from './connection-preview.js'
 import { initSignupForms } from './signup-forms.js'
 import './analytics.js'
+import { initMetaPixelConsent } from './meta-pixel.js'
 
+initMetaPixelConsent()
 initConnectionPreview()
 initSignupForms()
 

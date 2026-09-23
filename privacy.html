@@ -15,7 +15,7 @@
     <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png" sizes="180x180" />
     <link rel="stylesheet" href="css/main.css" />
-    <script type="module" src="scripts/analytics.js"></script>
+    <script type="module" src="scripts/privacy.js"></script>
   </head>
   <body class="legal-page">
     <a class="skip" href="#main">Skip to privacy policy</a>
@@ -39,7 +39,7 @@
       </div>
       <!-- TODO (launch): confirm hosting/log settings and privacy mailbox before publication.
            Review any required operator disclosures for the launch markets.
-           Confirm Kit settings and update this notice before adding surveys or advertising tools. -->
+           Confirm Kit and Meta settings and update this notice when data practices change. -->
       <section class="legal-section" aria-labelledby="scope-title">
         <h2 id="scope-title">About this policy</h2>
         <p>
@@ -70,7 +70,7 @@
         <p>
           We use Vercel Web Analytics to measure page views, referral sources, and aggregated statistics about visitors’
           countries, devices, and browsers without analytics cookies. We remove query strings and URL fragments from the
-          page URLs sent to analytics and do not send email addresses or form contents. See
+          page URLs sent to Vercel and do not send email addresses or form contents to Vercel. See
           <a href="https://vercel.com/docs/analytics/privacy-policy">Vercel’s analytics privacy information</a>.
         </p>
         <p>
@@ -83,19 +83,37 @@
           abuse.
         </p>
         <p>
-          We have not configured Google Analytics or advertising pixels on this website. We will update this policy
-          before introducing these tools and provide any required choices or consent controls. You can clear local
-          storage through your browser’s site-data settings.
+          If you choose Allow in our advertising cookie controls, we load Meta Pixel to measure visits and advertising
+          results. It sends a PageView event and, if you submit the waitlist form successfully, a Lead event. Lead means
+          Kit accepted the submission, not that you confirmed your email subscription. We do not supply your email
+          address or form contents to Meta Pixel.
+        </p>
+        <p>
+          Meta receives information such as the visited URL, referring page, IP address, browser and device information,
+          and cookie identifiers. The Pixel may set or read advertising cookies, including <code>_fbp</code> and
+          <code>_fbc</code>. Meta may associate this activity with other information it holds and use it under its
+          <a href="https://www.facebook.com/privacy/policy/">Privacy Policy</a>, including for advertising and
+          measurement. Visited URLs and referring pages may include query parameters.
+        </p>
+        <p>
+          We make no requests to Meta before you allow advertising tracking. You can choose Reject and still use the
+          website and join the waitlist. We save your choice in browser local storage; it expires after 180 days. Use
+          Cookie settings in the footer to change it at any time. Rejecting after allowing stops further tracking on the
+          current page and removes the first-party Meta cookies our website can access. It cannot erase data already
+          sent to Meta or cookies on Meta’s domains. You can also clear cookies and local storage through your browser’s
+          site-data settings. We keep Meta tracking off when your browser sends a Global Privacy Control signal. Google
+          Analytics and Google Ads are not configured on this website.
         </p>
       </section>
       <section class="legal-section" aria-labelledby="sharing-title">
         <h2 id="sharing-title">Sharing and retention</h2>
         <p>
-          We do not sell personal information. Service providers supporting our website and email may process
-          information to provide those services, including in countries other than yours. Kit processes subscriber
-          information on our behalf as described in its <a href="https://kit.com/dpa">Data Processing Addendum</a>. Its
+          Service providers supporting our website and email may process information to provide those services,
+          including in countries other than yours. Kit processes subscriber information on our behalf as described in
+          its <a href="https://kit.com/dpa">Data Processing Addendum</a>. Its
           <a href="https://kit.com/privacy">Privacy Policy</a> describes its own services and interactions. We may also
-          disclose information where required by law.
+          disclose information where required by law. With your advertising consent, information is shared with Meta as
+          described above; Meta’s own use and retention are described in its Privacy Policy.
         </p>
         <p>
           We retain information only as long as needed for the purposes described here or to meet legal obligations.
@@ -124,9 +142,27 @@
     </main>
     <footer class="wrap">
       <span>© 2026 <span translate="no">Failoverly</span></span>
-      <nav class="legal-footer-links" aria-label="Footer">
+      <nav class="footer-links" aria-label="Footer">
         <a href="/">Home</a>
+        <button class="cookie-settings" type="button" data-cookie-settings hidden>Cookie settings</button>
       </nav>
     </footer>
+    <template id="ad-consent-template">
+      <section class="ad-consent" role="region" aria-labelledby="ad-consent-title">
+        <div class="ad-consent-copy">
+          <p class="ad-consent-title" id="ad-consent-title">Advertising cookies</p>
+          <p>
+            We use Meta Pixel to measure ad visits and waitlist signups. You can join the waitlist without allowing
+            advertising cookies. <a href="#tracking-title">Tracking details</a>.
+          </p>
+          <p data-consent-status hidden></p>
+        </div>
+        <div class="ad-consent-actions">
+          <button type="button" data-ad-consent="granted">Allow</button>
+          <button type="button" data-ad-consent="denied">Reject</button>
+          <button type="button" data-consent-close hidden>Close</button>
+        </div>
+      </section>
+    </template>
   </body>
 </html>

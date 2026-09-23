@@ -1,3 +1,5 @@
+import { trackWaitlistLead } from './meta-pixel.js'
+
 // The forms and their accessible labels are already in HTML. Kit owns validation,
 // requests, attribution, and confirmation; no custom signup API is needed.
 export function initSignupForms() {
@@ -13,6 +15,7 @@ export function initSignupForms() {
     queueMicrotask(() => {
       const confirmation = source.querySelector('[data-element="success"]')
       if (!confirmation) return
+      trackWaitlistLead()
       containers.forEach(container => {
         const form = container.querySelector('.formkit-form')
         if (form === source || form.dataset.uid !== source.dataset.uid) return
