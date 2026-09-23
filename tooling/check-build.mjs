@@ -73,12 +73,16 @@ for (const [index, [, attributes, contents]] of kitForms.entries()) {
   assert(attributes.includes(`data-uid="${KIT_FORM_UID}"`), 'Kit form UID mismatch.')
   const options = attributes.match(/data-options=(["'])(.*?)\1/)?.[2]
   assert(options, 'Preserve Kit form settings in the HTML embed.')
-  JSON.parse(options.replaceAll('&quot;', '"').replaceAll('&amp;', '&'))
+  const formOptions = JSON.parse(options.replaceAll('&quot;', '"').replaceAll('&amp;', '&'))
   assert(contents.includes('name="email_address"'), 'Kit email field missing.')
   assert(contents.includes(`id="${placement}-email"`), 'Each email input needs its own accessible label.')
   assert(contents.includes(`aria-describedby="${placement}-privacy"`), 'Keep the privacy note connected to its input.')
   assert(contents.includes('data-element="submit"'), 'Kit submit hook missing.')
-  assert(contents.includes('Built with Kit'), 'Preserve the supplied Kit branding.')
+  assert.equal(
+    contents.includes('data-element="powered-by"'),
+    formOptions.settings.powered_by.show,
+    'Kit branding must match the supplied form settings.'
+  )
 }
 
 assert.equal(privacy.match(/rel="canonical"\s+href="([^"]+)"/)?.[1], `${origin}/privacy.html`)
