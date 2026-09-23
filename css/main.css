@@ -235,16 +235,6 @@ h3 {
   white-space: nowrap;
 }
 
-.signup {
-  margin-top: 14px;
-}
-
-/* Keep the form's last line aligned with the diagram even when it sets row height. */
-.hero-copy .signup {
-  margin-top: auto;
-  padding-top: 14px;
-}
-
 .signup label {
   display: block;
   margin-bottom: 6px;
