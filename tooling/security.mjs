@@ -1,12 +1,12 @@
 import { createHash } from 'node:crypto'
 
-// The approved embed and the runtime it loads. These are public form addresses,
+// The approved HTML form and its shared runtime. These are public addresses,
 // not API credentials; changes to the form's integrations need a CSP review.
+export const KIT_FORM_ID = '9949657'
 export const KIT_FORM_UID = 'eba19436d6'
-export const KIT_FORM_SCRIPT = `https://failoverly-app.kit.com/${KIT_FORM_UID}/index.js`
 export const KIT_RUNTIME_SCRIPT = 'https://f.convertkit.com/ckjs/ck.5.js'
-export const KIT_FORM_ACTION = 'https://app.kit.com/forms/9949657/subscriptions'
-export const KIT_VISIT_URL = 'https://app.convertkit.com/forms/9949657/visit'
+export const KIT_FORM_ACTION = `https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`
+export const KIT_VISIT_URL = `https://app.convertkit.com/forms/${KIT_FORM_ID}/visit`
 
 export const ANALYTICS_SCRIPT_PATH = '/_vercel/insights/script.js'
 
@@ -33,7 +33,7 @@ export function contentSecurityPolicy(html, { kitForm = false, analyticsOrigin }
   }
 
   const scripts = [hashes('script')]
-  if (kitForm) scripts.push(KIT_FORM_SCRIPT, KIT_RUNTIME_SCRIPT)
+  if (kitForm) scripts.push(KIT_RUNTIME_SCRIPT)
   if (analyticsOrigin) scripts.push(...analyticsScriptSources(analyticsOrigin))
 
   return [

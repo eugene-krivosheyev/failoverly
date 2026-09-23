@@ -1,43 +1,53 @@
-// Kit owns validation, requests, attribution, and the confirmation message.
-// This module adds the landing's visible labels and email keyboard/autofill hints.
+// The forms and their accessible labels are already in HTML. Kit owns validation,
+// requests, attribution, and confirmation; no custom signup API is needed.
 export function initSignupForms() {
-  document.querySelectorAll('[data-kit-signup]').forEach(container => {
-    const placement = container.dataset.kitSignup
+  const containers = document.querySelectorAll('[data-kit-signup]')
+  const query = new URLSearchParams(window.location.search)
+
+  containers.forEach(container => {
     const fallback = container.querySelector('[data-kit-fallback]')
     const url = new URL(fallback.href)
 
-    // Preserve campaign attribution if a blocked embed sends someone to the hosted form.
+    // Preserve campaign attribution if someone uses the hosted form instead.
     // Forward only campaign tags, never arbitrary query values or email addresses.
-    const query = new URLSearchParams(window.location.search)
     for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
       if (query.has(key)) url.searchParams.set(key, query.get(key))
     }
     fallback.href = url.href
+  })
 
-    const enhance = () => {
+  const updateReady = () => {
+    // Kit registers each HTML form here after attaching its submit handler.
+    // A rendered input alone does not mean the external runtime has loaded.
+    containers.forEach(container => {
       const form = container.querySelector('.formkit-form')
-      const input = form?.querySelector('input[name="email_address"]')
-      if (!input) return false
-
-      form.setAttribute('aria-label', 'Join the Failoverly waitlist')
-      input.id = `${placement}-email`
-      input.type = 'email'
-      input.autocomplete = 'email'
-      input.inputMode = 'email'
-      input.spellcheck = false
-      input.setAttribute('aria-describedby', `${placement}-privacy`)
-      input.placeholder = 'you@example.com'
-      // Kit adds status text inside this group after its API responds.
-      form.querySelector('[data-style="clean"]')?.setAttribute('aria-live', 'polite')
-      return true
-    }
-
-    // Async scripts may finish before or after this module. Observe each slot only
-    // until its form arrives; no polling or custom submit handlers are needed.
-    if (enhance()) return
-    const observer = new MutationObserver(() => {
-      if (enhance()) observer.disconnect()
+      const initialized = window.__sv_forms?.some(entry => entry.element === form && entry.initialized)
+      container.dataset.kitReady = String(Boolean(initialized))
     })
-    observer.observe(container, { childList: true, subtree: true })
+  }
+
+  updateReady()
+  document.getElementById('kit-runtime')?.addEventListener('load', updateReady, { once: true })
+  // Covers either execution order of the deferred Kit script and our module.
+  document.addEventListener('DOMContentLoaded', updateReady, { once: true })
+
+  // Kit gives success messages the form UID as a page-wide ID. Both placements
+  // share that UID, so mirror its confirmation instead of leaving a second form
+  // that cannot show its own success message. Kit still owns the submission.
+  document.addEventListener('ckjs:submission:complete', event => {
+    const source = event.target
+    if (![...containers].some(container => container.contains(source))) return
+    // Kit inserts the success message immediately after dispatching this event.
+    queueMicrotask(() => {
+      const confirmation = source.querySelector('[data-element="success"]')
+      if (!confirmation) return
+      containers.forEach(container => {
+        const form = container.querySelector('.formkit-form')
+        if (form === source || form.dataset.uid !== source.dataset.uid) return
+        const message = confirmation.cloneNode(true)
+        message.removeAttribute('id')
+        form.querySelector('[data-element="fields"]')?.replaceWith(message)
+      })
+    })
   })
 }

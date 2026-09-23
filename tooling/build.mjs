@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile, copyFile, cp, rm } from 'node:fs/promises'
 import { resolve, posix } from 'node:path'
 import config from '../site.config.json'
 import hosting from '../vercel.json'
-import { contentSecurityPolicy, KIT_FORM_SCRIPT } from './security.mjs'
+import { contentSecurityPolicy, KIT_RUNTIME_SCRIPT } from './security.mjs'
 
 // A single origin drives canonical, social metadata, structured data, and sitemap.
 const siteUrl = new URL(process.env.SITE_URL || config.url)
@@ -33,7 +33,7 @@ const result = await Bun.build({
     'process.env.VERCEL_ENV': JSON.stringify(process.env.VERCEL_ENV || 'production')
   },
   // The editable logo's font is removed after its text is replaced with outlines.
-  external: ['*.woff2', KIT_FORM_SCRIPT],
+  external: ['*.woff2', KIT_RUNTIME_SCRIPT],
   sourcemap: 'none',
   naming: {
     entry: '[name].[ext]',

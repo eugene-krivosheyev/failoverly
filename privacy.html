@@ -74,10 +74,13 @@
           <a href="https://vercel.com/docs/analytics/privacy-policy">Vercel’s analytics privacy information</a>.
         </p>
         <p>
-          The embedded Kit form receives technical information when it loads, such as your IP address and browser
-          information. It also reports form visits, the referring page, and campaign parameters in the page URL (such as
-          UTM tags) to help attribute signups. Kit uses browser local storage for a visitor identifier and signup
-          status. Its infrastructure may also set security cookies to protect the form from automated abuse.
+          The signup forms are included in our website’s HTML. We load Kit’s form script without cross-origin
+          credentials, so that script download does not include cookies for Kit’s domain. Kit receives technical
+          information such as your IP address and browser information when its resources load. Its form script also
+          reports form visits, the referring page, and campaign parameters in the page URL (such as UTM tags) to help
+          attribute signups, and uses browser local storage for a visitor identifier and signup status. Kit handles
+          submitted signup information. Its hosted forms or security checks may use cookies to protect against automated
+          abuse.
         </p>
         <p>
           We have not configured Google Analytics or advertising pixels on this website. We will update this policy

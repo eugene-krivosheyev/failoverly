@@ -10,8 +10,8 @@
     "assets": "bun tooling/brand-assets.mjs",
     "audit": "bun tooling/audit.mjs",
     "audit:3g": "bun tooling/audit.mjs --3g",
-    "format": "prettier --write index.html privacy.html css/main.css scripts/*.js tooling/*.mjs package.json site.config.json vercel.json README.md",
-    "format:check": "prettier --check index.html privacy.html css/main.css scripts/*.js tooling/*.mjs package.json site.config.json vercel.json README.md",
+    "format": "prettier --write index.html privacy.html css/*.css scripts/*.js tooling/*.mjs package.json site.config.json vercel.json README.md",
+    "format:check": "prettier --check index.html privacy.html css/*.css scripts/*.js tooling/*.mjs package.json site.config.json vercel.json README.md",
     "check": "bun run format:check && bun run build && bun tooling/check-build.mjs"
   },
   "devDependencies": {

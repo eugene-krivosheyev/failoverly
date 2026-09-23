@@ -291,14 +291,12 @@ h3 {
   font-size: calc(14px * var(--type-scale));
 }
 
-/* Override only the Kit form's layout and theme; Kit owns submission and status.
-   Extra specificity keeps these rules stable when the async embed adds its CSS.
-   !important is limited to properties the provider sets as inline styles. */
+/* Override the provider stylesheet's layout and theme; Kit owns submission and status. */
 .kit-embed {
   min-height: 100px;
 }
 
-.kit-embed:has(.formkit-form) .signup-fallback {
+.signup[data-kit-ready='true'] .signup-fallback {
   display: none;
 }
 
@@ -330,9 +328,9 @@ h3 {
   min-width: 0;
   height: 48px;
   padding: 0 13px;
-  border-color: var(--control-border) !important;
-  border-radius: 5px !important;
-  color: var(--ink) !important;
+  border-color: var(--control-border);
+  border-radius: 5px;
+  color: var(--ink);
   background: var(--canvas);
   font-family: inherit;
   font-size: calc(16px * var(--type-scale));
@@ -344,16 +342,17 @@ h3 {
 }
 
 .signup .kit-embed form.formkit-form[data-uid] .formkit-fields .formkit-submit {
+  position: relative;
   flex: 1 0 auto;
   min-height: 48px;
   margin: 0;
   border: 1px solid var(--action);
-  border-radius: 5px !important;
-  background: var(--action) !important;
-  color: var(--canvas) !important;
+  border-radius: 5px;
+  background: var(--action);
+  color: var(--canvas);
   font-family: inherit;
   font-size: calc(15px * var(--type-scale));
-  font-weight: 600 !important;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -362,7 +361,7 @@ h3 {
 }
 
 .signup .kit-embed form.formkit-form[data-uid] .formkit-submit:hover {
-  background: var(--action-hover) !important;
+  background: var(--action-hover);
 }
 
 .signup .kit-embed form.formkit-form[data-uid] :is(input, button, a):focus-visible {

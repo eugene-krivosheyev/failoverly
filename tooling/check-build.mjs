@@ -4,8 +4,8 @@ import { readFile, access, readdir } from 'node:fs/promises'
 import { resolve, dirname, relative, sep } from 'node:path'
 import config from '../site.config.json'
 import {
+  KIT_FORM_ID,
   KIT_FORM_UID,
-  KIT_FORM_SCRIPT,
   KIT_RUNTIME_SCRIPT,
   KIT_FORM_ACTION,
   KIT_VISIT_URL,
@@ -39,7 +39,7 @@ async function checkAsset(reference, fromFile) {
   }
 }
 
-let kitEmbeds = 0
+let kitRuntimes = 0
 for (const [name, document] of [
   ['index.html', html],
   ['privacy.html', privacy]
@@ -47,17 +47,39 @@ for (const [name, document] of [
   for (const [tag] of document.matchAll(/<(?:script|link|img)\b[^>]*>/g)) {
     if (tag.startsWith('<link') && !/rel="(?:stylesheet|preload|icon|apple-touch-icon)"/.test(tag)) continue
     const reference = tag.match(/(?:src|href)="([^"]+)"/)?.[1]
-    if (name === 'index.html' && tag.startsWith('<script') && reference === KIT_FORM_SCRIPT) {
-      assert(tag.includes(`data-uid="${KIT_FORM_UID}"`), 'Kit embed must use the approved form UID.')
-      assert(/\sasync(?:\s|>|=)/.test(tag), 'The Kit form must load asynchronously.')
-      kitEmbeds++
+    if (name === 'index.html' && tag.startsWith('<script') && reference === KIT_RUNTIME_SCRIPT) {
+      assert(/\sdefer(?:\s|>|=)/.test(tag), 'Kit must load without blocking HTML parsing.')
+      assert(tag.includes('crossorigin="anonymous"'), 'Kit runtime must load without cross-origin credentials.')
+      assert(tag.includes('id="kit-runtime"'), 'The Kit runtime needs a stable load-event target.')
+      kitRuntimes++
     } else if (reference) {
       await checkAsset(reference, resolve(root, name))
       assert(!tag.startsWith('<script'), 'Local production interactions must remain inline.')
     }
   }
 }
-assert(kitEmbeds > 0, 'The approved Kit form embed is missing.')
+assert.equal(kitRuntimes, 1, 'Both forms must share one Kit runtime.')
+assert(
+  !html.includes(`https://failoverly-app.kit.com/${KIT_FORM_UID}/index.js`),
+  'Remove the cookie-setting Kit bootstrap.'
+)
+const kitForms = [...html.matchAll(/<form\b([^>]*)>([\s\S]*?)<\/form>/g)]
+assert.equal(kitForms.length, 2, 'Both signup placements must contain a static HTML form.')
+for (const [index, [, attributes, contents]] of kitForms.entries()) {
+  const placement = index === 0 ? 'hero' : 'final'
+  assert(attributes.includes(`action="${KIT_FORM_ACTION}"`), 'Use the approved Kit subscription endpoint.')
+  assert(attributes.includes('method="post"'), 'Email addresses must not be submitted in a URL.')
+  assert(attributes.includes(`data-sv-form="${KIT_FORM_ID}"`), 'Kit form ID mismatch.')
+  assert(attributes.includes(`data-uid="${KIT_FORM_UID}"`), 'Kit form UID mismatch.')
+  const options = attributes.match(/data-options=(["'])(.*?)\1/)?.[2]
+  assert(options, 'Preserve Kit form settings in the HTML embed.')
+  JSON.parse(options.replaceAll('&quot;', '"').replaceAll('&amp;', '&'))
+  assert(contents.includes('name="email_address"'), 'Kit email field missing.')
+  assert(contents.includes(`id="${placement}-email"`), 'Each email input needs its own accessible label.')
+  assert(contents.includes(`aria-describedby="${placement}-privacy"`), 'Keep the privacy note connected to its input.')
+  assert(contents.includes('data-element="submit"'), 'Kit submit hook missing.')
+  assert(contents.includes('Built with Kit'), 'Preserve the supplied Kit branding.')
+}
 
 assert.equal(privacy.match(/rel="canonical"\s+href="([^"]+)"/)?.[1], `${origin}/privacy.html`)
 assert.equal(
@@ -67,7 +89,7 @@ assert.equal(
 )
 assert.equal((privacy.match(/<h1\b/g) || []).length, 1)
 assert(/<script type="module">/.test(privacy), 'Privacy analytics must retain deferred module execution.')
-assert(!privacy.includes(KIT_FORM_SCRIPT), 'Do not load signup forms on the privacy document.')
+assert(!privacy.includes(KIT_RUNTIME_SCRIPT), 'Do not load signup forms on the privacy document.')
 assert(!/<link\b[^>]*rel="stylesheet"/.test(privacy), 'Privacy CSS must be embedded too.')
 assert(!html.includes('privacy-template'), 'Remove the obsolete modal privacy placeholder.')
 assert.equal(
@@ -168,7 +190,7 @@ function checkPolicy(header, document, kitForm = false) {
     const expected = [...document.matchAll(new RegExp(`<${tag}\\b([^>]*)>([\\s\\S]*?)<\\/${tag}>`, 'g'))]
       .filter(([, attributes]) => tag !== 'script' || !/\bsrc\s*=/.test(attributes))
       .map(([, , contents]) => `'sha256-${createHash('sha256').update(contents).digest('base64')}'`)
-    if (kitForm && tag === 'script') expected.push(KIT_FORM_SCRIPT, KIT_RUNTIME_SCRIPT)
+    if (kitForm && tag === 'script') expected.push(KIT_RUNTIME_SCRIPT)
     if (tag === 'script') expected.push(...analyticsScriptSources(origin))
     if (kitForm && tag === 'style') expected.splice(0, expected.length, "'unsafe-inline'")
     assert.deepEqual(
