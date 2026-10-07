@@ -349,6 +349,58 @@
                 height="1374"
                 href="images/hero-illustration.webp"
               />
+              <g id="iphone-charging" aria-hidden="true">
+                <defs>
+                  <filter id="charging-icon-softness" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="0.15" />
+                  </filter>
+                  <linearGradient
+                    id="charging-plug-body"
+                    x1="918.5"
+                    y1="0"
+                    x2="966.5"
+                    y2="0"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop offset="0" stop-color="#090b0c" />
+                    <stop offset="0.14" stop-color="#22282e" />
+                    <stop offset="0.3" stop-color="#181c20" />
+                    <stop offset="0.65" stop-color="#0e1011" />
+                    <stop offset="0.88" stop-color="#080a0b" />
+                    <stop offset="1" stop-color="#171b20" />
+                  </linearGradient>
+                  <linearGradient
+                    id="charging-plug-contact"
+                    x1="0"
+                    y1="1338"
+                    x2="0"
+                    y2="1344"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop offset="0" stop-color="#000" stop-opacity="0.4" />
+                    <stop offset="1" stop-color="#000" stop-opacity="0" />
+                  </linearGradient>
+                  <clipPath id="charging-plug-clip">
+                    <rect x="918.5" y="1338" width="48" height="36" rx="1.5" />
+                  </clipPath>
+                </defs>
+                <g clip-path="url(#charging-plug-clip)">
+                  <rect x="918.5" y="1338" width="48" height="36" fill="url(#charging-plug-body)" />
+                  <rect x="922.75" y="1339.5" width="1.5" height="34.5" rx="0.75" fill="#5c6471" opacity="0.3" />
+                  <rect x="963" y="1339.5" width="1" height="34.5" rx="0.5" fill="#38404b" opacity="0.4" />
+                  <rect x="918.5" y="1338" width="48" height="6" fill="url(#charging-plug-contact)" />
+                </g>
+                <g filter="url(#charging-icon-softness)">
+                  <rect x="1074.5" y="655" width="16.5" height="8.5" rx="1" fill="#40c75c" />
+                  <path
+                    d="M 1085.5 652.5 L 1079.5 660.5 H 1083.1 L 1081.5 666.5 L 1087.5 658.5 H 1083.9 Z"
+                    fill="#f8faf9"
+                    stroke="#56636a"
+                    stroke-width="0.55"
+                    stroke-linejoin="round"
+                  />
+                </g>
+              </g>
               <g id="led-overlays" aria-hidden="true">
                 <circle id="led-1" class="led" data-led="1" cx="145.2" cy="495.1" r="8" fill="#01fb00" opacity="0" />
                 <circle id="led-2" class="led" data-led="2" cx="179.9" cy="495.1" r="8" fill="#01fb00" opacity="0" />
