@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Failoverly — webinar campaign creative</title>
+    <style>
+      /* Match the landing page's macOS system typography and color tokens. */
+      :root {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: #202124;
+        background: #eceef1;
+        font-synthesis: none;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 40px; }
+
+      .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 40px;
+      }
+
+      figure { margin: 0; }
+      figcaption { margin-bottom: 16px; font-size: 14px; color: #555960; }
+
+      .artboard {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      /* The Feed artwork also keeps the text inside a central square crop. */
+      .feed {
+        width: 1440px;
+        height: 1800px;
+        padding: 200px 144px;
+        --headline-size: 128px;
+        --body-size: 60px;
+        --copy-gap: 68px;
+        --paragraph-gap: 28px;
+      }
+
+      /* Leave generous room for the Stories account header and bottom CTA. */
+      .story {
+        width: 1080px;
+        height: 1920px;
+        padding: 300px 102px 675px;
+        --headline-size: 94px;
+        --body-size: 44px;
+        --copy-gap: 48px;
+        --paragraph-gap: 22px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: var(--headline-size);
+        font-weight: 700;
+        line-height: 1.04;
+        letter-spacing: -0.04em;
+        word-spacing: 0.025em;
+      }
+
+      h1 span { display: block; white-space: nowrap; }
+      h1 .second-thought { margin-top: 0.2em; }
+
+      .body-copy {
+        margin-top: var(--copy-gap);
+        font-size: var(--body-size);
+        font-weight: 400;
+        line-height: 1.36;
+        letter-spacing: -0.012em;
+        color: #555960;
+      }
+
+      p { margin: 0; }
+      p + p { margin-top: var(--paragraph-gap); }
+      .keep-together { white-space: nowrap; }
+
+      /* Preview only. PNG exports capture each artboard at its native size. */
+      body:not(.export) .feed { zoom: 0.25; }
+      body:not(.export) .story { zoom: calc(1 / 3); }
+
+      @media (max-width: 440px) {
+        body:not(.export) { padding: 16px; }
+        body:not(.export) .feed { zoom: 0.225; }
+        body:not(.export) .story { zoom: 0.3; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Edit the approved copy here once; both sizes use the same template. -->
+    <template id="approved-copy">
+      <div class="copy">
+        <h1>
+          <span>Your Wi-Fi says </span>
+          <span>“connected.” </span>
+          <span class="second-thought">Your webinar </span>
+          <span>quality disagrees.</span>
+        </h1>
+        <div class="body-copy">
+          <p>
+            Failoverly helps keep your broadcast session connected during sudden internet slowdowns.
+          </p>
+          <p>
+            Coming soon for Mac + <span class="keep-together">iPhone over USB.</span>
+            <span class="keep-together">Join the waitlist.</span>
+          </p>
+        </div>
+      </div>
+    </template>
+
+    <main class="gallery">
+      <figure>
+        <figcaption>Facebook Feed · 4:5 · 1440 × 1800</figcaption>
+        <article class="artboard feed" id="feed" aria-label="Facebook Feed creative"></article>
+      </figure>
+      <figure>
+        <figcaption>Stories · 9:16 · 1080 × 1920</figcaption>
+        <article class="artboard story" id="story" aria-label="Stories creative"></article>
+      </figure>
+    </main>
+    <script>
+      const template = document.querySelector('#approved-copy');
+      for (const artboard of document.querySelectorAll('.artboard')) {
+        artboard.append(template.content.cloneNode(true));
+      }
+      if (new URLSearchParams(location.search).has('export')) {
+        document.body.classList.add('export');
+      }
+    </script>
+  </body>
+</html>

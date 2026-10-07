@@ -21,9 +21,9 @@ if (!inlineLogo || font.subfamilyName !== 'Regular') {
   throw new Error('Expected the approved inline brand logo and Inter Regular.')
 }
 
-const tagline = 'Internet failover for Mac'
+const tagline = 'Reliable Internet with any Provider'
 const title = `Failoverly — ${tagline}`
-const taglineElement = /<text\b(?=[^>]*class="brand-tagline")[^>]*>\s*Internet failover for Mac\s*<\/text>/
+const taglineElement = /<text\b(?=[^>]*class="brand-tagline")[^>]*>\s*Reliable Internet with any Provider\s*<\/text>/
 const taglineSource = inlineLogo.match(taglineElement)?.[0]
 if (!taglineSource) {
   throw new Error('The approved tagline changed; review its outline settings.')
@@ -62,7 +62,7 @@ function outlineText(text, { x, y, size, textLength, label = text }) {
 }
 
 const logoContents = inlineLogo
-  .replace(taglineElement, outlineText(tagline, { ...taglinePosition, size: 15 }))
+  .replace(taglineElement, outlineText(tagline, { ...taglinePosition, size: 11.5 }))
   .split('\n')
   .map(line => line.trim())
   .filter(Boolean)
@@ -79,7 +79,7 @@ const logo = svgDocument({
   viewBox: '100 4.84033 183.45 62',
   title,
   description:
-    'Approved optically spaced wordmark with a slashed o. Tagline outlined in Inter Regular at its original y=62 baseline.',
+    'Approved optically spaced wordmark with a slashed o. Reliable Internet with any Provider tagline outlined in Inter Regular at 11.5 px on the y=59 baseline.',
   contents: logoContents
 })
 

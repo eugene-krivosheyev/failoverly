@@ -74,11 +74,11 @@
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <header class="site-header wrap">
-      <a class="brand" href="#main" aria-label="Failoverly — Internet failover for Mac — home">
+      <a class="brand" href="#main" aria-label="Failoverly — Reliable Internet with any Provider — home">
         <svg
           class="brand-logo"
           role="img"
-          aria-label="Failoverly — Internet failover for Mac"
+          aria-label="Failoverly — Reliable Internet with any Provider"
           width="183.45"
           height="62"
           viewBox="100 4.84033 183.45 62"
@@ -145,9 +145,9 @@
               d="M268.379 46.6841C267.621 46.6841 266.92 46.6226 266.275 46.4997C265.64 46.387 265.133 46.2538 264.754 46.1002L266.044 41.7667C266.853 42.0023 267.575 42.115 268.21 42.1048C268.845 42.0946 269.403 41.8948 269.885 41.5055C270.376 41.1264 270.791 40.4913 271.129 39.6L271.605 38.3246L263.049 14.2294H268.948L274.386 32.0549H274.632L280.085 14.2294H286L276.552 40.6911C276.112 41.9409 275.528 43.0114 274.801 43.9027C274.074 44.8042 273.183 45.4906 272.128 45.9619C271.083 46.4433 269.834 46.6841 268.379 46.6841Z"
             />
           </g>
-          <!-- Align the visible letter edges, compensating for Inter's sidebearings. -->
-          <text class="brand-tagline" x="98.681640625" y="62" textLength="185.50078125" lengthAdjust="spacing">
-            Internet failover for Mac
+          <!-- Keep the tagline close to the wordmark and optically inside the slanted y. -->
+          <text class="brand-tagline" x="98.681640625" y="59" textLength="180.5" lengthAdjust="spacing">
+            Reliable Internet with any Provider
           </text>
         </svg>
       </a>
@@ -160,15 +160,32 @@
 
     <main id="main" class="wrap">
       <section class="hero" aria-labelledby="hero-title">
-        <h1 id="hero-title"><span>Your internet slows or drops.</span> <span>Your session stays.</span></h1>
+        <h1
+          id="hero-title"
+          aria-label="Your internet slows or drops. Your online call, webinar, stream, game session, or working session stays."
+        >
+          <span aria-hidden="true">Your internet slows or drops.</span>
+          <span class="hero-title-rotation" aria-hidden="true">
+            Your
+            <span class="hero-rotator" data-hero-rotator>
+              <span data-hero-word data-active="true">online call</span>
+              <span data-hero-word data-active="false">webinar</span>
+              <span data-hero-word data-active="false">stream</span>
+              <span data-hero-word data-active="false">game session</span>
+              <span data-hero-word data-active="false">working session</span>
+            </span>
+          </span>
+          <span aria-hidden="true">stays.</span>
+        </h1>
         <div class="hero-body">
           <div class="hero-copy">
             <p class="hero-description">
-              Failoverly keeps calls, streams, and online sessions connected through outages and sudden slowdowns — even
-              when Wi-Fi says &quot;connected&quot;. It automatically switches to your iPhone hotspot over USB and back.
+              Failoverly keeps online calls, webinars, streams, game and working sessions connected through outages and
+              sudden slowdowns — even when Wi-Fi says &quot;connected&quot;. It automatically switches to your iPhone
+              hotspot over USB and back to primary provider.
             </p>
             <p class="offer">
-              Join before launch for <strong>your first month free.</strong> <br />
+              Join before launch for <strong>your first month free.</strong>
               <span class="price">US$6.99/month</span> after that.
               <span class="compatibility">Requires a Mac and an iPhone connected over USB.</span>
             </p>
@@ -193,7 +210,6 @@
                       <div class="formkit-field">
                         <input
                           id="hero-email"
-                          aria-describedby="hero-privacy"
                           autocomplete="email"
                           inputmode="email"
                           spellcheck="false"
@@ -217,13 +233,90 @@
                   </div>
                 </form>
               </div>
-              <p class="signup-note" id="hero-privacy">
-                Sign up for our launch announcement. No spam. We recommend Apple’s Hide My Email (iCloud+) to keep your
-                real address private.
-                <a href="privacy.html">Privacy Policy</a>.
-              </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="use-cases-title">
+        <h2 id="use-cases-title">Your iPhone is automatic Internet backup</h2>
+        <div class="use-cases">
+          <article class="use-case">
+            <h3><span class="case-tag">Work calls &amp; online coaching</span></h3>
+            <p class="case-offer">The call freezes. Your reputation shouldn’t.</p>
+            <p class="case-description">
+              Dropped calls on Zoom, Microsoft Teams, or Google Meet leave everyone waiting. Keep colleagues engaged and
+              give paying clients the time they booked.
+            </p>
+          </article>
+          <article class="use-case">
+            <h3><span class="case-tag">Webinars &amp; live streaming</span></h3>
+            <p class="case-offer">Hold their attention to the last frame.</p>
+            <p class="case-description">
+              An unstable connection can cause bitrate drops and dropped frames in your OBS stream on Twitch. Keep your
+              audience with you through your sign-off.
+            </p>
+          </article>
+          <article class="use-case">
+            <h3><span class="case-tag">Online gaming</span></h3>
+            <p class="case-offer">Don’t leave your team a player down.</p>
+            <p class="case-description">
+              Lag spikes and disconnects hit hardest mid-match. Stay in the game, make the next play, and be there when
+              your teammates need you.
+            </p>
+          </article>
+          <article class="use-case">
+            <h3><span class="case-tag">Developers &amp; DevOps</span></h3>
+            <p class="case-offer">Your SSH session outlives the outage.</p>
+            <p class="case-description">
+              A dropped connection and a “broken pipe” error mid-deploy can mean costly recovery. Keep configuring,
+              deploying, and troubleshooting without reconnecting.
+            </p>
+          </article>
+          <article class="use-case">
+            <h3><span class="case-tag">Traders</span></h3>
+            <p class="case-offer">The price moves. You’re ready.</p>
+            <p class="case-description">
+              Connection delays shouldn’t decide your next move. Stay connected to your trading platform to react when
+              prices change, adjust positions, and manage risk.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="how-it-works" aria-labelledby="how-title">
+        <h2 id="how-title">How automatic internet failover works</h2>
+        <div class="how-body">
+          <ol class="steps">
+            <li>
+              <h3>Set up your iPhone hotspot.</h3>
+              <p>
+                Connect via USB and enable Personal Hotspot. Keep using your usual internet connection until backup is
+                needed.
+              </p>
+            </li>
+            <li>
+              <h3>Let the Failoverly app watch your connection.</h3>
+              <p>
+                The app runs in your Mac’s menu bar and monitors latency and packet loss. It can switch to your iPhone
+                hotspot during outages or sudden slowdowns, even while Wi-Fi stays connected.
+              </p>
+            </li>
+            <li>
+              <h3>Keep your session going.</h3>
+              <p>
+                An encrypted VPN tunnel through Failoverly’s servers keeps your online sessions connected as traffic
+                moves to your iPhone hotspot.
+              </p>
+            </li>
+            <li>
+              <h3>Switch back. Save cellular data.</h3>
+              <p>
+                When your main connection recovers, Failoverly automatically switches back to save cellular data and
+                help avoid unnecessary mobile data charges.
+              </p>
+            </li>
+          </ol>
 
           <figure
             class="preview"
@@ -295,108 +388,20 @@
         </div>
       </section>
 
-      <section class="section" aria-labelledby="use-cases-title">
-        <h2 id="use-cases-title">Backup internet for Mac: calls, streams, and more</h2>
-        <div class="use-cases">
-          <article class="use-case">
-            <h3><span class="case-tag">Work calls &amp; online coaching</span></h3>
-            <p class="case-offer">The call freezes. Your reputation shouldn’t.</p>
-            <p class="case-description">
-              Dropped calls on Zoom, Microsoft Teams, or Google Meet leave everyone waiting. Keep colleagues engaged and
-              give paying clients the time they booked.
-            </p>
-          </article>
-          <article class="use-case">
-            <h3><span class="case-tag">Webinars &amp; live streaming</span></h3>
-            <p class="case-offer">Hold their attention to the last frame.</p>
-            <p class="case-description">
-              An unstable connection can cause bitrate drops and dropped frames in your OBS stream on Twitch. Keep your
-              audience with you through your sign-off.
-            </p>
-          </article>
-          <article class="use-case">
-            <h3><span class="case-tag">Online gaming</span></h3>
-            <p class="case-offer">Don’t leave your team a player down.</p>
-            <p class="case-description">
-              Lag spikes and disconnects hit hardest mid-match. Stay in the game, make the next play, and be there when
-              your teammates need you.
-            </p>
-          </article>
-          <article class="use-case">
-            <h3><span class="case-tag">Developers &amp; DevOps</span></h3>
-            <p class="case-offer">Your SSH session outlives the outage.</p>
-            <p class="case-description">
-              A dropped connection and a “broken pipe” error mid-deploy can mean costly recovery. Keep configuring,
-              deploying, and troubleshooting without reconnecting.
-            </p>
-          </article>
-          <article class="use-case">
-            <h3><span class="case-tag">Traders</span></h3>
-            <p class="case-offer">The price moves. You’re ready.</p>
-            <p class="case-description">
-              Connection delays shouldn’t decide your next move. Stay connected to your trading platform to react when
-              prices change, adjust positions, and manage risk.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="how-it-works" aria-labelledby="how-title">
-        <h2 id="how-title">How automatic internet failover works on your Mac</h2>
-        <ol class="steps">
-          <li>
-            <h3>Set up your iPhone hotspot.</h3>
-            <p>
-              Connect via USB and enable Personal Hotspot. Keep using your usual internet connection until backup is
-              needed.
-            </p>
-          </li>
-          <li>
-            <h3>Let the Failoverly app watch your connection.</h3>
-            <p>
-              The app runs in your Mac’s menu bar and monitors latency and packet loss. It can switch to your iPhone
-              hotspot during outages or sudden slowdowns, even while Wi-Fi stays connected.
-            </p>
-          </li>
-          <li>
-            <h3>Keep your session going.</h3>
-            <p>
-              An encrypted VPN tunnel through Failoverly’s servers keeps your online sessions connected as traffic moves
-              to your iPhone hotspot.
-            </p>
-          </li>
-          <li>
-            <h3>Switch back. Save cellular data.</h3>
-            <p>
-              When your main connection recovers, Failoverly automatically switches back to save cellular data and help
-              avoid unnecessary mobile data charges.
-            </p>
-          </li>
-        </ol>
-      </section>
-
-      <section class="context" aria-labelledby="when-title">
-        <h2 id="when-title">When you need a backup internet connection</h2>
+      <section class="context">
         <div class="context-statement">
           <p class="qualification">If your internet is rock-solid, you don’t need Failoverly.</p>
         </div>
         <p class="context-description">
-          For flaky Wi-Fi at home, unreliable hotel Wi-Fi while traveling, or congested public Wi-Fi in cafés and
-          coworking spaces. A backup internet connection helps remote workers and digital nomads stay connected when it
-          matters.
+          Failoverly app is for flaky Wi-Fi at home, unreliable hotel Wi-Fi while traveling, or congested public Wi-Fi
+          in cafés and coworking spaces. A backup internet connection helps remote workers and digital nomads stay
+          connected when it matters.
         </p>
       </section>
 
       <section class="section faq-layout" id="faq" aria-labelledby="faq-title">
         <div class="faq-heading">
-          <h2 id="faq-title">
-            Internet failover<br />
-            for Mac: FAQ
-          </h2>
-          <p>
-            The setup, the tradeoffs,<br />
-            and what happens next.
-          </p>
+          <h2 id="faq-title">FAQ</h2>
         </div>
         <div class="faq-list">
           <details>
@@ -506,7 +511,7 @@
         <div class="final-heading"><h2 id="final-title">Give your next online session a backup plan.</h2></div>
         <div>
           <p class="offer">
-            Join before launch for <strong>your first month free.</strong> <br />
+            Join before launch for <strong>your first month free.</strong>
             <span class="price">US$6.99/month</span> after that.
             <span class="compatibility">Requires a Mac and an iPhone connected over USB.</span>
           </p>

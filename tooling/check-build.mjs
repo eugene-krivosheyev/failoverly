@@ -78,7 +78,14 @@ for (const [index, [, attributes, contents]] of kitForms.entries()) {
   const formOptions = JSON.parse(options.replaceAll('&quot;', '"').replaceAll('&amp;', '&'))
   assert(contents.includes('name="email_address"'), 'Kit email field missing.')
   assert(contents.includes(`id="${placement}-email"`), 'Each email input needs its own accessible label.')
-  assert(contents.includes(`aria-describedby="${placement}-privacy"`), 'Keep the privacy note connected to its input.')
+  if (placement === 'final') {
+    assert(
+      contents.includes(`aria-describedby="${placement}-privacy"`),
+      'Keep the privacy note connected to its input.'
+    )
+  } else {
+    assert(!contents.includes('aria-describedby='), 'The hero form must not reference a removed privacy note.')
+  }
   assert(contents.includes('data-element="submit"'), 'Kit submit hook missing.')
   assert.equal(
     contents.includes('data-element="powered-by"'),
@@ -100,8 +107,8 @@ assert(!/<link\b[^>]*rel="stylesheet"/.test(privacy), 'Privacy CSS must be embed
 assert(!html.includes('privacy-template'), 'Remove the obsolete modal privacy placeholder.')
 assert.equal(
   (html.replace(/<template\b[^>]*>[\s\S]*?<\/template>/g, '').match(/href="privacy\.html"/g) || []).length,
-  3,
-  'Both forms and the footer must link to the privacy page.'
+  2,
+  'The final form and the footer must link to the privacy page.'
 )
 assert(!html.includes('data-signup-form'), 'Remove the replaced signup placeholders.')
 assert(!html.includes('survey-template'), 'Remove the disconnected survey placeholder.')
