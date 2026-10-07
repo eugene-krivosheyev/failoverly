@@ -154,7 +154,6 @@
       <nav class="nav" aria-label="Main navigation">
         <a href="#how-it-works">How it works</a>
         <a href="#faq">FAQ</a>
-        <a class="button nav-cta" href="#final-signup">Join the waitlist</a>
       </nav>
     </header>
 
@@ -162,7 +161,7 @@
       <section class="hero" aria-labelledby="hero-title">
         <h1
           id="hero-title"
-          aria-label="Your internet slows or drops. Your online call, webinar, stream, game session, or working session stays."
+          aria-label="Your internet slows or drops. Your online call, webinar, stream, game, or session stays."
         >
           <span aria-hidden="true">Your internet slows or drops.</span>
           <span class="hero-title-rotation" aria-hidden="true">
@@ -171,8 +170,8 @@
               <span data-hero-word data-active="true">online call</span>
               <span data-hero-word data-active="false">webinar</span>
               <span data-hero-word data-active="false">stream</span>
-              <span data-hero-word data-active="false">game session</span>
-              <span data-hero-word data-active="false">working session</span>
+              <span data-hero-word data-active="false">game</span>
+              <span data-hero-word data-active="false">session</span>
             </span>
           </span>
           <span aria-hidden="true">stays.</span>
@@ -285,8 +284,8 @@
       </section>
 
       <section class="section" id="how-it-works" aria-labelledby="how-title">
-        <h2 id="how-title">How automatic internet failover works</h2>
         <div class="how-body">
+          <h2 id="how-title">How automatic internet failover works</h2>
           <ol class="steps">
             <li>
               <h3>Set up your iPhone hotspot.</h3>
@@ -318,73 +317,96 @@
             </li>
           </ol>
 
-          <figure
-            class="preview"
-            data-backup="false"
-            aria-label="Illustration of a session staying connected while traffic switches to an iPhone hotspot over USB"
-          >
-            <div class="preview-top"><strong>One session. Two ways online.</strong></div>
-            <div class="connection-diagram">
-              <div class="source source-wifi">
-                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" aria-hidden="true">
-                  <path
-                    d="M2 8a17 17 0 0 1 21 0M5.5 12a11 11 0 0 1 14 0M9 16a5.5 5.5 0 0 1 7 0"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
-                  <circle cx="12.5" cy="20" r="1.4" fill="currentColor" />
-                </svg>
-                <div class="source-labels">
-                  <span class="source-name">Wi-Fi</span> <span class="source-state" id="wifi-state">Active</span>
-                </div>
-              </div>
-              <div class="source source-phone">
-                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" aria-hidden="true">
-                  <rect x="6.5" y="1" width="12" height="22" rx="2.5" stroke="currentColor" stroke-width="1.7" />
-                  <path d="M11 19.5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                </svg>
-                <div class="source-labels">
-                  <span class="source-name">iPhone hotspot (USB)</span>
-                  <span class="source-state" id="phone-state">Ready</span>
-                </div>
-              </div>
-              <svg class="path" viewBox="0 0 360 26" preserveAspectRatio="none" aria-hidden="true">
-                <path class="wifi-path" d="M85 0 V8 Q85 15 98 15 H168 Q180 15 180 26" />
-                <path class="phone-path" d="M275 0 V8 Q275 15 262 15 H192 Q180 15 180 26" />
-              </svg>
-              <div class="vpn-layer">
-                <strong>Failoverly VPN servers</strong> <span>Encrypted tunnel from your Mac</span>
-              </div>
-              <div class="stable-path" aria-hidden="true"></div>
-              <div class="session">
-                <div class="session-icon" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-                <div><strong>Same online session</strong> <span>Still connected</span></div>
-              </div>
-            </div>
-            <figcaption>
-              <p id="preview-caption" aria-live="off">Your iPhone hotspot is ready.</p>
-              <div class="preview-controls" role="group" aria-label="Diagram controls">
-                <button
-                  class="preview-refresh"
-                  type="button"
-                  aria-label="Show iPhone hotspot"
-                  title="Show iPhone hotspot"
-                  disabled
+          <div class="how-visual" data-hero-animation>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1145"
+              height="1229"
+              viewBox="0 145 1145 1229"
+              role="img"
+              aria-labelledby="scene-title"
+            >
+              <title id="scene-title">
+                A Mac stays connected through an iPhone backup when the primary router connection fails.
+              </title>
+              <defs>
+                <filter
+                  id="popup-shadow"
+                  x="-20%"
+                  y="-50%"
+                  width="140%"
+                  height="210%"
+                  color-interpolation-filters="sRGB"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path
-                      d="M20 7a8.5 8.5 0 0 0-14-2L3 8m0 0V3m0 5h5M4 17a8.5 8.5 0 0 0 14 2l3-3m0 0v5m0-5h-5"
-                      stroke="currentColor"
-                      stroke-width="1.7"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </figcaption>
-          </figure>
+                  <feDropShadow dx="0" dy="6" stdDeviation="9" flood-color="#172329" flood-opacity="0.16" />
+                </filter>
+              </defs>
+              <image
+                id="approved-artwork"
+                x="0"
+                y="0"
+                width="1145"
+                height="1374"
+                href="images/hero-illustration.webp"
+              />
+              <g id="led-overlays" aria-hidden="true">
+                <circle id="led-1" class="led" data-led="1" cx="145.2" cy="495.1" r="8" fill="#01fb00" opacity="0" />
+                <circle id="led-2" class="led" data-led="2" cx="179.9" cy="495.1" r="8" fill="#01fb00" opacity="0" />
+                <circle id="led-3" class="led" data-led="3" cx="213.8" cy="495.1" r="8" fill="#01fb00" opacity="0" />
+                <circle id="led-4" class="led" data-led="4" cx="247.2" cy="495.1" r="8" fill="#01fb00" opacity="0" />
+                <circle id="led-5" class="led" data-led="5" cx="280.9" cy="495.1" r="8" fill="#01fb00" opacity="0" />
+              </g>
+              <g id="connection-popup" opacity="0" transform="translate(0 8)" aria-hidden="true">
+                <g filter="url(#popup-shadow)">
+                  <rect
+                    x="155.5"
+                    y="758"
+                    width="420"
+                    height="90"
+                    rx="16"
+                    fill="#fff"
+                    stroke="#d9dfe2"
+                    stroke-width="1.5"
+                  />
+                  <polygon
+                    points="351.5,759 365.5,747 379.5,759"
+                    fill="#fff"
+                    stroke="#d9dfe2"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                  />
+                  <path d="M 352.5 759 H 378.5" fill="none" stroke="#fff" stroke-width="3" />
+                </g>
+                <text
+                  id="connection-label"
+                  x="365.5"
+                  y="803"
+                  fill="#172126"
+                  font-family="Arial, Helvetica, sans-serif"
+                  font-size="35"
+                  font-weight="500"
+                  text-anchor="middle"
+                  dominant-baseline="central"
+                >
+                  Backup Connection
+                </text>
+              </g>
+              <g
+                id="transfer-icon"
+                opacity="0"
+                transform="translate(901 1136) scale(1 1)"
+                fill="none"
+                stroke="#253139"
+                stroke-width="7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M 21 69 V 13 M 7 27 L 21 13 L 35 27" />
+                <path d="M 61 13 V 69 M 47 55 L 61 69 L 75 55" />
+              </g>
+            </svg>
+          </div>
         </div>
       </section>
 
@@ -563,7 +585,6 @@
             <p class="signup-note" id="final-privacy">
               Sign up for our launch announcement. No spam. We recommend Apple’s Hide My Email (iCloud+) to keep your
               real address private.
-              <a href="privacy.html">Privacy Policy</a>.
             </p>
           </div>
         </div>
@@ -571,7 +592,7 @@
     </main>
     <footer class="wrap">
       <span>© 2026 <span translate="no">Failoverly</span></span>
-      <span>Automatic internet failover for macOS.</span>
+      <span>Reliable Internet with any Provider</span>
       <!-- TODO (launch): verify the brand privacy contact and any required operator disclosures. -->
       <nav class="footer-links" aria-label="Footer">
         <a href="privacy.html">Privacy Policy</a>

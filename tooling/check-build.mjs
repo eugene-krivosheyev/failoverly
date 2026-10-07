@@ -46,7 +46,7 @@ for (const [name, document] of [
   ['index.html', html],
   ['privacy.html', privacy]
 ]) {
-  for (const [tag] of document.matchAll(/<(?:script|link|img)\b[^>]*>/g)) {
+  for (const [tag] of document.matchAll(/<(?:script|link|img|image|source)\b[^>]*>/g)) {
     if (tag.startsWith('<link') && !/rel="(?:stylesheet|preload|icon|apple-touch-icon)"/.test(tag)) continue
     const reference = tag.match(/(?:src|href)="([^"]+)"/)?.[1]
     if (name === 'index.html' && tag.startsWith('<script') && reference === KIT_RUNTIME_SCRIPT) {
@@ -57,6 +57,12 @@ for (const [name, document] of [
     } else if (reference) {
       await checkAsset(reference, resolve(root, name))
       assert(!tag.startsWith('<script'), 'Local production interactions must remain inline.')
+    }
+    const sourceSet = tag.match(/\bsrcset="([^"]+)"/)?.[1]
+    if (sourceSet) {
+      for (const candidate of sourceSet.split(',')) {
+        await checkAsset(candidate.trim().split(/\s+/)[0], resolve(root, name))
+      }
     }
   }
 }
@@ -107,8 +113,8 @@ assert(!/<link\b[^>]*rel="stylesheet"/.test(privacy), 'Privacy CSS must be embed
 assert(!html.includes('privacy-template'), 'Remove the obsolete modal privacy placeholder.')
 assert.equal(
   (html.replace(/<template\b[^>]*>[\s\S]*?<\/template>/g, '').match(/href="privacy\.html"/g) || []).length,
-  2,
-  'The final form and the footer must link to the privacy page.'
+  1,
+  'The footer must link to the privacy page.'
 )
 assert(!html.includes('data-signup-form'), 'Remove the replaced signup placeholders.')
 assert(!html.includes('survey-template'), 'Remove the disconnected survey placeholder.')

@@ -103,10 +103,10 @@ for (const name of ['index.html', 'privacy.html']) {
 // every document has embedded its copy and CSP hashes can use the final bytes.
 for (const file of embeddedFiles) await rm(file)
 
-// The social card needs a stable metadata URL. Other images are bundled once
-// under assets/, including the logo used on the privacy page.
+// Keep the social metadata URL stable. Bun does not bundle the inline SVG's
+// image href, so copy its static artwork too; other images live under assets/.
 await mkdir(resolve(outdir, 'images'), { recursive: true })
-for (const name of ['social-card.png']) {
+for (const name of ['social-card.png', 'hero-illustration.webp']) {
   await copyFile(resolve('images', name), resolve(outdir, 'images', name))
 }
 await mkdir(resolve(outdir, 'fonts'), { recursive: true })
