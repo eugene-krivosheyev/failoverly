@@ -142,6 +142,7 @@ h3 {
 /* Header and approved logo lockup. */
 .site-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   min-height: 96px;
@@ -271,15 +272,13 @@ h3 {
 
 .hero-rotator [data-hero-word] {
   grid-area: 1 / 1;
-  opacity: 0;
+  visibility: hidden;
   transform: translateY(0.16em);
-  transition:
-    opacity 240ms ease,
-    transform 240ms ease;
+  transition: transform 240ms ease;
 }
 
 .hero-rotator [data-active='true'] {
-  opacity: 1;
+  visibility: visible;
   transform: translateY(0);
 }
 
@@ -868,7 +867,13 @@ footer {
     font-size: 20px;
   }
   .use-case {
-    padding-inline: 13px;
+    padding-inline: 0;
+    border-left: 0;
+  }
+  .use-cases {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px 24px;
   }
   .case-offer {
     font-size: 18px;
@@ -898,6 +903,9 @@ footer {
 }
 
 @media (max-width: 900px) {
+  .use-cases {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .hero {
     grid-template-columns: minmax(0, 1fr);
     row-gap: 28px;
@@ -948,6 +956,13 @@ footer {
   .how-visual {
     max-width: 420px;
   }
+  .how-visual #connection-popup rect {
+    x: 65.5px;
+    width: 600px;
+  }
+  .how-visual #connection-label {
+    font-size: 54px;
+  }
   .hero-copy {
     flex: none;
     width: 100%;
@@ -966,7 +981,9 @@ footer {
     padding-block: 32px;
   }
   .use-cases {
+    display: flex;
     flex-direction: column;
+    gap: 0;
     margin-top: 16px;
   }
   .use-case {
@@ -1049,6 +1066,9 @@ footer {
     align-items: flex-start;
     gap: 5px;
     padding-block: 20px;
+  }
+  .footer-links {
+    margin-inline-start: 0;
   }
 }
 @media (max-width: 370px) {

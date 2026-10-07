@@ -197,6 +197,7 @@ GA4 и Google Ads не подключены. Их добавление треб�
 bun run check
 bun run check:pixel
 bun run audit
+bun run audit:4g
 bun run audit:3g
 ```
 
@@ -206,7 +207,18 @@ bun run audit:3g
 
 HTML/JSON-отчёты сохраняются в `reports/`; краткий результат — `reports/summary.json`. Команда завершится ошибкой, если хотя бы одна из четырёх категорий ниже 100. Отчёты не коммитятся.
 
+`audit:4g` проверяет холодную загрузку на одном и том же профиле Lighthouse Slow 4G для mobile и desktop через реальное ограничение DevTools: **562,5 мс задержки запроса, 1474,56 Кбит/с на загрузку и 675 Кбит/с на отправку**, CPU ×4 на mobile и ×1 на desktop. Сетевые параметры берутся из установленного Lighthouse. Отчёты: `reports/lighthouse-mobile-slow-4g.report.html`, `reports/lighthouse-desktop-slow-4g.report.html` и `reports/summary-slow-4g.json`; summary содержит фактические настройки и метрики. Порог проверки: Performance не ниже 99, Accessibility, Best Practices и SEO — 100. Локальный модуль запускается до внешнего обработчика Kit, чтобы панель выбора cookies и обработчики форм не ждали загрузки стороннего скрипта.
+
 `audit:3g` отдельно проверяет холодную загрузку с реальным ограничением DevTools: **400 Кбит/с в обе стороны, 2000 мс задержки**, CPU ×4 на mobile и ×1 на desktop. Сетевые значения соответствуют [профилю Slow 3G в Chromium](https://chromium.googlesource.com/devtools/devtools-frontend/+/HEAD/front_end/core/sdk/NetworkManager.ts). Отчёты: `reports/lighthouse-mobile-slow-3g.report.html`, `reports/lighthouse-desktop-slow-3g.report.html` и `reports/summary-slow-3g.json`. В summary записаны параметры, FCP, LCP, Speed Index, TBT и CLS. Этот стресс-профиль сохраняет реальные оценки и не требует 100: сама двухсекундная задержка сети влияет на метрики даже без блокирующих ресурсов. Сравнивайте результаты только при одинаковых настройках.
+
+Локальная проверка от **2026-10-07** (Lighthouse 13.4.1, Chrome 154, реальный Slow 4G, до согласия на Meta):
+
+| Профиль         | Performance | Accessibility | Best Practices | SEO | LCP    |
+| --------------- | ----------- | ------------- | -------------- | --- | ------ |
+| Slow 4G mobile  | 100         | 100           | 100            | 100 | 0,73 с |
+| Slow 4G desktop | 99          | 100           | 100            | 100 | 0,72 с |
+
+TBT и CLS равны нулю в обоих режимах. На лендинге и Privacy Policy проверены 32 ширины от 280 до 3840 px, включая обе стороны точек 370, 760, 900 и 1050 px: горизонтального переполнения нет. На 320 px дополнительно проверены все раскрытые FAQ и панель cookies. Карточки на планшетах переходят в три или две колонки; шапка может переносить навигацию, мобильный футер выровнен по левому краю. Смена слов сохраняет полный контраст без промежуточного бледного цвета. Результаты адаптивной проверки — `reports/responsive-layout.json` и `reports/responsive-privacy.json`.
 
 Локальная проверка production-сборки от **2026-09-23** с HTML-вставкой Kit, **с интерфейсом выбора трекинга, до согласия на Meta** (Lighthouse 13.4.1, Chrome 154):
 

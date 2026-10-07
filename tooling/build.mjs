@@ -91,6 +91,18 @@ for (const name of ['index.html', 'privacy.html']) {
     html = html.replace(tag, () => (script.trim() ? `<script type="module">${script}</script>` : ''))
     embeddedFiles.add(scriptPath)
   }
+
+  // Deferred classic scripts and modules share document order. Bun places our
+  // bundled module after the original Kit tag, which would postpone consent
+  // controls and signup listeners until that external download completes.
+  // Keep Kit deferred, but run local interactions first after HTML is parsed.
+  const kitRuntime = html.match(/<script\b(?=[^>]*\bid="kit-runtime")[^>]*>\s*<\/script>/)?.[0]
+  if (kitRuntime) {
+    const inlineModule = /<script\b(?=[^>]*type="module")[^>]*>[\s\S]*?<\/script>/
+    if (!inlineModule.test(html)) throw new Error('Kit requires the local interaction module to initialize first.')
+    html = html.replace(kitRuntime, '')
+    html = html.replace(inlineModule, module => `${module}\n${kitRuntime}`)
+  }
   html = html.replaceAll('https://failoverly.app', origin)
   // Vercel preview builds should not compete with the real domain in search.
   if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production') {

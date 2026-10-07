@@ -46,6 +46,19 @@ for (const [name, document] of [
   ['index.html', html],
   ['privacy.html', privacy]
 ]) {
+  const scripts = [...document.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)]
+  const localModules = scripts.filter(([, attributes]) => /\btype="module"/.test(attributes))
+  assert.equal(localModules.length, 1, `${name} must contain one inline interaction module.`)
+  assert(!/\bsrc=/.test(localModules[0][1]), `${name} interactions must not wait for another module download.`)
+  assert(!/\basync(?:\s|$|=)/.test(localModules[0][1]), `${name} interactions need the complete parsed document.`)
+  const kitScript = scripts.find(([, attributes]) => attributes.includes(`src="${KIT_RUNTIME_SCRIPT}"`))
+  if (kitScript) {
+    assert(
+      localModules[0].index < kitScript.index,
+      'Local consent controls and signup listeners must initialize before the deferred Kit runtime.'
+    )
+    assert(!/\basync(?:\s|$|=)/.test(kitScript[1]), 'Kit must wait until form markup has been parsed.')
+  }
   for (const [tag] of document.matchAll(/<(?:script|link|img|image|source)\b[^>]*>/g)) {
     if (tag.startsWith('<link') && !/rel="(?:stylesheet|preload|icon|apple-touch-icon)"/.test(tag)) continue
     const reference = tag.match(/(?:src|href)="([^"]+)"/)?.[1]
