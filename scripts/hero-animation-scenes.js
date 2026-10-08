@@ -1,4 +1,21 @@
-export const TIMING = Object.freeze({ transition: 200, transferDelay: 1200 })
+export const PLAYBACK_RATE = 1.5
+export const TIMING = Object.freeze({
+  transition: Math.round(200 / PLAYBACK_RATE),
+  iconTransition: Math.round(420 / PLAYBACK_RATE),
+  transferDelay: Math.round(1200 / PLAYBACK_RATE)
+})
+
+export const PHONE_ICONS = Object.freeze({ x: 842, size: 200, gap: 32, centerY: 982, strokeWidth: 11 })
+
+/** Center one tile or the complete two-tile stack in the iPhone screen. */
+export function getPhoneIconPositions(transfer) {
+  const singleY = PHONE_ICONS.centerY - PHONE_ICONS.size / 2
+  const pairY = PHONE_ICONS.centerY - PHONE_ICONS.size - PHONE_ICONS.gap / 2
+  return {
+    hotspotY: transfer ? pairY : singleY,
+    transferY: pairY + PHONE_ICONS.size + PHONE_ICONS.gap + (transfer ? 0 : 24)
+  }
+}
 
 export const SCENES = Object.freeze(
   [
@@ -36,7 +53,7 @@ export const SCENES = Object.freeze(
     { id: 8, label: 'Three green LEDs', leds: 'GGGRR', popup: 'Primary Connection', transfer: false, duration: 1000 },
     { id: 9, label: 'Four green LEDs', leds: 'GGGGR', popup: 'Primary Connection', transfer: false, duration: 1000 },
     { id: 10, label: 'All LEDs green', leds: 'GGGGG', popup: 'Primary Connection', transfer: false, duration: 2000 }
-  ].map(Object.freeze)
+  ].map(scene => Object.freeze({ ...scene, duration: Math.round(scene.duration / PLAYBACK_RATE) }))
 )
 
 /** Keep the phone's previous state visible until the connection popup has settled. */

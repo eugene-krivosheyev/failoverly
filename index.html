@@ -186,7 +186,9 @@
             <p class="offer">
               Join before launch for <strong>your first month free.</strong>
               <span class="price">US$6.99/month</span> after that.
-              <span class="compatibility">Includes a VPN protection. Requires a Mac and an iPhone connected over USB.</span>
+              <span class="compatibility"
+                >Includes a VPN protection. Requires a Mac and an iPhone connected over USB.</span
+              >
             </p>
             <div class="signup" data-kit-signup="hero">
               <div class="kit-embed">
@@ -443,19 +445,45 @@
                   Backup Connection
                 </text>
               </g>
-              <g
-                id="transfer-icon"
-                opacity="0"
-                transform="translate(901 1136) scale(1 1)"
-                fill="none"
-                stroke="#253139"
-                stroke-width="7"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M 21 69 V 13 M 7 27 L 21 13 L 35 27" />
-                <path d="M 61 13 V 69 M 47 55 L 61 69 L 75 55" />
+              <g id="phone-icons" aria-hidden="true">
+                <defs>
+                  <linearGradient id="phone-screen-cover" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#f6f9fc" />
+                    <stop offset="0.46" stop-color="#f4fafc" />
+                    <stop offset="1" stop-color="#f3f9fb" />
+                  </linearGradient>
+                  <filter id="phone-screen-blend" x="-10%" y="-10%" width="120%" height="120%">
+                    <feGaussianBlur stdDeviation="3" />
+                  </filter>
+                  <clipPath id="phone-icon-shape">
+                    <rect width="200" height="200" rx="48" />
+                  </clipPath>
+                  <linearGradient id="phone-icon-green" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#22a548" />
+                    <stop offset="1" stop-color="#1f9d42" />
+                  </linearGradient>
+                </defs>
+                <!-- Cover the baked icon, then move an exact crop of the approved hotspot artwork. -->
+                <rect
+                  x="828"
+                  y="820"
+                  width="228"
+                  height="231"
+                  fill="url(#phone-screen-cover)"
+                  filter="url(#phone-screen-blend)"
+                />
+                <g id="hotspot-icon" transform="translate(842 882)">
+                  <g clip-path="url(#phone-icon-shape)">
+                    <image x="-842" y="-835" width="1145" height="1374" href="images/hero-illustration.webp" />
+                  </g>
+                </g>
+                <g id="transfer-icon" opacity="0" transform="translate(842 1022)">
+                  <rect width="200" height="200" rx="48" fill="url(#phone-icon-green)" />
+                  <g fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M 70 146 V 54 M 47 77 L 70 54 L 93 77" />
+                    <path d="M 130 54 V 146 M 107 123 L 130 146 L 153 123" />
+                  </g>
+                </g>
               </g>
             </svg>
           </div>
@@ -587,7 +615,9 @@
           <p class="offer">
             Join before launch for <strong>your first month free.</strong>
             <span class="price">US$6.99/month</span> after that.
-            <span class="compatibility">Includes a VPN protection. Requires a Mac and an iPhone connected over USB.</span>
+            <span class="compatibility"
+              >Includes a VPN protection. Requires a Mac and an iPhone connected over USB.</span
+            >
           </p>
           <div class="signup" data-kit-signup="final">
             <div class="kit-embed">

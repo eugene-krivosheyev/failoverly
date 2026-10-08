@@ -1,4 +1,4 @@
-import { getScenePhases, SCENES } from './hero-animation-scenes.js'
+import { getPhoneIconPositions, getScenePhases, PHONE_ICONS, SCENES } from './hero-animation-scenes.js'
 
 const initializedAnimations = new WeakSet()
 
@@ -9,8 +9,9 @@ export function initHeroAnimation() {
     const leds = [...root.querySelectorAll('[data-led]')]
     const popup = root.querySelector('#connection-popup')
     const popupLabel = root.querySelector('#connection-label')
+    const hotspotIcon = root.querySelector('#hotspot-icon')
     const transferIcon = root.querySelector('#transfer-icon')
-    if (leds.length !== 5 || !popup || !popupLabel || !transferIcon) return
+    if (leds.length !== 5 || !popup || !popupLabel || !hotspotIcon || !transferIcon) return
     initializedAnimations.add(root)
 
     // Keep the connection demo animated on touch devices, even with iOS Reduce Motion.
@@ -35,6 +36,9 @@ export function initHeroAnimation() {
       if (phase.popup) popupLabel.textContent = phase.popup
       popup.setAttribute('opacity', phase.popup ? '1' : '0')
       popup.setAttribute('transform', phase.popup ? 'translate(0 0)' : 'translate(0 8)')
+      const positions = getPhoneIconPositions(phase.transfer)
+      hotspotIcon.setAttribute('transform', `translate(${PHONE_ICONS.x} ${positions.hotspotY})`)
+      transferIcon.setAttribute('transform', `translate(${PHONE_ICONS.x} ${positions.transferY})`)
       transferIcon.setAttribute('opacity', phase.transfer ? '1' : '0')
       remaining = phase.duration
     }

@@ -17,7 +17,22 @@ function interpolate(from, to, progress) {
   return from + (to - from) * progress
 }
 
-function transitionSvg(previous, next, progress) {
+function phoneSlideProgress(progress) {
+  if (progress === 0 || progress === 1) return progress
+  // Match the live icon's cubic-bezier(0.22, 0.61, 0.36, 1) easing.
+  const curve = (position, first, second) =>
+    3 * (1 - position) ** 2 * position * first + 3 * (1 - position) * position ** 2 * second + position ** 3
+  let low = 0
+  let high = 1
+  for (let iteration = 0; iteration < 20; iteration++) {
+    const position = (low + high) / 2
+    if (curve(position, 0.22, 0.36) < progress) low = position
+    else high = position
+  }
+  return curve((low + high) / 2, 0.61, 1)
+}
+
+function transitionSvg(previous, next, progress, iconProgress) {
   const popupFrom = visible(previous.popup)
   const popupTo = visible(next.popup)
   const opacity = interpolate(popupFrom, popupTo, progress)
@@ -32,7 +47,12 @@ function transitionSvg(previous, next, progress) {
       ledOpacity,
       popupOpacity: opacity,
       popupTranslateY: popupOffset,
-      transferOpacity: interpolate(visible(previous.transfer), visible(next.transfer), progress)
+      transferOpacity: interpolate(visible(previous.transfer), visible(next.transfer), progress),
+      phoneTransferProgress: interpolate(
+        visible(previous.transfer),
+        visible(next.transfer),
+        phoneSlideProgress(iconProgress)
+      )
     }
   )
 }
@@ -49,19 +69,37 @@ async function addFrame(svg, duration) {
   return filename
 }
 
+async function addPhaseFrames(previous, next, duration) {
+  const transitionDuration = Math.min(
+    duration,
+    previous.transfer === next.transfer ? TIMING.transition : Math.max(TIMING.transition, TIMING.iconTransition)
+  )
+  for (let elapsed = 0; elapsed < transitionDuration; elapsed += 100) {
+    await addFrame(
+      transitionSvg(
+        previous,
+        next,
+        Math.min(1, elapsed / TIMING.transition),
+        Math.min(1, elapsed / TIMING.iconTransition)
+      ),
+      Math.min(100, transitionDuration - elapsed)
+    )
+  }
+  // Holding the endpoint separately keeps each phase's duration and transfer delay intact.
+  return addFrame(renderSceneSvg(next), Math.max(0, duration - transitionDuration))
+}
+
 await addFrame(renderSceneSvg(SCENES[0]), SCENES[0].duration)
 for (let index = 1; index < SCENES.length; index++) {
   const previous = SCENES[index - 1]
   const scene = SCENES[index]
   let previousPhase = previous
   for (const phase of getScenePhases(previous, scene)) {
-    await addFrame(transitionSvg(previousPhase, phase, 0.5), TIMING.transition / 2)
-    await addFrame(transitionSvg(previousPhase, phase, 1), phase.duration - TIMING.transition / 2)
+    await addPhaseFrames(previousPhase, phase, phase.duration)
     previousPhase = phase
   }
 }
-await addFrame(transitionSvg(SCENES.at(-1), SCENES[0], 0.5), TIMING.transition / 2)
-const lastFrame = await addFrame(renderSceneSvg(SCENES[0]), TIMING.transition / 2)
+const lastFrame = await addPhaseFrames(SCENES.at(-1), SCENES[0], TIMING.transition)
 // The concat demuxer needs a final repeated frame to honor its last duration.
 manifest.push(`file '${lastFrame}'`)
 const manifestPath = join(frameDirectory, 'frames.txt')

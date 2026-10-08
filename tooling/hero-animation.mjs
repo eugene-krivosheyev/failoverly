@@ -1,9 +1,9 @@
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { TIMING, SCENES, getScenePhases } from '../scripts/hero-animation-scenes.js'
+import { TIMING, SCENES, PHONE_ICONS, getPhoneIconPositions, getScenePhases } from '../scripts/hero-animation-scenes.js'
 
-export { TIMING, SCENES, getScenePhases }
+export { TIMING, SCENES, PHONE_ICONS, getPhoneIconPositions, getScenePhases }
 
 const modulePath = fileURLToPath(import.meta.url)
 const projectRoot = resolve(dirname(modulePath), '..')
@@ -14,7 +14,12 @@ let bitmap
 export const GEOMETRY = Object.freeze({
   leds: Object.freeze([145.2, 179.9, 213.8, 247.2, 280.9].map(x => Object.freeze({ x, y: 495.1, radius: 8 }))),
   popup: Object.freeze({ x: 155.5, y: 758, width: 420, height: 90, anchorX: 365.5, anchorY: 747, fontSize: 35 }),
-  transfer: Object.freeze({ x: 901, y: 1136, width: 82, height: 82 })
+  transfer: Object.freeze({
+    x: PHONE_ICONS.x,
+    y: getPhoneIconPositions(false).transferY,
+    width: PHONE_ICONS.size,
+    height: PHONE_ICONS.size
+  })
 })
 
 export const LED_COLORS = Object.freeze({ G: '#01fb00', R: '#ed453b' })
@@ -67,9 +72,14 @@ export function renderSceneSvg(scene = SCENES[0], options = {}) {
   const currentScene = normalizedScene(scene)
   const image = readBitmap()
   const popup = GEOMETRY.popup
-  const transfer = GEOMETRY.transfer
+  const imageHref = escapeXml(options.imageHref || image.dataUri)
   const popupOpacity = boundedOpacity(options.popupOpacity, currentScene.popup ? 1 : 0)
   const transferOpacity = boundedOpacity(options.transferOpacity, currentScene.transfer ? 1 : 0)
+  const phoneTransferProgress = boundedOpacity(options.phoneTransferProgress, currentScene.transfer ? 1 : 0)
+  const singleIcon = getPhoneIconPositions(false)
+  const pairedIcons = getPhoneIconPositions(true)
+  const hotspotY = singleIcon.hotspotY + (pairedIcons.hotspotY - singleIcon.hotspotY) * phoneTransferProgress
+  const transferY = singleIcon.transferY + (pairedIcons.transferY - singleIcon.transferY) * phoneTransferProgress
   const popupTranslateY = options.popupTranslateY ?? (currentScene.popup ? 0 : 8)
   if (!Number.isFinite(popupTranslateY)) throw new Error('Popup translation must be a finite number.')
   const ledOpacity = options.ledOpacity
@@ -92,7 +102,7 @@ export function renderSceneSvg(scene = SCENES[0], options = {}) {
       <feDropShadow dx="0" dy="6" stdDeviation="9" flood-color="#172329" flood-opacity="0.16"/>
     </filter>
   </defs>
-  <image id="approved-artwork" x="0" y="0" width="${image.width}" height="${image.height}" href="${escapeXml(options.imageHref || image.dataUri)}"/>
+  <image id="approved-artwork" x="0" y="0" width="${image.width}" height="${image.height}" href="${imageHref}"/>
   <g id="iphone-charging" aria-hidden="true">
     <defs>
       <filter id="charging-icon-softness" x="-20%" y="-20%" width="140%" height="140%">
@@ -142,9 +152,38 @@ ${leds}
     </g>
     <text id="connection-label" x="${popup.x + popup.width / 2}" y="${popup.y + popup.height / 2}" fill="#172126" font-family="Arial, Helvetica, sans-serif" font-size="${popup.fontSize}" font-weight="500" text-anchor="middle" dominant-baseline="central">${escapeXml(currentScene.popup || 'Backup Connection')}</text>
   </g>
-  <g id="transfer-icon" opacity="${transferOpacity}" transform="translate(${transfer.x} ${transfer.y}) scale(${transfer.width / 82} ${transfer.height / 82})" fill="none" stroke="#253139" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M 21 69 V 13 M 7 27 L 21 13 L 35 27"/>
-    <path d="M 61 13 V 69 M 47 55 L 61 69 L 75 55"/>
+  <g id="phone-icons" aria-hidden="true">
+    <defs>
+      <linearGradient id="phone-screen-cover" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f6f9fc" />
+        <stop offset="0.46" stop-color="#f4fafc" />
+        <stop offset="1" stop-color="#f3f9fb" />
+      </linearGradient>
+      <filter id="phone-screen-blend" x="-10%" y="-10%" width="120%" height="120%">
+        <feGaussianBlur stdDeviation="3" />
+      </filter>
+      <clipPath id="phone-icon-shape">
+        <rect width="${PHONE_ICONS.size}" height="${PHONE_ICONS.size}" rx="48" />
+      </clipPath>
+      <linearGradient id="phone-icon-green" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#22a548" />
+        <stop offset="1" stop-color="#1f9d42" />
+      </linearGradient>
+    </defs>
+    <!-- Cover the baked icon, then move an exact crop of the approved hotspot artwork. -->
+    <rect x="828" y="820" width="228" height="231" fill="url(#phone-screen-cover)" filter="url(#phone-screen-blend)" />
+    <g id="hotspot-icon" transform="translate(${PHONE_ICONS.x} ${hotspotY})">
+      <g clip-path="url(#phone-icon-shape)">
+        <image x="-842" y="-835" width="${image.width}" height="${image.height}" href="${imageHref}" />
+      </g>
+    </g>
+    <g id="transfer-icon" opacity="${transferOpacity}" transform="translate(${PHONE_ICONS.x} ${transferY})">
+      <rect width="${PHONE_ICONS.size}" height="${PHONE_ICONS.size}" rx="48" fill="url(#phone-icon-green)" />
+      <g fill="none" stroke="#fff" stroke-width="${PHONE_ICONS.strokeWidth}" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 70 146 V 54 M 47 77 L 70 54 L 93 77" />
+        <path d="M 130 54 V 146 M 107 123 L 130 146 L 153 123" />
+      </g>
+    </g>
   </g>
 </svg>`
 }
@@ -153,6 +192,7 @@ function renderPreviewHtml() {
   const artwork = renderSceneSvg(SCENES[0])
   const sceneData = JSON.stringify(SCENES).replace(/</g, '\\u003c')
   const paletteData = JSON.stringify(LED_COLORS)
+  const phoneIconData = JSON.stringify(PHONE_ICONS)
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -170,7 +210,7 @@ function renderPreviewHtml() {
       .artwork svg { display: block; width: 100%; height: auto; }
       .led { transition: fill ${TIMING.transition}ms ease, opacity ${TIMING.transition}ms ease; }
       #connection-popup { transition: opacity ${TIMING.transition}ms ease, transform ${TIMING.transition}ms ease; }
-      #transfer-icon { transition: opacity ${TIMING.transition}ms ease; }
+      #hotspot-icon, #transfer-icon { transition: transform ${TIMING.iconTransition}ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity ${TIMING.transition}ms ease; }
       .controls { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; margin-top: 22px; }
       button { appearance: none; min-height: 44px; padding: 10px 16px; border: 1px solid #cdd5d6; border-radius: 9px; background: #fff; color: inherit; font: inherit; font-size: 14px; cursor: pointer; }
       button:hover { background: #e9efed; }
@@ -180,7 +220,7 @@ function renderPreviewHtml() {
       .scene-status { min-height: 40px; margin: 14px 0 0; text-align: center; font-size: 14px; line-height: 1.5; }
       .hint { margin: 6px 0 0; text-align: center; font-size: 12px; color: #637078; }
       @media (prefers-reduced-motion: reduce) {
-        .led, #connection-popup, #transfer-icon { transition: none; }
+        .led, #connection-popup, #hotspot-icon, #transfer-icon { transition: none; }
       }
     </style>
   </head>
@@ -202,11 +242,14 @@ ${artwork}
     <script>
       const scenes = ${sceneData}
       const colors = ${paletteData}
+      const PHONE_ICONS = ${phoneIconData}
+      const getPhoneIconPositions = ${getPhoneIconPositions.toString()}
       const getScenePhases = ${getScenePhases.toString()}
       const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
       const playToggle = document.querySelector('#play-toggle')
       const popup = document.querySelector('#connection-popup')
       const popupLabel = document.querySelector('#connection-label')
+      const hotspotIcon = document.querySelector('#hotspot-icon')
       const transferIcon = document.querySelector('#transfer-icon')
       const leds = [...document.querySelectorAll('[data-led]')]
       const sceneStatus = document.querySelector('#scene-status')
@@ -233,6 +276,9 @@ ${artwork}
         if (scene.popup) popupLabel.textContent = scene.popup
         popup.setAttribute('opacity', scene.popup ? '1' : '0')
         popup.setAttribute('transform', scene.popup ? 'translate(0 0)' : 'translate(0 8)')
+        const positions = getPhoneIconPositions(scene.transfer)
+        hotspotIcon.setAttribute('transform', 'translate(' + PHONE_ICONS.x + ' ' + positions.hotspotY + ')')
+        transferIcon.setAttribute('transform', 'translate(' + PHONE_ICONS.x + ' ' + positions.transferY + ')')
         transferIcon.setAttribute('opacity', scene.transfer ? '1' : '0')
         sceneTitle.textContent = 'Failoverly: ' + scene.label
         sceneStatus.textContent = 'Scene ' + sceneIndex + ' / ' + (scenes.length - 1) + ' · ' + scene.label

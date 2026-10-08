@@ -223,23 +223,27 @@ h3 {
 
 .how-visual [data-led] {
   transition:
-    fill 200ms ease,
-    opacity 200ms ease;
+    fill 133ms ease,
+    opacity 133ms ease;
 }
 
 .how-visual #connection-popup {
   transition:
-    opacity 200ms ease,
-    transform 200ms ease;
+    opacity 133ms ease,
+    transform 133ms ease;
 }
 
+.how-visual #hotspot-icon,
 .how-visual #transfer-icon {
-  transition: opacity 200ms ease;
+  transition:
+    transform 280ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 133ms ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .how-visual [data-led],
   .how-visual #connection-popup,
+  .how-visual #hotspot-icon,
   .how-visual #transfer-icon {
     transition: none;
   }
@@ -274,7 +278,7 @@ h3 {
   grid-area: 1 / 1;
   visibility: hidden;
   transform: translateY(0.16em);
-  transition: transform 240ms ease;
+  transition: transform 160ms ease;
 }
 
 .hero-rotator [data-active='true'] {
@@ -1179,23 +1183,26 @@ footer {
 /* Keep the hero rotation and connection demo animated on touch devices. */
 @media (prefers-reduced-motion: reduce) and (hover: none) and (pointer: coarse) {
   .hero-rotator [data-hero-word] {
-    transition: transform 240ms ease !important;
+    transition: transform 160ms ease !important;
   }
 
   .how-visual [data-led] {
     transition:
-      fill 200ms ease,
-      opacity 200ms ease !important;
+      fill 133ms ease,
+      opacity 133ms ease !important;
   }
 
   .how-visual #connection-popup {
     transition:
-      opacity 200ms ease,
-      transform 200ms ease !important;
+      opacity 133ms ease,
+      transform 133ms ease !important;
   }
 
+  .how-visual #hotspot-icon,
   .how-visual #transfer-icon {
-    transition: opacity 200ms ease !important;
+    transition:
+      transform 280ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      opacity 133ms ease !important;
   }
 }
 

@@ -1,4 +1,6 @@
-const ROTATION_DELAY = 2500
+import { PLAYBACK_RATE } from './hero-animation-scenes.js'
+
+const ROTATION_DELAY = Math.round(2500 / PLAYBACK_RATE)
 const initializedRotators = new WeakSet()
 
 export function initHeroRotation() {
