@@ -9,7 +9,10 @@ export function initHeroRotation() {
   if (words.length < 2) return
   initializedRotators.add(rotator)
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  // Keep this headline animated on touch devices, even with iOS Reduce Motion.
+  const reducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce) and (hover: hover), (prefers-reduced-motion: reduce) and (pointer: fine)'
+  )
   let activeIndex = 0
   let timer = null
   let visible = !('IntersectionObserver' in window)
@@ -33,10 +36,13 @@ export function initHeroRotation() {
   }
 
   document.addEventListener('visibilitychange', scheduleRotation)
-  reducedMotion.addEventListener('change', () => {
+  window.addEventListener('pageshow', scheduleRotation)
+  function updateMotionPreference() {
     if (reducedMotion.matches) showWord(0)
     scheduleRotation()
-  })
+  }
+  if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', updateMotionPreference)
+  else reducedMotion.addListener(updateMotionPreference)
 
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(([entry]) => {

@@ -1175,6 +1175,30 @@ footer {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Keep the hero rotation and connection demo animated on touch devices. */
+@media (prefers-reduced-motion: reduce) and (hover: none) and (pointer: coarse) {
+  .hero-rotator [data-hero-word] {
+    transition: transform 240ms ease !important;
+  }
+
+  .how-visual [data-led] {
+    transition:
+      fill 200ms ease,
+      opacity 200ms ease !important;
+  }
+
+  .how-visual #connection-popup {
+    transition:
+      opacity 200ms ease,
+      transform 200ms ease !important;
+  }
+
+  .how-visual #transfer-icon {
+    transition: opacity 200ms ease !important;
+  }
+}
+
 @media (forced-colors: active) {
   .button {
     border-color: ButtonText;

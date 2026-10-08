@@ -13,7 +13,10 @@ export function initHeroAnimation() {
     if (leds.length !== 5 || !popup || !popupLabel || !transferIcon) return
     initializedAnimations.add(root)
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    // Keep the connection demo animated on touch devices, even with iOS Reduce Motion.
+    const reducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce) and (hover: hover), (prefers-reduced-motion: reduce) and (pointer: fine)'
+    )
     let visible = !('IntersectionObserver' in window)
     let sceneIndex = 0
     let phases = [SCENES[0]]
@@ -67,6 +70,7 @@ export function initHeroAnimation() {
     }
 
     document.addEventListener('visibilitychange', schedulePhase)
+    window.addEventListener('pageshow', schedulePhase)
     function updateMotionPreference() {
       if (reducedMotion.matches) {
         pauseClock()
