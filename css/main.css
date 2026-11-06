@@ -447,6 +447,41 @@ h3 {
   line-height: 1.55;
 }
 
+/* Plan-interest tags take their own row; Kit hides the real checkbox behind
+   label pseudo-elements, so restore the native control and its focus ring. */
+.signup .kit-embed form.formkit-form[data-uid] .formkit-fields .formkit-field:has(.formkit-checkboxes) {
+  flex: 1 1 100%;
+}
+
+.signup .kit-embed form.formkit-form[data-uid] .formkit-checkboxes {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-size: calc(14px * var(--type-scale));
+  line-height: 1.5;
+}
+
+.signup .kit-embed form.formkit-form[data-uid] [data-group='checkbox'] .formkit-checkbox {
+  display: block;
+  flex: none;
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--action);
+}
+
+.signup .kit-embed form.formkit-form[data-uid] [data-group='checkbox'] label {
+  padding-left: 0;
+}
+
+.signup .kit-embed form.formkit-form[data-uid] [data-group='checkbox'] label::before,
+.signup .kit-embed form.formkit-form[data-uid] [data-group='checkbox'] label::after,
+.signup .kit-embed form.formkit-form[data-uid] [data-group='checkbox'] .formkit-checkbox:checked + label::before,
+.signup .kit-embed form.formkit-form[data-uid] [data-group='checkbox'] .formkit-checkbox:checked + label::after {
+  content: none;
+}
+
 /* Use cases and setup steps. */
 .section {
   border-top: 1px solid var(--line);
